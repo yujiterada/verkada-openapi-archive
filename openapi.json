@@ -7077,97 +7077,27 @@
                 "type": "object"
             },
             "SensorEventInfo": {
-                "description": "Sensor-specific event fields",
+                "description": "Sensor-specific event fields (matching proposal specification)",
                 "properties": {
-                    "details": {
-                        "description": "Additional details about the sensor event",
-                        "title": "Details",
-                        "type": "string"
-                    },
-                    "end_event": {
-                        "description": "Whether this event marks the end of an event condition",
-                        "title": "End Event",
-                        "type": "boolean"
-                    },
                     "end_time": {
-                        "description": "Event end time as Unix timestamp",
+                        "description": "The end time of the alert",
                         "title": "End Time",
-                        "type": "integer"
-                    },
-                    "event_id": {
-                        "description": "Unique identifier for the sensor event",
-                        "title": "Event Id",
                         "type": "string"
-                    },
-                    "is_above_max_event": {
-                        "description": "True if the event was triggered by exceeding the maximum threshold",
-                        "title": "Is Above Max Event",
-                        "type": "boolean"
-                    },
-                    "is_above_threshold": {
-                        "description": "Whether the measured value was above (true) or below (false) the threshold",
-                        "title": "Is Above Threshold",
-                        "type": "boolean"
-                    },
-                    "is_zone_event": {
-                        "description": "Whether this is a zone-level event",
-                        "title": "Is Zone Event",
-                        "type": "boolean"
-                    },
-                    "measured_value": {
-                        "description": "The actual measured value that triggered the event (most extreme value)",
-                        "title": "Measured Value",
-                        "type": "number"
                     },
                     "most_extreme_value": {
-                        "description": "The most extreme value detected during the event window",
+                        "description": "The most extreme value for the sensor that was detected during the alert window",
                         "title": "Most Extreme Value",
                         "type": "number"
                     },
                     "reading": {
-                        "description": "The sensor reading type that triggered the event",
+                        "description": "The sensor type of the alert (i.e. temperature, TVOC)",
                         "title": "Reading",
                         "type": "string"
                     },
-                    "sensor_type": {
-                        "description": "Type of sensor reading that triggered the event (e.g., 'temperature', 'humidity', 'motion')",
-                        "title": "Sensor Type",
-                        "type": "string"
-                    },
-                    "start_time": {
-                        "description": "Event start time as Unix timestamp",
-                        "title": "Start Time",
-                        "type": "integer"
-                    },
                     "threshold": {
-                        "description": "The configured threshold for the event",
+                        "description": "The user-defined threshold of the alert",
                         "title": "Threshold",
                         "type": "number"
-                    },
-                    "threshold_value": {
-                        "description": "The threshold value that was exceeded",
-                        "title": "Threshold Value",
-                        "type": "number"
-                    },
-                    "zone_device_id": {
-                        "description": "Device ID within the zone",
-                        "title": "Zone Device Id",
-                        "type": "string"
-                    },
-                    "zone_event_id": {
-                        "description": "Zone event identifier",
-                        "title": "Zone Event Id",
-                        "type": "string"
-                    },
-                    "zone_id": {
-                        "description": "Zone identifier if this is a zone event",
-                        "title": "Zone Id",
-                        "type": "string"
-                    },
-                    "zone_name": {
-                        "description": "Zone name if this is a zone event",
-                        "title": "Zone Name",
-                        "type": "string"
                     }
                 },
                 "title": "SensorEventInfo",
@@ -14299,7 +14229,7 @@
         },
         "/v2/events": {
             "get": {
-                "description": "Returns unified events from camera and access control devices within a specified time range.\n\nThis endpoint consolidates events from camera and access control devices in your organization,\nproviding a single interface to retrieve security events and access control events.\n\n**Default Behavior**: Returns events from all supported product types from the last hour if no filters are specified.\n\n### Supported Event Types\n\n**Camera Events:**\n- `camera_online`, `camera_offline` - Camera connectivity status\n- `motion` - Motion detection events\n- `person_of_interest` - Person of Interest detections\n- `license_plate_of_interest` - License Plate of Interest detections\n- `tamper` - Camera tampering events\n- `crowd` - Crowd detection events\n- `line_crossing` - Line crossing rule violations\n- `loitering` - Loitering/dwell time violations\n\n**Access Control Events:**\n- `door_opened`, `door_granted`, `door_rejected` - Access events\n- `door_forced_open`, `door_held_open` - Security violations\n- `door_tailgating` - Tailgating detection\n- `door_tamper` - Door tampering events\n- `door_offline` - Access control unit connectivity\n- Plus 50+ additional access control event types for comprehensive monitoring\n\n### Filtering\n\nUse these query parameters to filter results:\n- **`product_types`**: Comma-separated product types (`camera`, `access_control`)\n- **`device_ids`**: Comma-separated list of device IDs to filter by\n- **`event_types`**: Comma-separated list of event types (see supported types above)\n- **`start_time`**: Start time in ISO 8601 format (e.g., `2025-01-17T09:00:00Z`)\n- **`end_time`**: End time in ISO 8601 format (defaults to current time if not specified)\n- **`site_ids`**: Comma-separated list of site IDs (for access control events)\n\n### Pagination\n\nThis endpoint uses cursor-based pagination with these parameters:\n- **`limit`**: Number of events to return (1-1000, default 100)\n- **`cursor`**: Pagination cursor from previous response for next page\n- Continue paginating while the response includes a `cursor` value\n\n\n\n### Examples\n\nGet all events from the last hour:\n```\nGET /v2/events\n```\n\nGet only camera motion events from a specific time range:\n```\nGET /v2/events?product_types=camera&event_types=motion&start_time=2025-01-17T09:00:00Z&end_time=2025-01-17T17:00:00Z\n```\n\nGet access control events for specific doors:\n```\nGET /v2/events?product_types=access_control&device_ids=door1,door2&limit=50\n```",
+                "description": "Returns unified events from camera, access control, and sensor devices within a specified time range.\n\nThis endpoint consolidates events from camera, access control, and sensor devices in your organization,\nproviding a single interface to retrieve security events, access control events, and environmental sensor events.\n\n**Default Behavior**: Returns events from all supported product types from the last hour if no filters are specified.\n\n### Supported Event Types\n\n**Camera Events:**\n- `camera_online`, `camera_offline` - Camera connectivity status\n- `motion` - Motion detection events\n- `person_of_interest` - Person of Interest detections\n- `license_plate_of_interest` - License Plate of Interest detections\n- `tamper` - Camera tampering events\n- `crowd` - Crowd detection events\n- `line_crossing` - Line crossing rule violations\n- `loitering` - Loitering/dwell time violations\n\n**Access Control Events:**\n- `door_opened`, `door_granted`, `door_rejected` - Access events\n- `door_forced_open`, `door_held_open` - Security violations\n- `door_tailgating` - Tailgating detection\n- `door_tamper` - Door tampering events\n- `door_offline` - Access control unit connectivity\n- Plus 50+ additional access control event types for comprehensive monitoring\n\n**Sensor Events:**\n- `temperature`, `humidity` - Climate monitoring alerts\n- `tvoc`, `co2`, `pm25` - Air quality alerts\n- `noise` - Noise level alerts\n- `sensor_motion` - Motion detection from sensors\n- `air_quality` - General air quality alerts\n\n### Filtering\n\nUse these query parameters to filter results:\n- **`product_types`**: Comma-separated product types (`camera`, `access_control`, `sensor`)\n- **`device_ids`**: Comma-separated list of device IDs to filter by\n- **`event_types`**: Comma-separated list of event types (see supported types above)\n- **`start_time`**: Start time in ISO 8601 format (e.g., `2025-01-17T09:00:00Z`)\n- **`end_time`**: End time in ISO 8601 format (defaults to current time if not specified)\n- **`site_ids`**: Comma-separated list of site IDs (for access control events)\n\n### Pagination\n\nThis endpoint uses cursor-based pagination with these parameters:\n- **`limit`**: Number of events to return (1-1000, default 100)\n- **`cursor`**: Pagination cursor from previous response for next page\n- Continue paginating while the response includes a `cursor` value\n\n\n\n### Examples\n\nGet all events from the last hour:\n```\nGET /v2/events\n```\n\nGet only camera motion events from a specific time range:\n```\nGET /v2/events?product_types=camera&event_types=motion&start_time=2025-01-17T09:00:00Z&end_time=2025-01-17T17:00:00Z\n```\n\nGet access control events for specific doors:\n```\nGET /v2/events?product_types=access_control&device_ids=door1,door2&limit=50\n```\n\nGet sensor temperature and humidity alerts:\n```\nGET /v2/events?product_types=sensor&event_types=temperature,humidity&start_time=2025-01-17T09:00:00Z\n```",
                 "operationId": "getEventsViewV2",
                 "parameters": [
                     {
