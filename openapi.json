@@ -3559,7 +3559,7 @@
                         "title": "Cursor",
                         "type": "string"
                     },
-                    "events": {
+                    "items": {
                         "description": "List of events",
                         "items": {
                             "discriminator": {
@@ -3582,12 +3582,12 @@
                                 }
                             ]
                         },
-                        "title": "Events",
+                        "title": "Items",
                         "type": "array"
                     }
                 },
                 "required": [
-                    "events"
+                    "items"
                 ],
                 "title": "EventsResponseV2",
                 "type": "object"
