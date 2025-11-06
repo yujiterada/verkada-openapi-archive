@@ -2763,7 +2763,7 @@
                         "type": "array"
                     },
                     "widget_types": {
-                        "description": "The widget types to filter on.\nOne or multiple values from <code>occupancy</code>, <code>helix</code>, <code>conversion</code>, <code>queue</code>.\n\nDefaults to all widget types.",
+                        "description": "The widget types to filter on.\nOne or multiple values from <code>occupancy</code>, <code>helix</code>, <code>conversion</code>, <code>queue</code>, <code>deviceAlerts</code>.\n\nDefaults to all widget types.",
                         "items": {
                             "$ref": "#/components/schemas/WidgetType"
                         },
@@ -2980,6 +2980,21 @@
                     }
                 },
                 "title": "DenyListQueryRequest",
+                "type": "object"
+            },
+            "DeviceAlertsData": {
+                "additionalProperties": false,
+                "properties": {
+                    "alert_count": {
+                        "additionalProperties": {
+                            "type": "number"
+                        },
+                        "description": "A map of unix timestamps to device alerts counts for that time bucket",
+                        "title": "Alert Count",
+                        "type": "object"
+                    }
+                },
+                "title": "DeviceAlertsData",
                 "type": "object"
             },
             "DeviceInfo": {
@@ -3566,6 +3581,7 @@
                                 "mapping": {
                                     "access_control": "#/definitions/AccessEvent",
                                     "camera": "#/definitions/CameraEvent",
+                                    "intercom": "#/definitions/IntercomEvent",
                                     "sensor": "#/definitions/SensorEvent"
                                 },
                                 "propertyName": "device_type"
@@ -3579,6 +3595,9 @@
                                 },
                                 {
                                     "$ref": "#/components/schemas/AccessEvent"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/IntercomEvent"
                                 }
                             ]
                         },
@@ -3590,6 +3609,98 @@
                     "items"
                 ],
                 "title": "EventsResponseV2",
+                "type": "object"
+            },
+            "FaceUnlockDisableResponseV2": {
+                "additionalProperties": false,
+                "description": "Response for face unlock disable endpoint",
+                "properties": {
+                    "success": {
+                        "description": "Whether the operation was successful",
+                        "title": "Success",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "success"
+                ],
+                "title": "FaceUnlockDisableResponseV2",
+                "type": "object"
+            },
+            "FaceUnlockEnableResponseV2": {
+                "additionalProperties": false,
+                "description": "Response for face unlock enable endpoints",
+                "properties": {
+                    "identity_id": {
+                        "description": "The identity ID created for the face credential",
+                        "title": "Identity Id",
+                        "type": "string"
+                    },
+                    "quality_score": {
+                        "description": "The quality score of the face credential",
+                        "title": "Quality Score",
+                        "type": "number"
+                    },
+                    "success": {
+                        "description": "Whether the operation was successful",
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "user_id": {
+                        "description": "The user ID for which face unlock was enabled",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user_id",
+                    "success"
+                ],
+                "title": "FaceUnlockEnableResponseV2",
+                "type": "object"
+            },
+            "FaceUnlockInviteResponseV2": {
+                "additionalProperties": false,
+                "description": "Response for face unlock invite endpoint",
+                "properties": {
+                    "invitation_sent": {
+                        "description": "Whether the invitation email was successfully sent",
+                        "title": "Invitation Sent",
+                        "type": "boolean"
+                    },
+                    "live_link_id": {
+                        "description": "The ID of the created live link",
+                        "title": "Live Link Id",
+                        "type": "string"
+                    },
+                    "success": {
+                        "description": "Whether the operation was successful",
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "user_id": {
+                        "description": "The user ID for which the invitation was sent",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "success"
+                ],
+                "title": "FaceUnlockInviteResponseV2",
+                "type": "object"
+            },
+            "FaceUnlockQueryV2": {
+                "description": "Query parameters for face unlock endpoints",
+                "properties": {
+                    "overwrite": {
+                        "default": false,
+                        "description": "Whether to overwrite an existing face credential. Default is False.",
+                        "title": "Overwrite",
+                        "type": "boolean"
+                    }
+                },
+                "title": "FaceUnlockQueryV2",
                 "type": "object"
             },
             "FloorInfo": {
@@ -4360,6 +4471,89 @@
                     "has_email"
                 ],
                 "title": "HostResponseItem",
+                "type": "object"
+            },
+            "IntercomEvent": {
+                "additionalProperties": false,
+                "description": "Intercom event",
+                "properties": {
+                    "device_id": {
+                        "description": "ID of the device that generated the event",
+                        "title": "Device Id",
+                        "type": "string"
+                    },
+                    "device_type": {
+                        "default": "intercom",
+                        "description": "Always 'intercom' for intercom events",
+                        "enum": [
+                            "intercom"
+                        ],
+                        "title": "Device Type",
+                        "type": "string"
+                    },
+                    "event_id": {
+                        "description": "Unique identifier for the event",
+                        "title": "Event Id",
+                        "type": "string"
+                    },
+                    "event_info": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/IntercomEventInfo"
+                            }
+                        ],
+                        "description": "Intercom-specific event information",
+                        "title": "Event Info"
+                    },
+                    "event_type": {
+                        "description": "Type of event",
+                        "title": "Event Type",
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "description": "Event timestamp in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00')",
+                        "title": "Timestamp",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "event_id",
+                    "device_id",
+                    "event_type",
+                    "timestamp"
+                ],
+                "title": "IntercomEvent",
+                "type": "object"
+            },
+            "IntercomEventInfo": {
+                "properties": {
+                    "answered_by_name": {
+                        "description": "Name of the person or receiver who answered the call",
+                        "title": "Answered By Name",
+                        "type": "string"
+                    },
+                    "answered_timestamp": {
+                        "description": "Answered timestamp of the intercom event",
+                        "title": "Answered Timestamp",
+                        "type": "string"
+                    },
+                    "device_name": {
+                        "description": "Name of the device that generated the event",
+                        "title": "Device Name",
+                        "type": "string"
+                    },
+                    "end_timestamp": {
+                        "description": "End timestamp of the intercom event",
+                        "title": "End Timestamp",
+                        "type": "string"
+                    },
+                    "start_timestamp": {
+                        "description": "Start timestamp of the intercom event",
+                        "title": "Start Timestamp",
+                        "type": "string"
+                    }
+                },
+                "title": "IntercomEventInfo",
                 "type": "object"
             },
             "IntervalEnum": {
@@ -8513,6 +8707,7 @@
                     "ACCESS_EVENTS",
                     "SENSOR_EVENTS",
                     "ALARM_EVENTS",
+                    "INTERCOM_EVENTS",
                     "LPR"
                 ],
                 "title": "WebhookScope",
@@ -8557,6 +8752,15 @@
                         ],
                         "description": "Contains a map for helix event counts, occupancy in counts, and conversion rates.",
                         "title": "Conversion Data"
+                    },
+                    "device_alerts_data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DeviceAlertsData"
+                            }
+                        ],
+                        "description": "Contains a map for device alerts counts over time.",
+                        "title": "Device Alerts Data"
                     },
                     "helix_data": {
                         "allOf": [
@@ -8618,7 +8822,8 @@
                     "occupancy",
                     "helix",
                     "conversion",
-                    "queue"
+                    "queue",
+                    "deviceAlerts"
                 ],
                 "title": "WidgetType",
                 "type": "string"
@@ -14183,6 +14388,346 @@
                 "summary": "Get API Token",
                 "tags": [
                     "API Login"
+                ]
+            }
+        },
+        "/v2/access/external_users/{external_id}/face_unlock": {
+            "delete": {
+                "description": "Disable face unlock for a user. This will delete their face credential and disable the face unlock\naccess method. Any pending mobile enrollment invitations for this user will also be deleted.",
+                "operationId": "deleteFaceUnlockDisableExternalUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "external_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockDisableResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Disable Face Unlock",
+                "tags": [
+                    "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/external_users/{external_id}/face_unlock/copy_user_photo": {
+            "post": {
+                "description": "Enable face unlock for a user by using their existing profile photo. This will create a face credential\nfrom the user's profile photo. If the user already has a face credential and overwrite is False, the\nrequest will fail. The profile photo must meet quality requirements for face recognition.",
+                "operationId": "postFaceUnlockCopyUserPhotoExternalUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "external_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "overwrite",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to overwrite an existing face credential. Default is False.",
+                            "title": "Overwrite",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockEnableResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    }
+                },
+                "summary": "Enable Face Unlock with Profile Photo",
+                "tags": [
+                    "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/external_users/{external_id}/face_unlock/invite": {
+            "post": {
+                "description": "Enable face unlock for a user by sending them an invitation to enroll their face via mobile device.\nAn email will be sent to the user with a link to complete the enrollment process. If the user already\nhas a face credential and overwrite is False, the request will fail. When overwrite is True, the\ninvitation is sent and the user can upload a new photo which will replace the existing credential.",
+                "operationId": "postFaceUnlockInviteExternalUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "external_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "overwrite",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to overwrite an existing face credential. Default is False.",
+                            "title": "Overwrite",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockInviteResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    }
+                },
+                "summary": "Enable Face Unlock with Mobile Enrollment Invitation",
+                "tags": [
+                    "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/external_users/{external_id}/face_unlock/upload_photo": {
+            "post": {
+                "description": "Enable face unlock for a user by uploading a new photo. The photo must be provided as a multipart/form-data\nfile upload in the 'file' field. If the user already has a face credential and overwrite is False, the\nrequest will fail. The uploaded photo must meet quality requirements for face recognition.",
+                "operationId": "postFaceUnlockUploadPhotoExternalUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "external_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "overwrite",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to overwrite an existing face credential. Default is False.",
+                            "title": "Overwrite",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockEnableResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    }
+                },
+                "summary": "Enable Face Unlock with Uploaded Photo",
+                "tags": [
+                    "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/users/{user_id}/face_unlock": {
+            "delete": {
+                "description": "Disable face unlock for a user. This will delete their face credential and disable the face unlock\naccess method. Any pending mobile enrollment invitations for this user will also be deleted.",
+                "operationId": "deleteFaceUnlockDisableUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockDisableResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Disable Face Unlock",
+                "tags": [
+                    "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/users/{user_id}/face_unlock/copy_user_photo": {
+            "post": {
+                "description": "Enable face unlock for a user by using their existing profile photo. This will create a face credential\nfrom the user's profile photo. If the user already has a face credential and overwrite is False, the\nrequest will fail. The profile photo must meet quality requirements for face recognition.",
+                "operationId": "postFaceUnlockCopyUserPhotoUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "overwrite",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to overwrite an existing face credential. Default is False.",
+                            "title": "Overwrite",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockEnableResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    }
+                },
+                "summary": "Enable Face Unlock with Profile Photo",
+                "tags": [
+                    "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/users/{user_id}/face_unlock/invite": {
+            "post": {
+                "description": "Enable face unlock for a user by sending them an invitation to enroll their face via mobile device.\nAn email will be sent to the user with a link to complete the enrollment process. If the user already\nhas a face credential and overwrite is False, the request will fail. When overwrite is True, the\ninvitation is sent and the user can upload a new photo which will replace the existing credential.",
+                "operationId": "postFaceUnlockInviteUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "overwrite",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to overwrite an existing face credential. Default is False.",
+                            "title": "Overwrite",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockInviteResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    }
+                },
+                "summary": "Enable Face Unlock with Mobile Enrollment Invitation",
+                "tags": [
+                    "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/users/{user_id}/face_unlock/upload_photo": {
+            "post": {
+                "description": "Enable face unlock for a user by uploading a new photo. The photo must be provided as a multipart/form-data\nfile upload in the 'file' field. If the user already has a face credential and overwrite is False, the\nrequest will fail. The uploaded photo must meet quality requirements for face recognition.",
+                "operationId": "postFaceUnlockUploadPhotoUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "overwrite",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to overwrite an existing face credential. Default is False.",
+                            "title": "Overwrite",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaceUnlockEnableResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    }
+                },
+                "summary": "Enable Face Unlock with Uploaded Photo",
+                "tags": [
+                    "Access Credentials"
                 ]
             }
         },
