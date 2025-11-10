@@ -8708,7 +8708,8 @@
                     "SENSOR_EVENTS",
                     "ALARM_EVENTS",
                     "INTERCOM_EVENTS",
-                    "LPR"
+                    "LPR",
+                    "ALERTS"
                 ],
                 "title": "WebhookScope",
                 "type": "string"
