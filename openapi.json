@@ -283,7 +283,7 @@
                 "properties": {
                     "access_groups": {
                         "default": [],
-                        "description": "The list of Access Group Objects a user belongs to.",
+                        "description": "Access Groups to which a user belongs.",
                         "items": {
                             "$ref": "#/components/schemas/AccessGroupObjectResponseV1"
                         },
@@ -298,7 +298,7 @@
                     },
                     "cards": {
                         "default": [],
-                        "description": "The list of access cards associated with the user.",
+                        "description": "Access cards associated with the user.",
                         "items": {
                             "$ref": "#/components/schemas/CardObjectResponseV1"
                         },
@@ -327,7 +327,7 @@
                     },
                     "license_plates": {
                         "default": [],
-                        "description": "The list of license plates associated with the user.",
+                        "description": "License plates associated with the user.",
                         "items": {
                             "$ref": "#/components/schemas/LicensePlateObjectResponseV1"
                         },
@@ -336,7 +336,7 @@
                     },
                     "mfa_codes": {
                         "default": [],
-                        "description": "The list of MFA codes associated with the user.",
+                        "description": "MFA codes associated with the user.",
                         "items": {
                             "$ref": "#/components/schemas/MFACodeObjectResponseV1"
                         },
@@ -344,10 +344,19 @@
                         "type": "array"
                     },
                     "profile_photo_last_updated": {
-                        "description": "The timestamp of when the user's profile photo was last updated.",
+                        "description": "The timestamp when the user's profile photo was last updated.",
                         "format": "date-time",
                         "title": "Profile Photo Last Updated",
                         "type": "string"
+                    },
+                    "qr_codes": {
+                        "default": [],
+                        "description": "QR codes associated with the user.",
+                        "items": {
+                            "$ref": "#/components/schemas/QRCodeObjectResponseV1"
+                        },
+                        "title": "Qr Codes",
+                        "type": "array"
                     },
                     "remote_unlock": {
                         "default": false,
@@ -448,6 +457,18 @@
                     "last_updated_at"
                 ],
                 "title": "AccessLevelResponseV1",
+                "type": "object"
+            },
+            "AccessMembersRequestV1": {
+                "properties": {
+                    "include_visitors": {
+                        "default": false,
+                        "description": "Whether to include visitor users in the response.",
+                        "title": "Include Visitors",
+                        "type": "boolean"
+                    }
+                },
+                "title": "AccessMembersRequestV1",
                 "type": "object"
             },
             "AccessScheduleEventResponseV1": {
@@ -1360,7 +1381,7 @@
                         "type": "string"
                     },
                     "employee_id": {
-                        "description": "Employee ID",
+                        "description": "The organization-defined employee ID of the access member.",
                         "title": "Employee Id",
                         "type": "string"
                     },
@@ -1382,6 +1403,11 @@
                     "has_profile_photo": {
                         "description": "A flag that states whether or not the user has a profile photo.",
                         "title": "Has Profile Photo",
+                        "type": "boolean"
+                    },
+                    "is_visitor": {
+                        "description": "Whether this user is a visitor.",
+                        "title": "Is Visitor",
                         "type": "boolean"
                     },
                     "profile_photo_last_updated": {
@@ -3519,9 +3545,9 @@
                     },
                     "limit": {
                         "default": 100,
-                        "description": "Maximum number of events to return. Default is 100, maximum is 1000.",
+                        "description": "Maximum number of events to return. Default is 100, maximum is 200.",
                         "exclusiveMinimum": true,
-                        "maximum": 1000,
+                        "maximum": 200,
                         "minimum": 0,
                         "title": "Limit",
                         "type": "integer"
@@ -4951,7 +4977,7 @@
                 "additionalProperties": false,
                 "properties": {
                     "code": {
-                        "description": "The unique mfa code identifying a mfa code credential for a user.",
+                        "description": "The code corresponding to a user's MFA code credential.",
                         "title": "Code",
                         "type": "string"
                     }
@@ -5728,6 +5754,23 @@
                 "title": "PatchLicensePlateOfInterestBodyRequest",
                 "type": "object"
             },
+            "PatchQRCodeBodyV2": {
+                "description": "Schema for updating QR code activation state",
+                "properties": {
+                    "activation_state": {
+                        "description": "QR code activation state (active, deactivated, lost, etc.).",
+                        "title": "Activation State",
+                        "type": "string"
+                    },
+                    "active": {
+                        "description": "Whether the QR code can be used for access.",
+                        "title": "Active",
+                        "type": "boolean"
+                    }
+                },
+                "title": "PatchQRCodeBodyV2",
+                "type": "object"
+            },
             "PatchVideoTaggingEventRequestV1": {
                 "properties": {
                     "attributes": {
@@ -6167,6 +6210,57 @@
                 "title": "PostMFACodeBodyV1",
                 "type": "object"
             },
+            "PostQRCodeBodyV2": {
+                "properties": {
+                    "activation_state": {
+                        "default": "active",
+                        "description": "QR code activation state.",
+                        "title": "Activation State",
+                        "type": "string"
+                    },
+                    "active": {
+                        "default": true,
+                        "description": "Whether the QR code can be used for access.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "card_number": {
+                        "description": "The card number used to grant or deny access to a door.",
+                        "title": "Card Number",
+                        "type": "string"
+                    },
+                    "card_number_base36": {
+                        "description": "The card number in base36 used to grant or deny access to a door.",
+                        "title": "Card Number Base36",
+                        "type": "string"
+                    },
+                    "card_number_hex": {
+                        "description": "The card number in hexadecimal used to grant or deny access to a door.",
+                        "title": "Card Number Hex",
+                        "type": "string"
+                    },
+                    "encoding_type": {
+                        "description": "QR code encoding type. Must be a supported CardType or QRCodeEncodingType (NONE, VISIT_KEY_BASE_10, GUEST_STRIPPED_BIT_BASE_10).",
+                        "title": "Encoding Type",
+                        "type": "string"
+                    },
+                    "facility_code": {
+                        "description": "The facility code used to grant or deny access to a door.",
+                        "title": "Facility Code",
+                        "type": "string"
+                    },
+                    "qr_code": {
+                        "description": "QR code data (base-10 encoded).",
+                        "title": "Qr Code",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "encoding_type"
+                ],
+                "title": "PostQRCodeBodyV2",
+                "type": "object"
+            },
             "PostScenarioActionResponseV1": {
                 "additionalProperties": false,
                 "description": "Schema for scenario action response",
@@ -6374,6 +6468,147 @@
                     "start_date"
                 ],
                 "title": "PutStartDateAccessUserRequestBodyV1",
+                "type": "object"
+            },
+            "QRCodeObjectResponseV1": {
+                "additionalProperties": false,
+                "properties": {
+                    "activation_state": {
+                        "description": "Detailed (lost/auto-deactivated) state of a QR code.",
+                        "title": "Activation State",
+                        "type": "string"
+                    },
+                    "active": {
+                        "default": false,
+                        "description": "Whether this QR code credential grants access.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "card_number": {
+                        "description": "The card number used to grant or deny access to a door.",
+                        "title": "Card Number",
+                        "type": "string"
+                    },
+                    "card_number_base36": {
+                        "description": "The card number in base36 used to grant or deny access to a door.",
+                        "title": "Card Number Base36",
+                        "type": "string"
+                    },
+                    "card_number_hex": {
+                        "description": "The card number in hexadecimal used to grant or deny access to a door.",
+                        "title": "Card Number Hex",
+                        "type": "string"
+                    },
+                    "encoding_type": {
+                        "description": "The encoding type of a user's QR code credential.",
+                        "title": "Encoding Type",
+                        "type": "string"
+                    },
+                    "facility_code": {
+                        "description": "The facility code used to grant or deny access to a door.",
+                        "title": "Facility Code",
+                        "type": "string"
+                    },
+                    "qr_code": {
+                        "description": "The data within a user's QR code credential.",
+                        "title": "Qr Code",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "encoding_type"
+                ],
+                "title": "QRCodeObjectResponseV1",
+                "type": "object"
+            },
+            "QRCodeObjectResponseV2": {
+                "additionalProperties": false,
+                "properties": {
+                    "activation_state": {
+                        "description": "Detailed (lost/auto-deactivated) state of a QR code.",
+                        "title": "Activation State",
+                        "type": "string"
+                    },
+                    "active": {
+                        "default": false,
+                        "description": "Whether this QR code credential grants access.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "card_number": {
+                        "description": "The card number used to grant or deny access to a door.",
+                        "title": "Card Number",
+                        "type": "string"
+                    },
+                    "card_number_base36": {
+                        "description": "The card number in base36 used to grant or deny access to a door.",
+                        "title": "Card Number Base36",
+                        "type": "string"
+                    },
+                    "card_number_hex": {
+                        "description": "The card number in hexadecimal used to grant or deny access to a door.",
+                        "title": "Card Number Hex",
+                        "type": "string"
+                    },
+                    "encoding_type": {
+                        "description": "The encoding type of a user's QR code credential.",
+                        "title": "Encoding Type",
+                        "type": "string"
+                    },
+                    "facility_code": {
+                        "description": "The facility code used to grant or deny access to a door.",
+                        "title": "Facility Code",
+                        "type": "string"
+                    },
+                    "qr_code": {
+                        "description": "The data within a user's QR code credential.",
+                        "title": "Qr Code",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "encoding_type"
+                ],
+                "title": "QRCodeObjectResponseV2",
+                "type": "object"
+            },
+            "QRCodeQueryV2": {
+                "properties": {
+                    "card_number": {
+                        "description": "Card number to delete.",
+                        "title": "Card Number",
+                        "type": "string"
+                    },
+                    "card_number_base36": {
+                        "description": "Card number in base36 to delete.",
+                        "title": "Card Number Base36",
+                        "type": "string"
+                    },
+                    "card_number_hex": {
+                        "description": "Card number in hexadecimal to delete.",
+                        "title": "Card Number Hex",
+                        "type": "string"
+                    },
+                    "encoding_type": {
+                        "description": "Encoding type of the QR code.",
+                        "title": "Encoding Type",
+                        "type": "string"
+                    },
+                    "facility_code": {
+                        "description": "Facility code (for certain CardType encodings).",
+                        "title": "Facility Code",
+                        "type": "string"
+                    },
+                    "qr_code": {
+                        "description": "QR code data to delete.",
+                        "title": "Qr Code",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "encoding_type"
+                ],
+                "title": "QRCodeQueryV2",
                 "type": "object"
             },
             "QuestionnaireResponseItem": {
@@ -9064,9 +9299,21 @@
         },
         "/access/v1/access_users": {
             "get": {
-                "description": "This returns a list of All Access User Objects for all access members in an organization. The list is contained in a json as the value to the key \"access_members\".\nThe information includes the Verkada-defined user_id, the organization-defined employee_id, the access users's email, and the access user's full name.",
+                "description": "This returns a list of All Access User Objects for all access members in an organization. The list is contained in a json as the value to the key \"access_members\".\nThe information includes the Verkada-defined user_id, the organization-defined employee_id, the access users's email, and the access user's full name.\nBy default, visitor users are excluded. Use the include_visitors query parameter to include them.",
                 "operationId": "getAccessMembersViewV1",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "include_visitors",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to include visitor users in the response.",
+                            "title": "Include Visitors",
+                            "type": "boolean"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "content": {
@@ -14844,9 +15091,9 @@
                         "required": false,
                         "schema": {
                             "default": 100,
-                            "description": "Maximum number of events to return. Default is 100, maximum is 1000.",
+                            "description": "Maximum number of events to return. Default is 100, maximum is 200.",
                             "exclusiveMinimum": true,
-                            "maximum": 1000,
+                            "maximum": 200,
                             "minimum": 0,
                             "title": "Limit",
                             "type": "integer"
