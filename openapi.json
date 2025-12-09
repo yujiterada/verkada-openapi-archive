@@ -4363,6 +4363,87 @@
                 "title": "GuestSiteResponseItem",
                 "type": "object"
             },
+            "GuestTypeItem": {
+                "description": "A single guest type item",
+                "properties": {
+                    "enabled_for_invites": {
+                        "description": "Whether the guest type is enabled for invites.",
+                        "title": "Enabled For Invites",
+                        "type": "boolean"
+                    },
+                    "guest_type_id": {
+                        "description": "The unique identifier of the guest type.",
+                        "format": "uuid",
+                        "title": "Guest Type Id",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the guest type.",
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "guest_type_id",
+                    "name",
+                    "enabled_for_invites"
+                ],
+                "title": "GuestTypeItem",
+                "type": "object"
+            },
+            "GuestTypeRequest": {
+                "description": "Request parameters for listing guest types",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of guest types to return. Default is 100, maximum is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "site_id": {
+                        "description": "The Guest site ID to list guest types for.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "site_id"
+                ],
+                "title": "GuestTypeRequest",
+                "type": "object"
+            },
+            "GuestTypeResponse": {
+                "description": "Response containing a list of guest types",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of guest types.",
+                        "items": {
+                            "$ref": "#/components/schemas/GuestTypeItem"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "GuestTypeResponse",
+                "type": "object"
+            },
             "HelixData": {
                 "additionalProperties": false,
                 "properties": {
@@ -4418,6 +4499,64 @@
                     }
                 },
                 "title": "HistoryUrlResponse",
+                "type": "object"
+            },
+            "HostRequest": {
+                "description": "Request parameters for listing hosts",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Optional email filter. If provided, only returns the host matching this email.",
+                        "title": "Email",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of hosts to return. Default is 100, maximum is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "site_id": {
+                        "description": "The Guest site ID to list hosts for.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "site_id"
+                ],
+                "title": "HostRequest",
+                "type": "object"
+            },
+            "HostResponse": {
+                "description": "Response containing a list of hosts",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of hosts.",
+                        "items": {
+                            "$ref": "#/components/schemas/HostResponseItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "HostResponse",
                 "type": "object"
             },
             "HostResponseItem": {
@@ -4497,6 +4636,67 @@
                     "has_email"
                 ],
                 "title": "HostResponseItem",
+                "type": "object"
+            },
+            "HostResponseItemV2": {
+                "properties": {
+                    "email": {
+                        "description": "The email of the host.",
+                        "title": "Email",
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "description": "The preferred first name of the host. If none is specified by the host, the same as original_first_name.",
+                        "title": "First Name",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "description": "The full name of the host.",
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "has_delegate": {
+                        "description": "Whether the host has a delegate assigned.",
+                        "title": "Has Delegate",
+                        "type": "boolean"
+                    },
+                    "host_id": {
+                        "description": "The unique identifier of the host.",
+                        "format": "uuid",
+                        "title": "Host Id",
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "description": "The last name of the host.",
+                        "title": "Last Name",
+                        "type": "string"
+                    },
+                    "original_first_name": {
+                        "description": "The original first name of the host.",
+                        "title": "Original First Name",
+                        "type": "string"
+                    },
+                    "phone_number": {
+                        "description": "The phone number of the host.",
+                        "title": "Phone Number",
+                        "type": "string"
+                    },
+                    "requires_host_approval": {
+                        "description": "Whether the host requires host approval on all visits.",
+                        "title": "Requires Host Approval",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "host_id",
+                    "first_name",
+                    "last_name",
+                    "full_name",
+                    "original_first_name",
+                    "requires_host_approval",
+                    "has_delegate"
+                ],
+                "title": "HostResponseItemV2",
                 "type": "object"
             },
             "IntercomEvent": {
@@ -15155,6 +15355,134 @@
                 "summary": "Get Events",
                 "tags": [
                     "Events"
+                ]
+            }
+        },
+        "/v2/guest/guest_types": {
+            "get": {
+                "description": "Returns a paginated list of Guest types for a specific Guest site.",
+                "operationId": "getGuestTypeViewV2",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "site_id",
+                        "required": true,
+                        "schema": {
+                            "description": "The Guest site ID to list guest types for.",
+                            "format": "uuid",
+                            "title": "Site Id",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor for retrieving the next page of results.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 100,
+                            "description": "Maximum number of guest types to return. Default is 100, maximum is 200.",
+                            "exclusiveMinimum": true,
+                            "maximum": 200,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuestTypeResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Guest Types for a Site",
+                "tags": [
+                    "Guest Types"
+                ]
+            }
+        },
+        "/v2/guest/hosts": {
+            "get": {
+                "description": "Returns hosts for a specific Guest site.\n\nIf email is provided, returns the corresponding host with a matching email.\nOtherwise, returns a paginated list of hosts for the site.",
+                "operationId": "getHostViewV2",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "site_id",
+                        "required": true,
+                        "schema": {
+                            "description": "The Guest site ID to list hosts for.",
+                            "format": "uuid",
+                            "title": "Site Id",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "email",
+                        "required": false,
+                        "schema": {
+                            "description": "Optional email filter. If provided, only returns the host matching this email.",
+                            "title": "Email",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor for retrieving the next page of results.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 100,
+                            "description": "Maximum number of hosts to return. Default is 100, maximum is 200.",
+                            "exclusiveMinimum": true,
+                            "maximum": 200,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HostResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Hosts for a Site",
+                "tags": [
+                    "Hosts"
                 ]
             }
         },
