@@ -9734,7 +9734,7 @@
         },
         "security": [
           {
-            "GetToken": []
+            "ApiKey": []
           }
         ],
         "summary": "Get API Token",
