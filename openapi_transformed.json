@@ -9696,7 +9696,7 @@
     },
     "securitySchemes": {
       "ApiKey": {
-        "description": "Legacy API Key acquired from Command",
+        "description": "API Key acquired from Command",
         "in": "header",
         "name": "x-api-key",
         "type": "apiKey"
@@ -9705,12 +9705,6 @@
         "description": "API Token acquired from API Login",
         "in": "header",
         "name": "x-verkada-auth",
-        "type": "apiKey"
-      },
-      "GetToken": {
-        "description": "API Key acquired from Command",
-        "in": "header",
-        "name": "x-api-key",
         "type": "apiKey"
       }
     }
