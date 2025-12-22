@@ -2761,7 +2761,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnum"
+                                "$ref": "#/components/schemas/IntervalEnumV2"
                             }
                         ],
                         "default": "PT1H",
@@ -2820,7 +2820,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnum"
+                                "$ref": "#/components/schemas/IntervalEnumV2"
                             }
                         ],
                         "description": "The time interval used."
@@ -3286,6 +3286,187 @@
                 "title": "Event",
                 "type": "object"
             },
+            "EventCreateRequestV2": {
+                "description": "Request for creating an event",
+                "properties": {
+                    "event_address": {
+                        "description": "The location of the event.",
+                        "title": "Event Address",
+                        "type": "string"
+                    },
+                    "event_description": {
+                        "description": "A description of the event.",
+                        "title": "Event Description",
+                        "type": "string"
+                    },
+                    "event_name": {
+                        "default": "New Event",
+                        "description": "The name of the Guest event. If not specified, defaults to 'New Event'.",
+                        "title": "Event Name",
+                        "type": "string"
+                    },
+                    "event_times": {
+                        "description": "A list of start and end times for each event part. If only one time span specified, will be treated as a single day event. A maximum of 30 time spans may be specified and must occur in the future within 1 year.",
+                        "items": {
+                            "$ref": "#/components/schemas/EventTimeV2"
+                        },
+                        "maxItems": 30,
+                        "minItems": 1,
+                        "title": "Event Times",
+                        "type": "array"
+                    },
+                    "guest_type_id": {
+                        "description": "The unique identifier of the Guest type for this event. Guest types must be eligible and allowed for invites in visibility controls. Guest types can be retrieved with the Guest Type API.",
+                        "format": "uuid",
+                        "title": "Guest Type Id",
+                        "type": "string"
+                    },
+                    "host_id": {
+                        "description": "The unique identifier of the host. Valid hosts can be retrieved with the Guest Host API.",
+                        "format": "uuid",
+                        "title": "Host Id",
+                        "type": "string"
+                    },
+                    "invitees": {
+                        "description": "List of invitees for the event.",
+                        "items": {
+                            "$ref": "#/components/schemas/InviteeRequestV2"
+                        },
+                        "title": "Invitees",
+                        "type": "array"
+                    },
+                    "rsvp_enabled": {
+                        "default": false,
+                        "description": "Whether a RSVP link should be generated.",
+                        "title": "Rsvp Enabled",
+                        "type": "boolean"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "walk_in_enabled": {
+                        "default": false,
+                        "description": "Whether walk-ins are allowed to the event.",
+                        "title": "Walk In Enabled",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "site_id",
+                    "host_id",
+                    "guest_type_id",
+                    "event_times"
+                ],
+                "title": "EventCreateRequestV2",
+                "type": "object"
+            },
+            "EventDetailResponseV2": {
+                "description": "Detailed event response for GET single event and POST create",
+                "properties": {
+                    "end_time": {
+                        "description": "The ending time of the event. This will be for the last event part of multi-part events in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00').",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "event_address": {
+                        "description": "The location of the event taking place.",
+                        "title": "Event Address",
+                        "type": "string"
+                    },
+                    "event_description": {
+                        "description": "A description of the Guest event.",
+                        "title": "Event Description",
+                        "type": "string"
+                    },
+                    "event_name": {
+                        "description": "The name of the Guest event. If not specified, defaults to 'New Event'.",
+                        "title": "Event Name",
+                        "type": "string"
+                    },
+                    "event_parts": {
+                        "description": "List of event parts for multi-part events.",
+                        "items": {
+                            "$ref": "#/components/schemas/EventPartResponseV2"
+                        },
+                        "title": "Event Parts",
+                        "type": "array"
+                    },
+                    "event_source": {
+                        "description": "The source at which the event was created from.",
+                        "title": "Event Source",
+                        "type": "string"
+                    },
+                    "guest_event_id": {
+                        "description": "The unique identifier of the Guest event.",
+                        "format": "uuid",
+                        "title": "Guest Event Id",
+                        "type": "string"
+                    },
+                    "guest_type_id": {
+                        "description": "The unique identifier of the Guest type for this event. Guest types can be retrieved with the Guest Type API.",
+                        "format": "uuid",
+                        "title": "Guest Type Id",
+                        "type": "string"
+                    },
+                    "host_id": {
+                        "description": "The unique identifier of the host. Hosts can be retrieved with the Guest Host API.",
+                        "format": "uuid",
+                        "title": "Host Id",
+                        "type": "string"
+                    },
+                    "invitees": {
+                        "description": "List of invitees for the event.",
+                        "items": {
+                            "$ref": "#/components/schemas/InviteeResponseV2"
+                        },
+                        "title": "Invitees",
+                        "type": "array"
+                    },
+                    "rsvp_link": {
+                        "description": "The RSVP link of the event if generated.",
+                        "title": "Rsvp Link",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The starting time of the event. This will be for the first event part of multi-part events in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00').",
+                        "title": "Start Time",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the event (active, canceled or rescheduled).",
+                        "title": "Status",
+                        "type": "string"
+                    },
+                    "walk_in_enabled": {
+                        "description": "Whether walk-ins are allowed to the event.",
+                        "title": "Walk In Enabled",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "guest_event_id",
+                    "site_id",
+                    "host_id",
+                    "start_time",
+                    "end_time",
+                    "walk_in_enabled",
+                    "event_parts",
+                    "invitees",
+                    "event_source",
+                    "status"
+                ],
+                "title": "EventDetailResponseV2",
+                "type": "object"
+            },
             "EventInfo": {
                 "additionalProperties": false,
                 "properties": {
@@ -3441,6 +3622,165 @@
                     }
                 },
                 "title": "EventInfo",
+                "type": "object"
+            },
+            "EventListRequestV2": {
+                "description": "Request parameters for listing events",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "description": "The end time to look for events and their event parts in ISO 8601 format (e.g., '2025-01-17T22:06:20Z').",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of items to return. Default is 100, maximum is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start time to look for events and their event parts in ISO 8601 format (e.g., '2025-01-17T21:06:20Z').",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "site_id",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "EventListRequestV2",
+                "type": "object"
+            },
+            "EventListResponseV2": {
+                "description": "Response containing a list of events and event parts",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of events, their event parts and invitees.",
+                        "items": {
+                            "$ref": "#/components/schemas/EventPartItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "EventListResponseV2",
+                "type": "object"
+            },
+            "EventPartItemV2": {
+                "description": "Event part item in list response",
+                "properties": {
+                    "end_time": {
+                        "description": "The end time for the event or event part in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00').",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "event_name": {
+                        "description": "The name of the Event. Defaults to 'New Event' if not specified in creation.",
+                        "title": "Event Name",
+                        "type": "string"
+                    },
+                    "event_part_id": {
+                        "description": "The unique identifier for an event part of a multi-day event. Null if a single-day event.",
+                        "format": "uuid",
+                        "title": "Event Part Id",
+                        "type": "string"
+                    },
+                    "guest_event_id": {
+                        "description": "The unique identifier for a Guest event.",
+                        "format": "uuid",
+                        "title": "Guest Event Id",
+                        "type": "string"
+                    },
+                    "is_multipart": {
+                        "description": "Whether this is a multi part event.",
+                        "title": "Is Multipart",
+                        "type": "boolean"
+                    },
+                    "start_time": {
+                        "description": "The start time for the event or event part in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00').",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "guest_event_id",
+                    "event_name",
+                    "start_time",
+                    "end_time",
+                    "is_multipart"
+                ],
+                "title": "EventPartItemV2",
+                "type": "object"
+            },
+            "EventPartResponseV2": {
+                "description": "Event part in detailed response",
+                "properties": {
+                    "end_time": {
+                        "description": "The end time of the event part in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00').",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "event_part_id": {
+                        "description": "The unique identifier of the event part. Will be null for single day events.",
+                        "format": "uuid",
+                        "title": "Event Part Id",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start time of the event part in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00').",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "EventPartResponseV2",
+                "type": "object"
+            },
+            "EventTimeV2": {
+                "description": "Event time for creation request",
+                "properties": {
+                    "end_time": {
+                        "description": "The end time of the event part in ISO 8601 format (e.g., '2025-01-17T22:06:20Z').",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start time of the event part in ISO 8601 format (e.g., '2025-01-17T22:06:20Z').",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "EventTimeV2",
                 "type": "object"
             },
             "EventsErrorResponse": {
@@ -4409,7 +4749,7 @@
                         "type": "integer"
                     },
                     "site_id": {
-                        "description": "The Guest site ID to list guest types for.",
+                        "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
                         "format": "uuid",
                         "title": "Site Id",
                         "type": "string"
@@ -4524,7 +4864,7 @@
                         "type": "integer"
                     },
                     "site_id": {
-                        "description": "The Guest site ID to list hosts for.",
+                        "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
                         "format": "uuid",
                         "title": "Site Id",
                         "type": "string"
@@ -4785,12 +5125,101 @@
             "IntervalEnum": {
                 "description": "An enumeration.",
                 "enum": [
+                    "15_minutes",
+                    "1_hour",
+                    "1_day"
+                ],
+                "title": "IntervalEnum",
+                "type": "string"
+            },
+            "IntervalEnumV2": {
+                "description": "An enumeration.",
+                "enum": [
                     "PT15M",
                     "PT1H",
                     "PT1D"
                 ],
-                "title": "IntervalEnum",
+                "title": "IntervalEnumV2",
                 "type": "string"
+            },
+            "InviteeRequestV2": {
+                "description": "Invitee request model",
+                "properties": {
+                    "email": {
+                        "description": "The email of the invitee.",
+                        "title": "Email",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "description": "The full name of the invitee. Must include the first and last name with a space in between.",
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "notes": {
+                        "description": "Notes for the invitee. Max note size of 100 characters.",
+                        "maxLength": 100,
+                        "title": "Notes",
+                        "type": "string"
+                    },
+                    "phone_number": {
+                        "description": "The phone number of the invitee.",
+                        "title": "Phone Number",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "full_name"
+                ],
+                "title": "InviteeRequestV2",
+                "type": "object"
+            },
+            "InviteeResponseV2": {
+                "description": "Invitee in detailed response",
+                "properties": {
+                    "guest_email": {
+                        "description": "The email of the invitee.",
+                        "title": "Guest Email",
+                        "type": "string"
+                    },
+                    "guest_full_name": {
+                        "description": "The full name of the invitee.",
+                        "title": "Guest Full Name",
+                        "type": "string"
+                    },
+                    "guest_phone_number": {
+                        "description": "The phone number of the invitee.",
+                        "title": "Guest Phone Number",
+                        "type": "string"
+                    },
+                    "invited_guest_id": {
+                        "description": "The unique identifier of the invited guest.",
+                        "format": "uuid",
+                        "title": "Invited Guest Id",
+                        "type": "string"
+                    },
+                    "notes": {
+                        "description": "Notes for the invitee. Max note size of 100 characters.",
+                        "title": "Notes",
+                        "type": "string"
+                    },
+                    "registered_time": {
+                        "description": "The time the invited guest registered for the event in RFC 3339 format (e.g., '2025-01-17T21:06:20+00:00').",
+                        "title": "Registered Time",
+                        "type": "string"
+                    },
+                    "visit_id": {
+                        "description": "The unique identifier of the visit if the invitee has signed-in.",
+                        "format": "uuid",
+                        "title": "Visit Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "invited_guest_id",
+                    "guest_full_name"
+                ],
+                "title": "InviteeResponseV2",
+                "type": "object"
             },
             "LPRImageItem": {
                 "additionalProperties": false,
@@ -14330,7 +14759,7 @@
                         "description": "ok"
                     }
                 },
-                "summary": "Delete a Guest deny list",
+                "summary": "Delete a Guest Deny List",
                 "tags": [
                     "Deny List"
                 ]
@@ -14363,13 +14792,13 @@
                         "description": "OK"
                     }
                 },
-                "summary": "Get Guest deny list",
+                "summary": "Get Guest Deny List",
                 "tags": [
                     "DenyList"
                 ]
             },
             "post": {
-                "description": "Uploads deny list in csv format to vdoorman.",
+                "description": "Uploads deny list in csv format.",
                 "operationId": "postDenyListView",
                 "parameters": [
                     {
@@ -14507,7 +14936,7 @@
                         "description": "OK"
                     }
                 },
-                "summary": "Get Guest visits",
+                "summary": "Get Guest Visits",
                 "tags": [
                     "Visits"
                 ]
@@ -15358,6 +15787,170 @@
                 ]
             }
         },
+        "/v2/guest/guest_events": {
+            "get": {
+                "description": "Returns a paginated list of Guest events and their event parts for a site within a time range.\n\nGuest events allow organizations to pre-register and manage visitors for specific events.\nSee https://help.verkada.com/guest/configuration-and-setup/guest-events for more information.",
+                "operationId": "getGuestEventViewV2",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "site_id",
+                        "required": true,
+                        "schema": {
+                            "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
+                            "format": "uuid",
+                            "title": "Site Id",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": true,
+                        "schema": {
+                            "description": "The start time to look for events and their event parts in ISO 8601 format (e.g., '2025-01-17T21:06:20Z').",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": true,
+                        "schema": {
+                            "description": "The end time to look for events and their event parts in ISO 8601 format (e.g., '2025-01-17T22:06:20Z').",
+                            "title": "End Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 100,
+                            "description": "Maximum number of items to return. Default is 100, maximum is 200.",
+                            "exclusiveMinimum": true,
+                            "maximum": 200,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor for retrieving the next page of results.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventListResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Guest Events for a Site",
+                "tags": [
+                    "Events"
+                ]
+            },
+            "post": {
+                "description": "Creates a Guest event based on a host, guest type, invitees, and specified start and end times.\nSupports multi-part events by providing multiple time ranges in `event_times`. A maximum of 30 time spans may be specified.\n\nGuest events allow organizations to pre-register and manage visitors for specific events.\nSee https://help.verkada.com/guest/configuration-and-setup/guest-events for more information.",
+                "operationId": "postGuestEventViewV2",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EventCreateRequestV2"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventDetailResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Create a Guest Event",
+                "tags": [
+                    "Events"
+                ]
+            }
+        },
+        "/v2/guest/guest_events/{guest_event_id}": {
+            "delete": {
+                "description": "Deletes a Guest event by `guest_event_id`.\n\nGuest events allow organizations to pre-register and manage visitors for specific events.\nSee https://help.verkada.com/guest/configuration-and-setup/guest-events for more information.",
+                "operationId": "deleteGuestSingleEventViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "guest_event_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                },
+                "summary": "Delete Event",
+                "tags": [
+                    "Events"
+                ]
+            },
+            "get": {
+                "description": "Get specific details for a Guest event with its event parts and invitees by `guest_event_id`.\n\nGuest events allow organizations to pre-register and manage visitors for specific events.\nSee https://help.verkada.com/guest/configuration-and-setup/guest-events for more information.",
+                "operationId": "getGuestSingleEventViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "guest_event_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventDetailResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Guest Event by ID",
+                "tags": [
+                    "Events"
+                ]
+            }
+        },
         "/v2/guest/guest_types": {
             "get": {
                 "description": "Returns a paginated list of Guest types for a specific Guest site.",
@@ -15368,7 +15961,7 @@
                         "name": "site_id",
                         "required": true,
                         "schema": {
-                            "description": "The Guest site ID to list guest types for.",
+                            "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
                             "format": "uuid",
                             "title": "Site Id",
                             "type": "string"
@@ -15427,7 +16020,7 @@
                         "name": "site_id",
                         "required": true,
                         "schema": {
-                            "description": "The Guest site ID to list hosts for.",
+                            "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
                             "format": "uuid",
                             "title": "Site Id",
                             "type": "string"
