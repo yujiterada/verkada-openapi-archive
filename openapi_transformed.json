@@ -13615,7 +13615,7 @@
         },
         "security": [
           {
-            "GetToken": []
+            "ApiKey": []
           }
         ],
         "summary": "Get Streaming Token",
