@@ -21,6 +21,31 @@ def reorder_openapi_paths(file_path, output_path):
         # Replace the old paths object with the reordered one
         data['paths'] = new_paths
 
+    # Modify securitySchemes
+    if 'components' in data and 'securitySchemes' in data['components']:
+        schemes = data['components']['securitySchemes']
+        if 'GetToken' in schemes:
+            # 1. change ApiKey.description to GetToken.description
+            if 'ApiKey' in schemes and 'description' in schemes['GetToken']:
+                schemes['ApiKey']['description'] = schemes['GetToken']['description']
+
+            # 2. remove GetToken
+            del schemes['GetToken']
+
+            # 3. change GetToken to ApiKey in ALL endpoints
+            if 'paths' in data:
+                for path, operations in data['paths'].items():
+                    for method, details in operations.items():
+                        if isinstance(details, dict):
+                            if 'security' in details:
+                                for scheme in details['security']:
+                                    if 'GetToken' in scheme:
+                                        scheme['ApiKey'] = scheme.pop('GetToken')
+
+                            # 4. Change DenyList tag to Deny List
+                            if 'tags' in details:
+                                details['tags'] = ['Deny List' if tag == 'DenyList' else tag for tag in details['tags']]
+
     # Save the modified JSON
     with open(output_path + '.json', 'w') as f:
         json.dump(data, f, indent=2)
