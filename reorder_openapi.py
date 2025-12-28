@@ -26,6 +26,7 @@ def reorder_openapi_paths(file_path, output_path):
         schemes = data['components']['securitySchemes']
         if 'GetToken' in schemes:
             # 1. change ApiKey.description to GetToken.description
+            # GetToken is the same as ApiKey
             if 'ApiKey' in schemes and 'description' in schemes['GetToken']:
                 schemes['ApiKey']['description'] = schemes['GetToken']['description']
 
@@ -33,6 +34,7 @@ def reorder_openapi_paths(file_path, output_path):
             del schemes['GetToken']
 
             # 3. change GetToken to ApiKey in ALL endpoints
+            # Doublechecking
             if 'paths' in data:
                 for path, operations in data['paths'].items():
                     for method, details in operations.items():
@@ -40,9 +42,14 @@ def reorder_openapi_paths(file_path, output_path):
                             if 'security' in details:
                                 for scheme in details['security']:
                                     if 'GetToken' in scheme:
+                                        print("!!! GetToken in {} {} !!!".format(method, path))
                                         scheme['ApiKey'] = scheme.pop('GetToken')
 
-                            # 4. Change DenyList tag to Deny List
+                            # 4. Add ApiToken to all endpoints so global config is not used
+                            else:
+                                details['security'] = [{"ApiToken": []}]
+
+                            # 5. Change DenyList tag to Deny List
                             if 'tags' in details:
                                 details['tags'] = ['Deny List' if tag == 'DenyList' else tag for tag in details['tags']]
 
