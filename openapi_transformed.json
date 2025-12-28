@@ -9763,6 +9763,11 @@
         "summary": "Get All Access Groups",
         "tags": [
           "Access Groups"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -9791,6 +9796,11 @@
         "summary": "Delete Access Group",
         "tags": [
           "Access Groups"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -9824,6 +9834,11 @@
         "summary": "Get Access Group",
         "tags": [
           "Access Groups"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -9854,6 +9869,11 @@
         "summary": "Create Access Group",
         "tags": [
           "Access Groups"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -9903,6 +9923,11 @@
         "summary": "Remove User from Access Group",
         "tags": [
           "Access Groups"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -9945,6 +9970,11 @@
         "summary": "Add User to Access Group",
         "tags": [
           "Access Groups"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -9980,6 +10010,11 @@
         "summary": "Get All Access Users",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10045,6 +10080,11 @@
         "summary": "Get Access Information Object",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10110,6 +10150,11 @@
         "summary": "Activate BLE for Access User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10175,6 +10220,11 @@
         "summary": "Deactivate BLE for Access User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10249,6 +10299,11 @@
         "summary": "Set End Date for User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10307,6 +10362,11 @@
         "summary": "Remove Entry Code for User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -10390,6 +10450,11 @@
         "summary": "Set Entry Code for User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10455,6 +10520,11 @@
         "summary": "Send Pass App Invite for User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10503,6 +10573,11 @@
         "summary": "Delete Profile Photo",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -10560,6 +10635,11 @@
         "summary": "Get Profile Photo",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -10666,6 +10746,11 @@
         "summary": "Upload Profile Photo",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10731,6 +10816,11 @@
         "summary": "Activate Remote Unlock for User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10796,6 +10886,11 @@
         "summary": "Deactivate Remote Unlock for User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10870,6 +10965,11 @@
         "summary": "Set Start Date for User",
         "tags": [
           "Access User Information"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -10918,6 +11018,11 @@
         "summary": "Delete Access Card",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -10970,6 +11075,11 @@
         "summary": "Add Card to User",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11025,6 +11135,11 @@
         "summary": "Activate Access Card",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11080,6 +11195,11 @@
         "summary": "Deactivate Access Card",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11128,6 +11248,11 @@
         "summary": "Delete License Plate from User",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -11180,6 +11305,11 @@
         "summary": "Add License Plate to User",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11235,6 +11365,11 @@
         "summary": "Activate License Plate",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11290,6 +11425,11 @@
         "summary": "Deactivate License Plate",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11338,6 +11478,11 @@
         "summary": "Delete MFACode from User",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -11390,6 +11535,11 @@
         "summary": "Add MFA Code to User",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11413,6 +11563,11 @@
         "summary": "Get All Available Access Levels",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -11446,6 +11601,11 @@
         "summary": "Create Access Level",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11471,6 +11631,11 @@
         "summary": "Delete Access Level",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -11501,6 +11666,11 @@
         "summary": "Get Access Level",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -11540,6 +11710,11 @@
         "summary": "Update Access Level",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11584,6 +11759,11 @@
         "summary": "Add Access Schedule Event to Access Level",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11617,6 +11797,11 @@
         "summary": "Delete Access Schedule Event on Access Level",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -11655,6 +11840,11 @@
         "summary": "Get Access Schedule Event Details",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -11702,6 +11892,11 @@
         "summary": "Update Access Schedule Event on Access Level",
         "tags": [
           "Access Levels"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11764,6 +11959,11 @@
         "summary": "Unlock Door as Admin",
         "tags": [
           "Access Doors"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11798,6 +11998,11 @@
         "summary": "Get All Available Door Exception Calendars",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -11828,6 +12033,11 @@
         "summary": "Create Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11853,6 +12063,11 @@
         "summary": "Delete Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -11883,6 +12098,11 @@
         "summary": "Get Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -11922,6 +12142,11 @@
         "summary": "Update Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11963,6 +12188,11 @@
         "summary": "Add Exception to Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -11996,6 +12226,11 @@
         "summary": "Delete Exception on Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -12034,6 +12269,11 @@
         "summary": "Get Exception on Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -12081,6 +12321,11 @@
         "summary": "Update Exception on Door Exception Calendar",
         "tags": [
           "Access Door Exception Calendars"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12143,6 +12388,11 @@
         "summary": "Unlock Door as User",
         "tags": [
           "Access Doors"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12217,6 +12467,11 @@
         "summary": "Get Doors",
         "tags": [
           "Access Doors"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12280,6 +12535,11 @@
         "summary": "Get All Access Scenarios",
         "tags": [
           "Access Scenarios"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12312,6 +12572,11 @@
         "summary": "Activate Access Scenario",
         "tags": [
           "Access Scenarios"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12344,6 +12609,11 @@
         "summary": "Release Access Scenario",
         "tags": [
           "Access Scenarios"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12388,6 +12658,11 @@
         "summary": "Get Alarm Devices",
         "tags": [
           "Devices"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12422,6 +12697,11 @@
         "summary": "Get Site Information",
         "tags": [
           "Sites"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12511,6 +12791,11 @@
         "summary": "Get Alerts",
         "tags": [
           "Alerts"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12579,6 +12864,11 @@
         "summary": "Get Dashboard Occupancy Trend Data",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12667,6 +12957,11 @@
         "summary": "Get seen license plates",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12701,6 +12996,11 @@
         "summary": "Delete a License Plate of Interest",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -12747,6 +13047,11 @@
         "summary": "Get All License Plates of Interest",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "patch": {
@@ -12788,6 +13093,11 @@
         "summary": "Update a License of Interest",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -12818,6 +13128,11 @@
         "summary": "Create a License Plate of Interest",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12850,6 +13165,11 @@
         "summary": "Delete the License Plates of Interest specified in the uploaded file.",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -12880,6 +13200,11 @@
         "summary": "Create the License Plates of Interest specified in the uploaded file.",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -12968,6 +13293,11 @@
         "summary": "Get Timestamps for a License Plate",
         "tags": [
           "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13038,6 +13368,11 @@
         "summary": "Get Max People/Vehicle Counts",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13116,6 +13451,11 @@
         "summary": "Get People/Vehicle Counts",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13148,6 +13488,11 @@
         "summary": "Set Object Position MQTT Config",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13240,6 +13585,11 @@
         "summary": "Get Occupancy Trend Data",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13274,6 +13624,11 @@
         "summary": "Get Camera Audio Status",
         "tags": [
           "Audio"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -13297,6 +13652,11 @@
         "summary": "Update Camera Audio Status",
         "tags": [
           "Audio"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13331,6 +13691,11 @@
         "summary": "Get cloud backup settings for a certain camera.",
         "tags": [
           "CloudBackup"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -13354,6 +13719,11 @@
         "summary": "Update cloud backup settings for a certain camera.",
         "tags": [
           "CloudBackup"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13402,6 +13772,11 @@
         "summary": "Get Camera Data",
         "tags": [
           "Devices"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13446,6 +13821,11 @@
         "summary": "Get Link to Footage",
         "tags": [
           "Footage"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13497,6 +13877,11 @@
         "summary": "Get Thumbnail Image",
         "tags": [
           "Footage"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13538,6 +13923,11 @@
         "summary": "Get Latest Thumbnail Image",
         "tags": [
           "Footage"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13593,6 +13983,11 @@
         "summary": "Get Thumbnail Link",
         "tags": [
           "Footage"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13644,6 +14039,11 @@
         "summary": "Get Occupancy Trends Cameras",
         "tags": [
           "Devices"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13678,6 +14078,11 @@
         "summary": "Delete a Person of Interest",
         "tags": [
           "People"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -13724,6 +14129,11 @@
         "summary": "Get All Person of Interest",
         "tags": [
           "People"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "patch": {
@@ -13765,6 +14175,11 @@
         "summary": "Update a Person of Interest",
         "tags": [
           "People"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -13795,6 +14210,11 @@
         "summary": "Create a Person of Interest",
         "tags": [
           "People"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -13842,6 +14262,11 @@
         "summary": "Delete a Helix Event",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -13894,6 +14319,11 @@
         "summary": "Get a Helix Event",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "patch": {
@@ -13948,6 +14378,11 @@
         "summary": "Update a Helix Event",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -13971,6 +14406,11 @@
         "summary": "Create a Helix Event",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14003,6 +14443,11 @@
         "summary": "Search a Helix Event",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14030,6 +14475,11 @@
         "summary": "Delete a Helix Event Type",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -14072,6 +14522,11 @@
         "summary": "Get List of Helix Event Types",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "patch": {
@@ -14106,6 +14561,11 @@
         "summary": "Update a Helix Event Type",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -14136,6 +14596,11 @@
         "summary": "Create a Helix Event Type",
         "tags": [
           "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14215,6 +14680,11 @@
         "summary": "Get Audit Logs",
         "tags": [
           "Audit Log"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14269,6 +14739,11 @@
         "summary": "Delete User",
         "tags": [
           "Users"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -14331,6 +14806,11 @@
         "summary": "Get User",
         "tags": [
           "Users"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -14381,6 +14861,11 @@
         "summary": "Create User",
         "tags": [
           "Users"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "put": {
@@ -14462,6 +14947,11 @@
         "summary": "Update User",
         "tags": [
           "Users"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14550,6 +15040,11 @@
         "summary": "Get Sensor Alerts",
         "tags": [
           "Alerts"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14648,6 +15143,11 @@
         "summary": "Get Sensor Data",
         "tags": [
           "Data"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14756,6 +15256,11 @@
         "summary": "Get Access Events",
         "tags": [
           "Events"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14784,6 +15289,11 @@
         "summary": "Delete a Guest Deny List",
         "tags": [
           "Deny List"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -14817,6 +15327,11 @@
         "summary": "Get Guest Deny List",
         "tags": [
           "Deny List"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -14859,6 +15374,11 @@
         "summary": "Post Guest Deny List",
         "tags": [
           "Deny List"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14882,6 +15402,11 @@
         "summary": "Get Guest Sites",
         "tags": [
           "Sites"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -14961,6 +15486,11 @@
         "summary": "Get Guest Visits",
         "tags": [
           "Visits"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15291,6 +15821,11 @@
         "summary": "Disable Face Unlock",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15337,6 +15872,11 @@
         "summary": "Enable Face Unlock with Profile Photo",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15383,6 +15923,11 @@
         "summary": "Enable Face Unlock with Mobile Enrollment Invitation",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15429,6 +15974,11 @@
         "summary": "Enable Face Unlock with Uploaded Photo",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15461,6 +16011,11 @@
         "summary": "Disable Face Unlock",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15507,6 +16062,11 @@
         "summary": "Enable Face Unlock with Profile Photo",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15553,6 +16113,11 @@
         "summary": "Enable Face Unlock with Mobile Enrollment Invitation",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15599,6 +16164,11 @@
         "summary": "Enable Face Unlock with Uploaded Photo",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15640,6 +16210,11 @@
         "summary": "Get Dashboard Widget Trend Data",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15778,6 +16353,11 @@
         "summary": "Get Events",
         "tags": [
           "Events"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15857,6 +16437,11 @@
         "summary": "Get Guest Events for a Site",
         "tags": [
           "Events"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "post": {
@@ -15887,6 +16472,11 @@
         "summary": "Create a Guest Event",
         "tags": [
           "Events"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -15912,6 +16502,11 @@
         "summary": "Delete Event",
         "tags": [
           "Events"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       },
       "get": {
@@ -15942,6 +16537,11 @@
         "summary": "Get Guest Event by ID",
         "tags": [
           "Events"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -16001,6 +16601,11 @@
         "summary": "Get Guest Types for a Site",
         "tags": [
           "Guest Types"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -16070,6 +16675,11 @@
         "summary": "Get Hosts for a Site",
         "tags": [
           "Hosts"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     },
@@ -16093,6 +16703,11 @@
         "summary": "Get Viewing Station Devices",
         "tags": [
           "Devices"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
         ]
       }
     }
