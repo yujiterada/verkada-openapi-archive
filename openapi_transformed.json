@@ -320,6 +320,15 @@
             "title": "External Id",
             "type": "string"
           },
+          "face_credential": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FaceCredentialObjectResponseV1"
+              }
+            ],
+            "description": "The face credential of the user.",
+            "title": "Face Credential"
+          },
           "has_profile_photo": {
             "description": "A flag that states whether or not the user has a profile photo.",
             "title": "Has Profile Photo",
@@ -639,6 +648,26 @@
         "title": "AccessUserRequestV1",
         "type": "object"
       },
+      "AddPeopleRequest": {
+        "description": "Request to add people to approved lists",
+        "properties": {
+          "people": {
+            "description": "List of people to add to approved lists.",
+            "items": {
+              "$ref": "#/components/schemas/PersonToAdd"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "People",
+            "type": "array"
+          }
+        },
+        "required": [
+          "people"
+        ],
+        "title": "AddPeopleRequest",
+        "type": "object"
+      },
       "AlarmsDeviceType": {
         "description": "Device types",
         "enum": [
@@ -915,6 +944,127 @@
           }
         },
         "title": "ApiLoginToken",
+        "type": "object"
+      },
+      "ApprovedListItem": {
+        "description": "A single approved list item",
+        "properties": {
+          "approved_list_id": {
+            "description": "The unique identifier of the approved list.",
+            "title": "Approved List Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the approved list.",
+            "title": "Name",
+            "type": "string"
+          },
+          "site_id": {
+            "description": "The unique identifier of the site this list is applied to.",
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "approved_list_id",
+          "name",
+          "site_id"
+        ],
+        "title": "ApprovedListItem",
+        "type": "object"
+      },
+      "ApprovedListMembersRequest": {
+        "description": "Request parameters for getting approved list members",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of people to return. Default is 100, maximum is 1000.",
+            "exclusiveMinimum": true,
+            "maximum": 1000,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ApprovedListMembersRequest",
+        "type": "object"
+      },
+      "ApprovedListMembersResponse": {
+        "description": "Response containing people on an approved list",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results. Continue paginating while this field is present.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "people": {
+            "description": "List of people on the approved list.",
+            "items": {
+              "$ref": "#/components/schemas/PersonInfo"
+            },
+            "title": "People",
+            "type": "array"
+          }
+        },
+        "required": [
+          "people"
+        ],
+        "title": "ApprovedListMembersResponse",
+        "type": "object"
+      },
+      "ApprovedListsRequest": {
+        "description": "Request parameters for listing approved lists",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of approved lists to return. Default is 100, maximum is 1000.",
+            "exclusiveMinimum": true,
+            "maximum": 1000,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "site_id": {
+            "description": "Optional site ID to filter approved lists. Omitting will return all lists for the organization.",
+            "format": "uuid",
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "title": "ApprovedListsRequest",
+        "type": "object"
+      },
+      "ApprovedListsResponse": {
+        "description": "Response containing a list of approved lists",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results. Continue paginating while this field is present.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "List of approved lists.",
+            "items": {
+              "$ref": "#/components/schemas/ApprovedListItem"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ApprovedListsResponse",
         "type": "object"
       },
       "AttributeFilter": {
@@ -2401,6 +2551,21 @@
           "data"
         ],
         "title": "ConflictingExternalId",
+        "type": "object"
+      },
+      "CountResponse": {
+        "description": "Response containing a count of affected records",
+        "properties": {
+          "count": {
+            "description": "Number of records added, removed, or changed by the operation.",
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "count"
+        ],
+        "title": "CountResponse",
         "type": "object"
       },
       "CreateAccessLevelRequestV1": {
@@ -3977,20 +4142,24 @@
         "title": "EventsResponseV2",
         "type": "object"
       },
-      "FaceUnlockDisableResponseV2": {
+      "FaceCredentialObjectResponseV1": {
         "additionalProperties": false,
-        "description": "Response for face unlock disable endpoint",
         "properties": {
-          "success": {
-            "description": "Whether the operation was successful",
-            "title": "Success",
-            "type": "boolean"
+          "source": {
+            "description": "The source of the face credential.",
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "description": "The status of the face credential.",
+            "title": "Status",
+            "type": "string"
           }
         },
         "required": [
-          "success"
+          "status"
         ],
-        "title": "FaceUnlockDisableResponseV2",
+        "title": "FaceCredentialObjectResponseV1",
         "type": "object"
       },
       "FaceUnlockEnableResponseV2": {
@@ -4007,11 +4176,6 @@
             "title": "Quality Score",
             "type": "number"
           },
-          "success": {
-            "description": "Whether the operation was successful",
-            "title": "Success",
-            "type": "boolean"
-          },
           "user_id": {
             "description": "The user ID for which face unlock was enabled",
             "title": "User Id",
@@ -4019,30 +4183,56 @@
           }
         },
         "required": [
-          "user_id",
-          "success"
+          "user_id"
         ],
         "title": "FaceUnlockEnableResponseV2",
+        "type": "object"
+      },
+      "FaceUnlockInviteRequestV2": {
+        "description": "Request body for face unlock invite endpoints",
+        "properties": {
+          "invitation_methods": {
+            "description": "Methods to send invitation through (email, sms). Default is [\"email\", \"sms\"].",
+            "items": {
+              "type": "string"
+            },
+            "title": "Invitation Methods",
+            "type": "array"
+          },
+          "overwrite": {
+            "default": false,
+            "description": "Whether to overwrite an existing face credential. Default is false.",
+            "title": "Overwrite",
+            "type": "boolean"
+          }
+        },
+        "title": "FaceUnlockInviteRequestV2",
         "type": "object"
       },
       "FaceUnlockInviteResponseV2": {
         "additionalProperties": false,
         "description": "Response for face unlock invite endpoint",
         "properties": {
-          "invitation_sent": {
-            "description": "Whether the invitation email was successfully sent",
-            "title": "Invitation Sent",
-            "type": "boolean"
+          "invitations_failed": {
+            "description": "The mediums the invitation failed to send to",
+            "items": {
+              "type": "string"
+            },
+            "title": "Invitations Failed",
+            "type": "array"
+          },
+          "invitations_sent": {
+            "description": "The mediums the invitation was successfully sent to",
+            "items": {
+              "type": "string"
+            },
+            "title": "Invitations Sent",
+            "type": "array"
           },
           "live_link_id": {
             "description": "The ID of the created live link",
             "title": "Live Link Id",
             "type": "string"
-          },
-          "success": {
-            "description": "Whether the operation was successful",
-            "title": "Success",
-            "type": "boolean"
           },
           "user_id": {
             "description": "The user ID for which the invitation was sent",
@@ -4050,23 +4240,20 @@
             "type": "string"
           }
         },
-        "required": [
-          "success"
-        ],
         "title": "FaceUnlockInviteResponseV2",
         "type": "object"
       },
-      "FaceUnlockQueryV2": {
-        "description": "Query parameters for face unlock endpoints",
+      "FaceUnlockRequestV2": {
+        "description": "Request body for face unlock endpoints",
         "properties": {
           "overwrite": {
             "default": false,
-            "description": "Whether to overwrite an existing face credential. Default is False.",
+            "description": "Whether to overwrite an existing face credential. Default is false.",
             "title": "Overwrite",
             "type": "boolean"
           }
         },
-        "title": "FaceUnlockQueryV2",
+        "title": "FaceUnlockRequestV2",
         "type": "object"
       },
       "FloorInfo": {
@@ -6446,6 +6633,58 @@
         "title": "PathPersonOfInterestRequest",
         "type": "object"
       },
+      "PersonInfo": {
+        "description": "Information about a person on an approved list",
+        "properties": {
+          "address": {
+            "description": "The person's street address.",
+            "title": "Address",
+            "type": "string"
+          },
+          "date_of_birth": {
+            "description": "The person's date of birth in YYYY-MM-DD format.",
+            "title": "Date Of Birth",
+            "type": "string"
+          },
+          "email": {
+            "description": "The person's email address.",
+            "title": "Email",
+            "type": "string"
+          },
+          "expiration_timestamp": {
+            "description": "ISO 8601 formatted expiration time for the approved list entry. This will be shared by all entries corresponding to this person.",
+            "title": "Expiration Timestamp",
+            "type": "string"
+          },
+          "external_id": {
+            "description": "Stable external identifier. This can be used to ensure that changes are to the same person as well as ease syncing with an external system. Must be unique to the person within the organization if used.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "full_name": {
+            "description": "The person's full name.",
+            "title": "Full Name",
+            "type": "string"
+          },
+          "person_id": {
+            "description": "Verkada's internal identifier for the person.",
+            "title": "Person Id",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "The person's phone number.",
+            "title": "Phone Number",
+            "type": "string"
+          }
+        },
+        "required": [
+          "person_id",
+          "full_name",
+          "email"
+        ],
+        "title": "PersonInfo",
+        "type": "object"
+      },
       "PersonOfInterest": {
         "additionalProperties": false,
         "example": {
@@ -6552,6 +6791,88 @@
           "label"
         ],
         "title": "PersonOfInterestPostBodyRequest",
+        "type": "object"
+      },
+      "PersonToAdd": {
+        "description": "A person to add to one or more approved lists",
+        "properties": {
+          "address": {
+            "description": "The person's street address.",
+            "title": "Address",
+            "type": "string"
+          },
+          "approved_list_ids": {
+            "description": "List of one or more approved list IDs to add the person to.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Approved List Ids",
+            "type": "array"
+          },
+          "date_of_birth": {
+            "description": "The person's date of birth in YYYY-MM-DD format.",
+            "title": "Date Of Birth",
+            "type": "string"
+          },
+          "email": {
+            "description": "The person's email address.",
+            "title": "Email",
+            "type": "string"
+          },
+          "expiration_timestamp": {
+            "description": "ISO 8601 formatted expiration time for the approved list entry. This will be shared by all entries corresponding to this person.",
+            "title": "Expiration Timestamp",
+            "type": "string"
+          },
+          "external_id": {
+            "description": "Stable external identifier. This can be used to ensure that changes are to the same person as well as ease syncing with an external system. Must be unique to the person within the organization if used.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "full_name": {
+            "description": "The person's full name.",
+            "title": "Full Name",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "The person's phone number.",
+            "title": "Phone Number",
+            "type": "string"
+          }
+        },
+        "required": [
+          "full_name",
+          "email",
+          "approved_list_ids"
+        ],
+        "title": "PersonToAdd",
+        "type": "object"
+      },
+      "PersonToRemove": {
+        "description": "A person to remove from one or more approved lists",
+        "properties": {
+          "approved_list_ids": {
+            "description": "List of approved list IDs to remove the person from. Omitting will remove the person from all lists.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Approved List Ids",
+            "type": "array"
+          },
+          "external_id": {
+            "description": "Stable external identifier. Either person_id or external_id must be provided, but not both.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "person_id": {
+            "description": "Verkada's internal identifier for the person. Either person_id or external_id must be provided, but not both.",
+            "title": "Person Id",
+            "type": "string"
+          }
+        },
+        "title": "PersonToRemove",
         "type": "object"
       },
       "PostAPIUnlockResponseV1": {
@@ -7369,6 +7690,26 @@
           "interval"
         ],
         "title": "RecurrenceRule",
+        "type": "object"
+      },
+      "RemovePeopleRequest": {
+        "description": "Request to remove people from approved lists",
+        "properties": {
+          "people": {
+            "description": "List of people to remove from approved lists.",
+            "items": {
+              "$ref": "#/components/schemas/PersonToRemove"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "People",
+            "type": "array"
+          }
+        },
+        "required": [
+          "people"
+        ],
+        "title": "RemovePeopleRequest",
         "type": "object"
       },
       "ResolutionEnum": {
@@ -15808,14 +16149,7 @@
         ],
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FaceUnlockDisableResponseV2"
-                }
-              }
-            },
-            "description": "OK"
+            "description": "ok"
           }
         },
         "summary": "Disable Face Unlock",
@@ -15841,19 +16175,17 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "overwrite",
-            "required": false,
-            "schema": {
-              "default": false,
-              "description": "Whether to overwrite an existing face credential. Default is False.",
-              "title": "Overwrite",
-              "type": "boolean"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceUnlockRequestV2"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "ok"
@@ -15892,19 +16224,17 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "overwrite",
-            "required": false,
-            "schema": {
-              "default": false,
-              "description": "Whether to overwrite an existing face credential. Default is False.",
-              "title": "Overwrite",
-              "type": "boolean"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceUnlockInviteRequestV2"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "ok"
@@ -15943,19 +16273,17 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "overwrite",
-            "required": false,
-            "schema": {
-              "default": false,
-              "description": "Whether to overwrite an existing face credential. Default is False.",
-              "title": "Overwrite",
-              "type": "boolean"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceUnlockRequestV2"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "ok"
@@ -15998,14 +16326,7 @@
         ],
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FaceUnlockDisableResponseV2"
-                }
-              }
-            },
-            "description": "OK"
+            "description": "ok"
           }
         },
         "summary": "Disable Face Unlock",
@@ -16031,19 +16352,17 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "overwrite",
-            "required": false,
-            "schema": {
-              "default": false,
-              "description": "Whether to overwrite an existing face credential. Default is False.",
-              "title": "Overwrite",
-              "type": "boolean"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceUnlockRequestV2"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "ok"
@@ -16082,19 +16401,17 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "overwrite",
-            "required": false,
-            "schema": {
-              "default": false,
-              "description": "Whether to overwrite an existing face credential. Default is False.",
-              "title": "Overwrite",
-              "type": "boolean"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceUnlockInviteRequestV2"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "ok"
@@ -16133,19 +16450,17 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "overwrite",
-            "required": false,
-            "schema": {
-              "default": false,
-              "description": "Whether to overwrite an existing face credential. Default is False.",
-              "title": "Overwrite",
-              "type": "boolean"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FaceUnlockRequestV2"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "ok"
@@ -16353,6 +16668,242 @@
         "summary": "Get Events",
         "tags": [
           "Events"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/guest/approved_lists": {
+      "get": {
+        "description": "Returns a paginated list of approved lists for the organization.\nOptionally filter by site_id to get lists for a specific site.",
+        "operationId": "getApprovedListsViewV2",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "site_id",
+            "required": false,
+            "schema": {
+              "description": "Optional site ID to filter approved lists. Omitting will return all lists for the organization.",
+              "format": "uuid",
+              "title": "Site Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for retrieving the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of approved lists to return. Default is 100, maximum is 1000.",
+              "exclusiveMinimum": true,
+              "maximum": 1000,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApprovedListsResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get Approved Lists",
+        "tags": [
+          "Approved Lists"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/guest/approved_lists/add": {
+      "patch": {
+        "description": "Adds one or more people to one or more approved lists.\nThis operation is idempotent - calling it multiple times with the same data won't create duplicates.\nPeople are matched by external_id first, then by email if no external_id is provided.",
+        "operationId": "patchApprovedListAddViewV2",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddPeopleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Add People to Approved Lists",
+        "tags": [
+          "Approved Lists"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/guest/approved_lists/remove": {
+      "patch": {
+        "description": "Removes one or more people from one or more approved lists.\nIf approved_list_ids is omitted, removes the person from all lists.\nPeople must be identified by either person_id or external_id.",
+        "operationId": "patchApprovedListRemoveViewV2",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemovePeopleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Remove People from Approved Lists",
+        "tags": [
+          "Approved Lists"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/guest/approved_lists/{approved_list_id}": {
+      "get": {
+        "description": "Returns a paginated list of people on a specific approved list.\nExcludes expired members.",
+        "operationId": "getApprovedListMembersViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "approved_list_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for retrieving the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of people to return. Default is 100, maximum is 1000.",
+              "exclusiveMinimum": true,
+              "maximum": 1000,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApprovedListMembersResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get Approved List Members",
+        "tags": [
+          "Approved Lists"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/guest/approved_lists/{approved_list_id}/reset": {
+      "patch": {
+        "description": "Removes all members from an approved list, effectively clearing the list.\nReturns the count of members removed.",
+        "operationId": "patchApprovedListResetViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "approved_list_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Reset Approved List",
+        "tags": [
+          "Approved Lists"
         ],
         "security": [
           {
