@@ -320,6 +320,15 @@
                         "title": "External Id",
                         "type": "string"
                     },
+                    "face_credential": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/FaceCredentialObjectResponseV1"
+                            }
+                        ],
+                        "description": "The face credential of the user.",
+                        "title": "Face Credential"
+                    },
                     "has_profile_photo": {
                         "description": "A flag that states whether or not the user has a profile photo.",
                         "title": "Has Profile Photo",
@@ -4131,6 +4140,26 @@
                     "items"
                 ],
                 "title": "EventsResponseV2",
+                "type": "object"
+            },
+            "FaceCredentialObjectResponseV1": {
+                "additionalProperties": false,
+                "properties": {
+                    "source": {
+                        "description": "The source of the face credential.",
+                        "title": "Source",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the face credential.",
+                        "title": "Status",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "status"
+                ],
+                "title": "FaceCredentialObjectResponseV1",
                 "type": "object"
             },
             "FaceUnlockEnableResponseV2": {
