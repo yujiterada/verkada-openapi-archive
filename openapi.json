@@ -9910,6 +9910,7 @@
                 "enum": [
                     "CAMERA_EVENTS",
                     "ACCESS_EVENTS",
+                    "ACCESS_CREDENTIAL_EVENTS",
                     "SENSOR_EVENTS",
                     "ALARM_EVENTS",
                     "INTERCOM_EVENTS",
