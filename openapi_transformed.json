@@ -2375,11 +2375,6 @@
             "title": "Card Number",
             "type": "string"
           },
-          "card_number_base36": {
-            "description": "The card number in base36 used to grant or deny access to a door.",
-            "title": "Card Number Base36",
-            "type": "string"
-          },
           "card_number_hex": {
             "description": "The card number in hexadecimal used to grant or deny access to a door.",
             "title": "Card Number Hex",
@@ -6933,11 +6928,6 @@
             "title": "Card Number",
             "type": "string"
           },
-          "card_number_base36": {
-            "description": "The card number in base36 used to grant or deny access to a door.",
-            "title": "Card Number Base36",
-            "type": "string"
-          },
           "card_number_hex": {
             "description": "The card number in hexadecimal used to grant or deny access to a door.",
             "title": "Card Number Hex",
@@ -7177,11 +7167,6 @@
           "card_number": {
             "description": "The card number used to grant or deny access to a door.",
             "title": "Card Number",
-            "type": "string"
-          },
-          "card_number_base36": {
-            "description": "The card number in base36 used to grant or deny access to a door.",
-            "title": "Card Number Base36",
             "type": "string"
           },
           "card_number_hex": {
@@ -7439,11 +7424,6 @@
             "title": "Card Number",
             "type": "string"
           },
-          "card_number_base36": {
-            "description": "The card number in base36 used to grant or deny access to a door.",
-            "title": "Card Number Base36",
-            "type": "string"
-          },
           "card_number_hex": {
             "description": "The card number in hexadecimal used to grant or deny access to a door.",
             "title": "Card Number Hex",
@@ -7490,11 +7470,6 @@
             "title": "Card Number",
             "type": "string"
           },
-          "card_number_base36": {
-            "description": "The card number in base36 used to grant or deny access to a door.",
-            "title": "Card Number Base36",
-            "type": "string"
-          },
           "card_number_hex": {
             "description": "The card number in hexadecimal used to grant or deny access to a door.",
             "title": "Card Number Hex",
@@ -7527,11 +7502,6 @@
           "card_number": {
             "description": "Card number to delete.",
             "title": "Card Number",
-            "type": "string"
-          },
-          "card_number_base36": {
-            "description": "Card number in base36 to delete.",
-            "title": "Card Number Base36",
             "type": "string"
           },
           "card_number_hex": {
@@ -9910,6 +9880,7 @@
         "enum": [
           "CAMERA_EVENTS",
           "ACCESS_EVENTS",
+          "ACCESS_CREDENTIALS",
           "SENSOR_EVENTS",
           "ALARM_EVENTS",
           "INTERCOM_EVENTS",
@@ -11367,7 +11338,7 @@
         ]
       },
       "post": {
-        "description": "Create and add an access card for a specified user_id or external_id and org_id. Card object will be passed in the body of the request as a json.\nWe require facility code and card number OR card_number_hex OR card_number_base36. The successful repsonse will be the created credential information.",
+        "description": "Create and add an access card for a specified user_id or external_id and org_id. Card object will be passed in the body of the request as a json.\nWe require facility code and card number OR card_number_hex. The successful repsonse will be the created credential information.",
         "operationId": "postAccessCardViewV1",
         "parameters": [
           {
