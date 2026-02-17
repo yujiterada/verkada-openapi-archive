@@ -3214,6 +3214,27 @@
         "title": "DeviceInfo",
         "type": "object"
       },
+      "DoorConfiguration": {
+        "description": "Schema for door configuration in a scenario.",
+        "properties": {
+          "door_id": {
+            "description": "ID of the door.",
+            "title": "Door Id",
+            "type": "string"
+          },
+          "door_lock_state": {
+            "description": "Lock state of the door (e.g., ACCESS_CONTROL, LOCKED, UNLOCKED).",
+            "title": "Door Lock State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "door_id",
+          "door_lock_state"
+        ],
+        "title": "DoorConfiguration",
+        "type": "object"
+      },
       "DoorExceptionCalendarV1": {
         "description": "Schema for the Door Exception Calendar.",
         "properties": {
@@ -5572,6 +5593,31 @@
         "title": "LPRTimestampResponseV1",
         "type": "object"
       },
+      "LatLon": {
+        "description": "A latitude/longitude coordinate pair",
+        "properties": {
+          "latitude": {
+            "description": "Latitude coordinate (-90 to 90)",
+            "maximum": 90,
+            "minimum": -90,
+            "title": "Latitude",
+            "type": "number"
+          },
+          "longitude": {
+            "description": "Longitude coordinate (-180 to 180)",
+            "maximum": 180,
+            "minimum": -180,
+            "title": "Longitude",
+            "type": "number"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "title": "LatLon",
+        "type": "object"
+      },
       "LatestThumbnailRequest": {
         "properties": {
           "type": {
@@ -5734,6 +5780,179 @@
           "license_plate"
         ],
         "title": "LicensePlateOfInterestModifyQueryRequest",
+        "type": "object"
+      },
+      "LicensePlateSearchErrorResponse": {
+        "additionalProperties": false,
+        "description": "Error response schema",
+        "properties": {
+          "error": {
+            "description": "Error code",
+            "title": "Error",
+            "type": "string"
+          },
+          "message": {
+            "description": "Human-readable error message",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ],
+        "title": "LicensePlateSearchErrorResponse",
+        "type": "object"
+      },
+      "LicensePlateSearchRequestV2": {
+        "description": "Request schema for license plate search API",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "End time for the search in ISO 8601 format (e.g., '2025-01-17T23:59:59Z').",
+            "title": "End Time",
+            "type": "string"
+          },
+          "geo_fence": {
+            "description": "Polygon coordinates defining the geographic search area. Must have between 3 and 700 coordinate pairs. Events will only be returned if the camera location falls within this polygon.",
+            "items": {
+              "$ref": "#/components/schemas/LatLon"
+            },
+            "maxItems": 700,
+            "minItems": 3,
+            "title": "Geo Fence",
+            "type": "array"
+          },
+          "license_plate": {
+            "description": "License plate pattern to search for. Supports wildcard (*) for flexible matching:\n- `ABC123` - Exact match\n- `ABC*` - Starts with 'ABC'\n- `*123` - Ends with '123'\n- `*BC1*` - Contains 'BC1'",
+            "title": "License Plate",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of results to return. Default is 100, maximum is 1000.",
+            "exclusiveMinimum": true,
+            "maximum": 1000,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "start_time": {
+            "description": "Start time for the search in ISO 8601 format (e.g., '2025-01-17T00:00:00Z').",
+            "title": "Start Time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_time",
+          "end_time"
+        ],
+        "title": "LicensePlateSearchRequestV2",
+        "type": "object"
+      },
+      "LicensePlateSearchResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for license plate search API",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results. Null if there are no more results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "List of license plate detection events matching the search criteria.",
+            "items": {
+              "$ref": "#/components/schemas/LicensePlateSearchResultV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "LicensePlateSearchResponseV2",
+        "type": "object"
+      },
+      "LicensePlateSearchResultV2": {
+        "additionalProperties": false,
+        "description": "A single license plate search result",
+        "properties": {
+          "additional_image": {
+            "description": "URL to the full vehicle image.",
+            "title": "Additional Image",
+            "type": "string"
+          },
+          "agency_name": {
+            "description": "Name of the agency/organization that owns the camera.",
+            "title": "Agency Name",
+            "type": "string"
+          },
+          "camera_name": {
+            "description": "Name of the camera that captured the plate.",
+            "title": "Camera Name",
+            "type": "string"
+          },
+          "event_time": {
+            "description": "Timestamp when the plate was detected in RFC 3339 format (YYYY-MM-DDTHH:MM:SS\u00b1HH:MM).",
+            "title": "Event Time",
+            "type": "string"
+          },
+          "image_data": {
+            "description": "URL to the license plate image.",
+            "title": "Image Data",
+            "type": "string"
+          },
+          "lat": {
+            "description": "Latitude of the camera location.",
+            "title": "Lat",
+            "type": "number"
+          },
+          "lon": {
+            "description": "Longitude of the camera location.",
+            "title": "Lon",
+            "type": "number"
+          },
+          "ori": {
+            "description": "Originating Agency Identifier (ORI code) for NCIC events.",
+            "title": "Ori",
+            "type": "string"
+          },
+          "plate": {
+            "description": "The detected license plate number.",
+            "title": "Plate",
+            "type": "string"
+          },
+          "plate_state": {
+            "description": "Two-character state code of the license plate. May be null if not detected.",
+            "title": "Plate State",
+            "type": "string"
+          },
+          "read_id": {
+            "description": "Unique identifier for the LPR read (event ID).",
+            "title": "Read Id",
+            "type": "string"
+          },
+          "site_id": {
+            "description": "Site identifier where the camera is located.",
+            "title": "Site Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "User identifier (reserved for future use).",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "read_id",
+          "plate",
+          "lat",
+          "lon",
+          "event_time"
+        ],
+        "title": "LicensePlateSearchResultV2",
         "type": "object"
       },
       "Lockdown": {
@@ -7750,6 +7969,14 @@
             "title": "Scenario Ids",
             "type": "array"
           },
+          "scenario_types": {
+            "description": "Types of scenarios to filter by (e.g., LOCKDOWN, EVACUATE, CUSTOM_TYPE). Accepts any string values for pass-through filtering.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Scenario Types",
+            "type": "array"
+          },
           "site_ids": {
             "description": "IDs of scoped sites that the scenarios are applied to.",
             "items": {
@@ -7759,7 +7986,7 @@
             "type": "array"
           },
           "types": {
-            "description": "Types of scenarios to list.",
+            "description": "Types of scenarios to list (deprecated, use scenario_types).",
             "items": {
               "type": "string"
             },
@@ -7805,6 +8032,14 @@
       "ScenarioV1": {
         "description": "Schema for the Scenario.",
         "properties": {
+          "door_configurations": {
+            "description": "Detailed door configurations with lock states.",
+            "items": {
+              "$ref": "#/components/schemas/DoorConfiguration"
+            },
+            "title": "Door Configurations",
+            "type": "array"
+          },
           "doors_to_lock": {
             "description": "IDs of doors the scenario locks.",
             "items": {
@@ -7824,9 +8059,24 @@
             "title": "Name",
             "type": "string"
           },
+          "scenario_color": {
+            "description": "Color of the scenario in hex format (e.g., #FF0000).",
+            "title": "Scenario Color",
+            "type": "string"
+          },
           "scenario_id": {
             "description": "Unique ID of the scenario.",
             "title": "Scenario Id",
+            "type": "string"
+          },
+          "scenario_message": {
+            "description": "Additional message for the scenario.",
+            "title": "Scenario Message",
+            "type": "string"
+          },
+          "scenario_type": {
+            "description": "Custom scenario type string (e.g., LOCKDOWN, EVACUATE, CUSTOM_TYPE).",
+            "title": "Scenario Type",
             "type": "string"
           },
           "site_count": {
@@ -12823,11 +13073,24 @@
             "name": "types",
             "required": false,
             "schema": {
-              "description": "Types of scenarios to list.",
+              "description": "Types of scenarios to list (deprecated, use scenario_types).",
               "items": {
                 "type": "string"
               },
               "title": "Types",
+              "type": "array"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scenario_types",
+            "required": false,
+            "schema": {
+              "description": "Types of scenarios to filter by (e.g., LOCKDOWN, EVACUATE, CUSTOM_TYPE). Accepts any string values for pass-through filtering.",
+              "items": {
+                "type": "string"
+              },
+              "title": "Scenario Types",
               "type": "array"
             }
           }
@@ -16496,6 +16759,73 @@
         "summary": "Get Dashboard Widget Trend Data",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/cameras/ncic/license_plates/search": {
+      "post": {
+        "description": "Searches for license plate detection events within a specified time range\nand geographic area.\n\n**Access Restriction**: This endpoint is only available to organizations with\nCJIS (Criminal Justice Information Services) access enabled. Contact Verkada\nsupport to enable this feature for your organization.\n\n### Search Capabilities\n\n**Plate Search with Wildcards**:\n\nUse the `license_plate` field with wildcard (`*`) support for flexible matching:\n- `ABC123` - Exact match\n- `ABC*` - Starts with \"ABC\"\n- `*123` - Ends with \"123\"\n- `*BC1*` - Contains \"BC1\"\n\n**Geographic Filtering**:\n- `geo_fence`: Define a polygon (3-700 coordinate pairs) to filter events\n  by camera location. Only events from cameras within the polygon are returned.\n\n**Time Range**:\n- Maximum query range is 3 years\n- Results are returned in reverse chronological order (newest first)\n\n### Response Fields\n\nEach result includes:\n- `read_id`: Unique identifier for the detection event\n- `plate`: The detected license plate number\n- `plate_state`: Two-character state code (may be null)\n- `lat`/`lon`: Camera location coordinates\n- `event_time`: Detection timestamp in RFC 3339 format\n- `image_data`: URL to the license plate image\n- `additional_image`: URL to the full vehicle image\n- `agency_name`: Name of the organization owning the camera\n- `ori`: Originating Agency Identifier (for NCIC events)\n\n### Pagination\n\nUse cursor-based pagination:\n- Set `limit` to control page size (1-1000, default 100)\n- Use the returned `cursor` value in subsequent requests to get more results\n- Continue until `cursor` is null\n\n### Example Request\n\n```json\n{\n    \"start_time\": \"2025-01-01T00:00:00Z\",\n    \"end_time\": \"2025-01-15T23:59:59Z\",\n    \"license_plate\": \"*ABC*\",\n    \"geo_fence\": [\n        {\"latitude\": 37.7749, \"longitude\": -122.4194},\n        {\"latitude\": 37.7849, \"longitude\": -122.4094},\n        {\"latitude\": 37.7649, \"longitude\": -122.4094}\n    ],\n    \"limit\": 100\n}\n```",
+        "operationId": "postLicensePlateSearchViewV2",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LicensePlateSearchRequestV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LicensePlateSearchResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LicensePlateSearchErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LicensePlateSearchErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LicensePlateSearchErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Search License Plate Events",
+        "tags": [
+          "LPR"
         ],
         "security": [
           {
