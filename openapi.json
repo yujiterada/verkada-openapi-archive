@@ -3762,6 +3762,15 @@
                         "title": "Rawcard",
                         "type": "string"
                     },
+                    "scenarioInfo": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ScenarioInfo"
+                            }
+                        ],
+                        "description": "Information about scenario status",
+                        "title": "Scenarioinfo"
+                    },
                     "siteId": {
                         "description": "Site identifier",
                         "title": "Siteid",
