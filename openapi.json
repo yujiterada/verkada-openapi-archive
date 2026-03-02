@@ -1575,6 +1575,146 @@
                 "title": "BaseAccessMemberResponseV1",
                 "type": "object"
             },
+            "BatchJobCreatedRequest_VideoTaggingEventPostBodyRequestV1": {
+                "properties": {
+                    "items": {
+                        "description": "List of items to process",
+                        "items": {
+                            "$ref": "#/components/schemas/VideoTaggingEventPostBodyRequestV1"
+                        },
+                        "maxItems": 1000,
+                        "minItems": 1,
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "BatchJobCreatedRequest_VideoTaggingEventPostBodyRequestV1",
+                "type": "object"
+            },
+            "BatchJobCreatedResponse": {
+                "description": "Response returned when a batch job is created.",
+                "example": {
+                    "job_id": "550e8400-e29b-41d4-a716-446655440000",
+                    "status": "pending",
+                    "status_url": "/batch/jobs/550e8400-e29b-41d4-a716-446655440000",
+                    "total_items": 100
+                },
+                "properties": {
+                    "job_id": {
+                        "description": "Unique identifier for tracking the batch job",
+                        "title": "Job Id",
+                        "type": "string"
+                    },
+                    "status": {
+                        "default": "pending",
+                        "description": "Initial status of the job",
+                        "title": "Status",
+                        "type": "string"
+                    },
+                    "status_url": {
+                        "description": "URL to poll for job status",
+                        "title": "Status Url",
+                        "type": "string"
+                    },
+                    "total_items": {
+                        "description": "Number of items in the batch",
+                        "title": "Total Items",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "job_id",
+                    "total_items",
+                    "status_url"
+                ],
+                "title": "BatchJobCreatedResponse",
+                "type": "object"
+            },
+            "BatchJobStatusResponse": {
+                "description": "Response returned when querying batch job status.",
+                "example": {
+                    "completed_at": "2025-12-05T10:05:00Z",
+                    "created_at": "2025-12-05T10:00:00Z",
+                    "failed_items": 3,
+                    "failure_file_url": "https://s3.amazonaws.com/bucket/batch/failures/550e8400.jsonl?signature=...",
+                    "job_id": "550e8400-e29b-41d4-a716-446655440000",
+                    "processed_items": 100,
+                    "progress_percent": 100.0,
+                    "status": "completed",
+                    "successful_items": 97,
+                    "total_items": 100
+                },
+                "properties": {
+                    "completed_at": {
+                        "description": "ISO 8601 timestamp when job completed (only in final response)",
+                        "title": "Completed At",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "ISO 8601 timestamp when job was created",
+                        "title": "Created At",
+                        "type": "string"
+                    },
+                    "error_message": {
+                        "description": "Error message if the job failed at the job level",
+                        "title": "Error Message",
+                        "type": "string"
+                    },
+                    "failed_items": {
+                        "default": 0,
+                        "description": "Number of items that failed",
+                        "title": "Failed Items",
+                        "type": "integer"
+                    },
+                    "failure_file_url": {
+                        "description": "Pre-signed S3 URL to download failure details (if any failures)",
+                        "title": "Failure File Url",
+                        "type": "string"
+                    },
+                    "job_id": {
+                        "description": "Unique identifier for the batch job",
+                        "title": "Job Id",
+                        "type": "string"
+                    },
+                    "processed_items": {
+                        "default": 0,
+                        "description": "Number of items processed so far",
+                        "title": "Processed Items",
+                        "type": "integer"
+                    },
+                    "status": {
+                        "description": "Current status: pending, processing, completed, or failed",
+                        "title": "Status",
+                        "type": "string"
+                    },
+                    "successful_items": {
+                        "description": "Number of items successfully processed (only in final response)",
+                        "title": "Successful Items",
+                        "type": "integer"
+                    },
+                    "total_items": {
+                        "description": "Total number of items in the batch",
+                        "title": "Total Items",
+                        "type": "integer"
+                    },
+                    "updated_at": {
+                        "description": "ISO 8601 timestamp of last progress update",
+                        "title": "Updated At",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "job_id",
+                    "status",
+                    "total_items",
+                    "created_at"
+                ],
+                "title": "BatchJobStatusResponse",
+                "type": "object"
+            },
             "CCRData": {
                 "additionalProperties": false,
                 "properties": {
@@ -4303,6 +4443,18 @@
                 "title": "FloorInfo",
                 "type": "object"
             },
+            "FootageTokenRequestV1": {
+                "properties": {
+                    "exclude_accessible_resources": {
+                        "default": false,
+                        "description": "If true, omits accessibleCameras and accessibleSites from the response to reduce payload size.",
+                        "title": "Exclude Accessible Resources",
+                        "type": "boolean"
+                    }
+                },
+                "title": "FootageTokenRequestV1",
+                "type": "object"
+            },
             "FootageTokenResponseV1": {
                 "additionalProperties": false,
                 "example": {
@@ -4323,7 +4475,7 @@
                 },
                 "properties": {
                     "accessibleCameras": {
-                        "description": "Allowed cameras for footage streaming for the JWT based on the provided API key.",
+                        "description": "Allowed cameras for footage streaming for the JWT based on the provided API key. Omitted if exclude_accessible_resources is true.",
                         "items": {
                             "type": "string"
                         },
@@ -4331,7 +4483,7 @@
                         "type": "array"
                     },
                     "accessibleSites": {
-                        "description": "Allowed sites for footage streaming for the JWT based on the provided API key.",
+                        "description": "Allowed sites for footage streaming for the JWT based on the provided API key. Omitted if exclude_accessible_resources is true.",
                         "items": {
                             "type": "string"
                         },
@@ -4366,9 +4518,7 @@
                     "jwt",
                     "expiration",
                     "expiresAt",
-                    "permission",
-                    "accessibleCameras",
-                    "accessibleSites"
+                    "permission"
                 ],
                 "title": "FootageTokenResponseV1",
                 "type": "object"
@@ -14162,7 +14312,19 @@
             "get": {
                 "description": "This is a prerequisite to stream live or historical footage. It returns a JWT (JSON Web Token) which provides access to the streaming endpoint for 30 minutes. For detailed information on streaming footage, refer to <a href=\"https://apidocs.verkada.com/reference/getfootagestreamviewv1\">Stream Footage (Live or Historical)</a>.",
                 "operationId": "getFootageTokenViewV1",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "exclude_accessible_resources",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "If true, omits accessibleCameras and accessibleSites from the response to reduce payload size.",
+                            "title": "Exclude Accessible Resources",
+                            "type": "boolean"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "content": {
