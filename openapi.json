@@ -1762,6 +1762,27 @@
                 "title": "CCRData",
                 "type": "object"
             },
+            "CameraAudioResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "camera_id": {
+                        "description": "The unique identifier of the camera.",
+                        "title": "Camera Id",
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "description": "The status of audio for the camera. If True, audio is enabled for the camera.",
+                        "title": "Enabled",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "camera_id",
+                    "enabled"
+                ],
+                "title": "CameraAudioResponse",
+                "type": "object"
+            },
             "CameraAudioStatusGetRequest": {
                 "properties": {
                     "camera_id": {
@@ -1815,6 +1836,20 @@
                     "enabled"
                 ],
                 "title": "CameraAudioStatusPostRequest",
+                "type": "object"
+            },
+            "CameraAudioUpdateRequest": {
+                "properties": {
+                    "enabled": {
+                        "description": "The status of audio for the camera. If True, audio is enabled for the camera.",
+                        "title": "Enabled",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "enabled"
+                ],
+                "title": "CameraAudioUpdateRequest",
                 "type": "object"
             },
             "CameraConfigGetRequestV1": {
@@ -16431,6 +16466,95 @@
                 ]
             }
         },
+        "/v2/cameras/people/people_list/{list_id}": {
+            "delete": {
+                "description": "Deletes a People List and all identities that exclusively belong to it.\nIdentities shared across multiple lists will be removed from this list only.\nSystem lists cannot be deleted.",
+                "operationId": "deletePeopleListViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "list_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                },
+                "summary": "Delete a People List",
+                "tags": [
+                    "People Lists"
+                ]
+            }
+        },
+        "/v2/cameras/{camera_id}/audio": {
+            "get": {
+                "description": "Retrieve the current audio recording status for a specific camera.\n\nTo use this endpoint, you need a \"Camera Audio\" API key (separate from Read only and\nRead/write API keys).\n\nReturns the camera's audio status. If audio is disabled at the organization level,\nthe response will show `enabled: false` regardless of the camera's individual setting.",
+                "operationId": "getCameraAudioViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CameraAudioResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Camera Audio Status",
+                "tags": [
+                    "Audio"
+                ]
+            },
+            "post": {
+                "description": "Update the audio recording status for a specific camera.\n\nTo use this endpoint, you need a \"Camera Audio\" API key (separate from Read only and\nRead/write API keys). Audio must be enabled in Feature Manager and supported by the\ncamera model.\n\n### Error Responses\n\n| Code | Message | Description |\n|------|---------|-------------|\n| 400 | Audio is not supported by the camera | Camera model does not support audio |\n| 403 | Audio is not enabled for the organization | Enable audio in Feature Manager |",
+                "operationId": "postCameraAudioViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CameraAudioUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                },
+                "summary": "Update Camera Audio Status",
+                "tags": [
+                    "Audio"
+                ]
+            }
+        },
         "/v2/events": {
             "get": {
                 "description": "Returns unified events from camera, access control, and sensor devices within a specified time range.\n\nThis endpoint consolidates events from camera, access control, and sensor devices in your organization,\nproviding a single interface to retrieve security events, access control events, and environmental sensor events.\n\n**Default Behavior**: Returns events from all supported product types from the last hour if no filters are specified.\n\n### Supported Event Types\n\n**Camera Events:**\n- `camera_online`, `camera_offline` - Camera connectivity status\n- `motion` - Motion detection events\n- `person_of_interest` - Person of Interest detections\n- `license_plate_of_interest` - License Plate of Interest detections\n- `tamper` - Camera tampering events\n- `crowd` - Crowd detection events\n- `line_crossing` - Line crossing rule violations\n- `loitering` - Loitering/dwell time violations\n\n**Access Control Events:**\n- `door_opened`, `door_granted`, `door_rejected` - Access events\n- `door_forced_open`, `door_held_open` - Security violations\n- `door_tailgating` - Tailgating detection\n- `door_tamper` - Door tampering events\n- `door_offline` - Access control unit connectivity\n- Plus 50+ additional access control event types for comprehensive monitoring\n\n**Sensor Events:**\n- `temperature`, `humidity` - Climate monitoring alerts\n- `tvoc`, `co2`, `pm25` - Air quality alerts\n- `noise` - Noise level alerts\n- `sensor_motion` - Motion detection from sensors\n- `air_quality` - General air quality alerts\n\n### Filtering\n\nUse these query parameters to filter results:\n- **`product_types`**: Comma-separated product types (`camera`, `access_control`, `sensor`)\n- **`device_ids`**: Comma-separated list of device IDs to filter by\n- **`event_types`**: Comma-separated list of event types (see supported types above)\n- **`start_time`**: Start time in ISO 8601 format (e.g., `2025-01-17T09:00:00Z`)\n- **`end_time`**: End time in ISO 8601 format (defaults to current time if not specified)\n- **`site_ids`**: Comma-separated list of site IDs (for access control events)\n\n### Pagination\n\nThis endpoint uses cursor-based pagination with these parameters:\n- **`limit`**: Number of events to return (1-1000, default 100)\n- **`cursor`**: Pagination cursor from previous response for next page\n- Continue paginating while the response includes a `cursor` value\n\n\n\n### Examples\n\nGet all events from the last hour:\n```\nGET /v2/events\n```\n\nGet only camera motion events from a specific time range:\n```\nGET /v2/events?product_types=camera&event_types=motion&start_time=2025-01-17T09:00:00Z&end_time=2025-01-17T17:00:00Z\n```\n\nGet access control events for specific doors:\n```\nGET /v2/events?product_types=access_control&device_ids=door1,door2&limit=50\n```\n\nGet sensor temperature and humidity alerts:\n```\nGET /v2/events?product_types=sensor&event_types=temperature,humidity&start_time=2025-01-17T09:00:00Z\n```",
@@ -17113,7 +17237,8 @@
                     "enum": [
                         "api",
                         "api.eu",
-                        "api.au"
+                        "api.au",
+                        "api.oh"
                     ]
                 }
             }
