@@ -16491,6 +16491,31 @@
                 ]
             }
         },
+        "/v2/cameras/people/smart_list/{list_id}": {
+            "delete": {
+                "description": "Deletes a Smart List (clustering group) and all whitelisted identities\nthat exclusively belong to it.",
+                "operationId": "deleteSmartListViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "list_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                },
+                "summary": "Delete a Smart List",
+                "tags": [
+                    "Smart Lists"
+                ]
+            }
+        },
         "/v2/cameras/{camera_id}/audio": {
             "get": {
                 "description": "Retrieve the current audio recording status for a specific camera.\n\nTo use this endpoint, you need a \"Camera Audio\" API key (separate from Read only and\nRead/write API keys).\n\nReturns the camera's audio status. If audio is disabled at the organization level,\nthe response will show `enabled: false` regardless of the camera's individual setting.",
