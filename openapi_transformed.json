@@ -4371,11 +4371,6 @@
             "title": "Identity Id",
             "type": "string"
           },
-          "quality_score": {
-            "description": "The quality score of the face credential",
-            "title": "Quality Score",
-            "type": "number"
-          },
           "user_id": {
             "description": "The user ID for which face unlock was enabled",
             "title": "User Id",
@@ -4398,12 +4393,6 @@
             },
             "title": "Invitation Methods",
             "type": "array"
-          },
-          "overwrite": {
-            "default": false,
-            "description": "Whether to overwrite an existing face credential. Default is false.",
-            "title": "Overwrite",
-            "type": "boolean"
           }
         },
         "title": "FaceUnlockInviteRequestV2",
