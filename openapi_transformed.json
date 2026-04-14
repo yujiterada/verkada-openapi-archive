@@ -15184,6 +15184,46 @@
         ]
       }
     },
+    "/cameras/v1/video_tagging/event/batch": {
+      "post": {
+        "description": "",
+        "operationId": "postVideoTaggingEventBatchViewV1",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchJobCreatedRequest_VideoTaggingEventPostBodyRequestV1"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchJobCreatedResponse"
+                }
+              }
+            },
+            "description": "Accepted"
+          }
+        },
+        "summary": "Create Helix Events in Batch",
+        "tags": [
+          "Methods"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
     "/cameras/v1/video_tagging/event/search": {
       "post": {
         "description": "",
@@ -16954,6 +16994,43 @@
         "summary": "Get Dashboard Widget Trend Data",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/batch/jobs/{job_id}": {
+      "get": {
+        "description": "Args:\n    job_id: The job ID to query (from URL path)\n\nReturns:\n    200 OK with job status\n    404 Not Found if job doesn't exist or isn't accessible",
+        "operationId": "getBatchJobStatusView",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchJobStatusResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get the status of a batch job.",
+        "tags": [
+          "Batch"
         ],
         "security": [
           {
