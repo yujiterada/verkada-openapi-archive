@@ -2828,6 +2828,52 @@
         "title": "CreateAccessScheduleEventRequestV1",
         "type": "object"
       },
+      "CreateLicensePlateOfInterestRequestV2": {
+        "description": "Request body for creating a License Plate of Interest.",
+        "properties": {
+          "description": {
+            "description": "The description for the License Plate of Interest.",
+            "title": "Description",
+            "type": "string"
+          },
+          "license_plate": {
+            "description": "The license plate number of the License Plate of Interest.",
+            "maxLength": 11,
+            "minLength": 1,
+            "title": "License Plate",
+            "type": "string"
+          }
+        },
+        "required": [
+          "license_plate",
+          "description"
+        ],
+        "title": "CreateLicensePlateOfInterestRequestV2",
+        "type": "object"
+      },
+      "CreateLicensePlateOfInterestResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for a newly created License Plate of Interest.\n\nV2 changes from v1:\n- `creation_time` (Unix int) renamed to `created_at` (RFC 3339 string).\n- HTTP status code is 201 (Created) instead of 200.",
+        "properties": {
+          "created_at": {
+            "description": "The creation time of the License Plate of Interest in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "description": "The description of the License Plate of Interest.",
+            "title": "Description",
+            "type": "string"
+          },
+          "license_plate": {
+            "description": "The license plate number of the License Plate of Interest.",
+            "title": "License Plate",
+            "type": "string"
+          }
+        },
+        "title": "CreateLicensePlateOfInterestResponseV2",
+        "type": "object"
+      },
       "CreateUserRequestBody": {
         "properties": {
           "company_name": {
@@ -4819,6 +4865,48 @@
         "title": "GetDoorInformationResponseV1",
         "type": "object"
       },
+      "GetLicensePlatesOfInterestQueryV2": {
+        "description": "Query parameters for listing License Plates of Interest.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 1000,
+            "description": "Maximum number of License Plates of Interest to return per page. Default is 1000.",
+            "exclusiveMinimum": true,
+            "maximum": 10000,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "GetLicensePlatesOfInterestQueryV2",
+        "type": "object"
+      },
+      "GetLicensePlatesOfInterestResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing License Plates of Interest.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for the next page of results. Null if no more pages.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "List of License Plates of Interest.",
+            "items": {
+              "$ref": "#/components/schemas/LicensePlateOfInterestItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "GetLicensePlatesOfInterestResponseV2",
+        "type": "object"
+      },
       "GetProfilePhotoQuery": {
         "properties": {
           "external_id": {
@@ -5635,6 +5723,38 @@
         "title": "LPRImageItem",
         "type": "object"
       },
+      "LPRImageItemV2": {
+        "additionalProperties": false,
+        "description": "A single license plate detection with image URLs.",
+        "properties": {
+          "detected_at": {
+            "description": "Timestamp when the license plate was detected, in RFC 3339 format (e.g., '2025-01-10T12:00:00+00:00').",
+            "title": "Detected At",
+            "type": "string"
+          },
+          "image_url": {
+            "description": "Pre-signed URL to the cropped license plate image.",
+            "title": "Image Url",
+            "type": "string"
+          },
+          "license_plate": {
+            "description": "The detected license plate number.",
+            "title": "License Plate",
+            "type": "string"
+          },
+          "vehicle_image_url": {
+            "description": "Pre-signed URL to the full vehicle image, if available.",
+            "title": "Vehicle Image Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "license_plate",
+          "detected_at"
+        ],
+        "title": "LPRImageItemV2",
+        "type": "object"
+      },
       "LPRImagesRequest": {
         "properties": {
           "camera_id": {
@@ -5678,6 +5798,44 @@
         "title": "LPRImagesRequest",
         "type": "object"
       },
+      "LPRImagesRequestV2": {
+        "description": "Query parameters for GET /v2/cameras/<camera_id>/lpr/images",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "End of the time range in ISO 8601 format (e.g., '2025-01-17T23:59:59Z'). Defaults to the current time.",
+            "title": "End Time",
+            "type": "string"
+          },
+          "license_plate": {
+            "description": "License plate number to filter results by. Returns only detections matching this plate number.",
+            "maxLength": 11,
+            "minLength": 1,
+            "title": "License Plate",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of items to return per page. Default is 100, maximum is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "start_time": {
+            "description": "Start of the time range in ISO 8601 format (e.g., '2025-01-17T00:00:00Z'). Defaults to 24 hours before the current time.",
+            "title": "Start Time",
+            "type": "string"
+          }
+        },
+        "title": "LPRImagesRequestV2",
+        "type": "object"
+      },
       "LPRImagesResponse": {
         "additionalProperties": false,
         "properties": {
@@ -5701,6 +5859,43 @@
           }
         },
         "title": "LPRImagesResponse",
+        "type": "object"
+      },
+      "LPRImagesResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for LPR images v2 API with cursor-based pagination.\n\nNote: camera_id is omitted from the response since it is already a path parameter.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results. Null if there are no more results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "List of license plate detections with image URLs.",
+            "items": {
+              "$ref": "#/components/schemas/LPRImageItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "LPRImagesResponseV2",
+        "type": "object"
+      },
+      "LPRTimestampItemV2": {
+        "additionalProperties": false,
+        "description": "A single license plate detection timestamp.",
+        "properties": {
+          "detected_at": {
+            "description": "Timestamp when the license plate was detected, in RFC 3339 format (e.g., '2025-01-10T12:00:00+00:00').",
+            "title": "Detected At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "detected_at"
+        ],
+        "title": "LPRTimestampItemV2",
         "type": "object"
       },
       "LPRTimestampRequestV1": {
@@ -5775,6 +5970,58 @@
           }
         },
         "title": "LPRTimestampResponseV1",
+        "type": "object"
+      },
+      "LPRTimestampsRequestV2": {
+        "description": "Query parameters for GET /v2/cameras/<camera_id>/lpr/<license_plate>/timestamps",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "End of the time range in ISO 8601 format (e.g., '2025-01-17T23:59:59Z'). Defaults to the current time.",
+            "title": "End Time",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of items to return per page. Default is 100, maximum is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "start_time": {
+            "description": "Start of the time range in ISO 8601 format (e.g., '2025-01-17T00:00:00Z'). Defaults to 24 hours before the current time.",
+            "title": "Start Time",
+            "type": "string"
+          }
+        },
+        "title": "LPRTimestampsRequestV2",
+        "type": "object"
+      },
+      "LPRTimestampsResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for LPR timestamps v2 API with cursor-based pagination.\n\nNote: camera_id and license_plate are omitted from the response since they\nare already path parameters.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results. Null if there are no more results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "List of detection timestamps for the requested license plate.",
+            "items": {
+              "$ref": "#/components/schemas/LPRTimestampItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "LPRTimestampsResponseV2",
         "type": "object"
       },
       "LatLon": {
@@ -5923,6 +6170,29 @@
         "title": "LicensePlateOfInterestBulkOperationResponse",
         "type": "object"
       },
+      "LicensePlateOfInterestItemV2": {
+        "additionalProperties": false,
+        "description": "A single License Plate of Interest item in v2 format.",
+        "properties": {
+          "created_at": {
+            "description": "When the License Plate of Interest was created, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "description": "The description of the License Plate of Interest.",
+            "title": "Description",
+            "type": "string"
+          },
+          "license_plate": {
+            "description": "The license plate number of the License Plate of Interest.",
+            "title": "License Plate",
+            "type": "string"
+          }
+        },
+        "title": "LicensePlateOfInterestItemV2",
+        "type": "object"
+      },
       "LicensePlateOfInterestList": {
         "additionalProperties": false,
         "example": {
@@ -5964,6 +6234,29 @@
           "license_plate"
         ],
         "title": "LicensePlateOfInterestModifyQueryRequest",
+        "type": "object"
+      },
+      "LicensePlateOfInterestResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for a single License Plate of Interest.\n\nV2 changes from v1:\n- creation_time renamed to created_at and is now an RFC 3339 formatted string\n  instead of a Unix timestamp integer.",
+        "properties": {
+          "created_at": {
+            "description": "When the License Plate of Interest was created, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "description": "The description of the License Plate of Interest.",
+            "title": "Description",
+            "type": "string"
+          },
+          "license_plate": {
+            "description": "The license plate number of the License Plate of Interest.",
+            "title": "License Plate",
+            "type": "string"
+          }
+        },
+        "title": "LicensePlateOfInterestResponseV2",
         "type": "object"
       },
       "LicensePlateSearchErrorResponse": {
@@ -6966,6 +7259,21 @@
           "description"
         ],
         "title": "PatchLicensePlateOfInterestBodyRequest",
+        "type": "object"
+      },
+      "PatchLicensePlateOfInterestRequestV2": {
+        "description": "Request body for updating a License Plate of Interest description.",
+        "properties": {
+          "description": {
+            "description": "The updated description for this License Plate of Interest.",
+            "title": "Description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "description"
+        ],
+        "title": "PatchLicensePlateOfInterestRequestV2",
         "type": "object"
       },
       "PatchQRCodeBodyV2": {
@@ -10319,6 +10627,7 @@
           "ALARM_EVENTS",
           "INTERCOM_EVENTS",
           "LPR",
+          "LPR_ENRICHED",
           "ALERTS"
         ],
         "title": "WebhookScope",
@@ -17040,6 +17349,171 @@
         ]
       }
     },
+    "/v2/cameras/lpr/license_plates_of_interest": {
+      "get": {
+        "description": "Returns creation time, description, and license plate number for all\nLicense Plates of Interest for an organization.\n\nResults are paginated. Use the `cursor` from the response to fetch the\nnext page.",
+        "operationId": "getLicensePlateOfInterestCollectionViewV2",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 1000,
+              "description": "Maximum number of License Plates of Interest to return per page. Default is 1000.",
+              "exclusiveMinimum": true,
+              "maximum": 10000,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLicensePlatesOfInterestResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get All License Plates of Interest",
+        "tags": [
+          "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Creates a License Plate of Interest for an organization using a specified\ndescription and license plate number.\n\n### Request Body\n\n- `license_plate` (required): The license plate number (max 11 characters)\n- `description` (required): A description for this License Plate of Interest\n\n### Example Request\n\n```json\n{\n    \"license_plate\": \"ABC123\",\n    \"description\": \"John's car\"\n}\n```\n\n### Example Response (HTTP 201)\n\n```json\n{\n    \"license_plate\": \"ABC123\",\n    \"description\": \"John's car\",\n    \"created_at\": \"2020-08-19T08:05:53+00:00\"\n}\n```",
+        "operationId": "postLicensePlateOfInterestCollectionViewV2",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLicensePlateOfInterestRequestV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLicensePlateOfInterestResponseV2"
+                }
+              }
+            },
+            "description": "Created"
+          }
+        },
+        "summary": "Create a License Plate of Interest",
+        "tags": [
+          "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/cameras/lpr/license_plates_of_interest/{license_plate}": {
+      "delete": {
+        "description": "Deletes a license plate from License Plates of Interest using\nthe license plate number provided in the URL path.\nReturns HTTP 204 on success with no response body.",
+        "operationId": "deleteLicensePlateOfInterestItemViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "license_plate",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        },
+        "summary": "Delete a License Plate of Interest",
+        "tags": [
+          "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      },
+      "patch": {
+        "description": "Updates the description of a License Plate of Interest identified by its\nlicense plate number in the URL path.\n\n### Example Request\n\n```\nPATCH /v2/cameras/lpr/license_plates_of_interest/ABC123\nContent-Type: application/json\n\n{\n    \"description\": \"Updated vehicle description\"\n}\n```\n\n### Response\n\nReturns the updated License Plate of Interest with:\n- `license_plate`: The license plate number\n- `description`: The updated description\n- `created_at`: When the LPOI was created, in RFC 3339 format",
+        "operationId": "patchLicensePlateOfInterestItemViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "license_plate",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchLicensePlateOfInterestRequestV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LicensePlateOfInterestResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Update a License Plate of Interest",
+        "tags": [
+          "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
     "/v2/cameras/ncic/license_plates/search": {
       "post": {
         "description": "Searches for license plate detection events within a specified time range\nand geographic area.\n\n**Access Restriction**: This endpoint is only available to organizations with\nCJIS (Criminal Justice Information Services) access enabled. Contact Verkada\nsupport to enable this feature for your organization.\n\n### Search Capabilities\n\n**Plate Search with Wildcards**:\n\nUse the `license_plate` field with wildcard (`*`) support for flexible matching:\n- `ABC123` - Exact match\n- `ABC*` - Starts with \"ABC\"\n- `*123` - Ends with \"123\"\n- `*BC1*` - Contains \"BC1\"\n\n**Geographic Filtering**:\n- `geo_fence`: Define a polygon (3-700 coordinate pairs) to filter events\n  by camera location. Only events from cameras within the polygon are returned.\n\n**Time Range**:\n- Maximum query range is 3 years\n- Results are returned in reverse chronological order (newest first)\n\n### Response Fields\n\nEach result includes:\n- `read_id`: Unique identifier for the detection event\n- `plate`: The detected license plate number\n- `plate_state`: Two-character state code (may be null)\n- `lat`/`lon`: Camera location coordinates\n- `event_time`: Detection timestamp in RFC 3339 format\n- `image_data`: URL to the license plate image\n- `additional_image`: URL to the full vehicle image\n- `agency_name`: Name of the organization owning the camera\n- `ori`: Originating Agency Identifier (for NCIC events)\n\n### Pagination\n\nUse cursor-based pagination:\n- Set `limit` to control page size (1-1000, default 100)\n- Use the returned `cursor` value in subsequent requests to get more results\n- Continue until `cursor` is null\n\n### Example Request\n\n```json\n{\n    \"start_time\": \"2025-01-01T00:00:00Z\",\n    \"end_time\": \"2025-01-15T23:59:59Z\",\n    \"license_plate\": \"*ABC*\",\n    \"geo_fence\": [\n        {\"latitude\": 37.7749, \"longitude\": -122.4194},\n        {\"latitude\": 37.7849, \"longitude\": -122.4094},\n        {\"latitude\": 37.7649, \"longitude\": -122.4094}\n    ],\n    \"limit\": 100\n}\n```",
@@ -17233,6 +17707,188 @@
         "summary": "Update Camera Audio Status",
         "tags": [
           "Audio"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/cameras/{camera_id}/lpr/images": {
+      "get": {
+        "description": "Returns the timestamps, detected license plate numbers, and pre-signed\nimage URLs of all license plates seen by a camera.\n\nOnly works for cameras that are LPR enabled.\n\n### Path Parameters\n\n- **camera_id**: The unique identifier of the camera.\n\n### Query Parameters\n\n- **license_plate** (optional): Filter detections by license plate number.\n- **start_time** (optional): Start of time range in ISO 8601 format\n  (e.g., `2025-01-17T00:00:00Z`). Defaults to 24 hours ago.\n- **end_time** (optional): End of time range in ISO 8601 format\n  (e.g., `2025-01-17T23:59:59Z`). Defaults to current time.\n- **limit** (optional): Page size, 1-200. Default 100.\n- **cursor** (optional): Pagination cursor from a previous response.\n\n### Pagination\n\nUse cursor-based pagination:\n- Set `limit` to control page size (1-200, default 100)\n- Use the returned `cursor` value in subsequent requests\n- Continue until `cursor` is null\n\n### Response Fields\n\nEach item in the `items` array contains:\n- `license_plate`: The detected plate number\n- `detected_at`: Detection timestamp in RFC 3339 format\n- `image_url`: Pre-signed URL to the license plate image\n- `vehicle_image_url`: Pre-signed URL to the full vehicle image (if available)",
+        "operationId": "getLPRImagesViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "camera_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "license_plate",
+            "required": false,
+            "schema": {
+              "description": "License plate number to filter results by. Returns only detections matching this plate number.",
+              "maxLength": 11,
+              "minLength": 1,
+              "title": "License Plate",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_time",
+            "required": false,
+            "schema": {
+              "description": "Start of the time range in ISO 8601 format (e.g., '2025-01-17T00:00:00Z'). Defaults to 24 hours before the current time.",
+              "title": "Start Time",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_time",
+            "required": false,
+            "schema": {
+              "description": "End of the time range in ISO 8601 format (e.g., '2025-01-17T23:59:59Z'). Defaults to the current time.",
+              "title": "End Time",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of items to return per page. Default is 100, maximum is 200.",
+              "exclusiveMinimum": true,
+              "maximum": 200,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor from a previous response to fetch the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LPRImagesResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get License Plate Detection Images",
+        "tags": [
+          "LPR"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/cameras/{camera_id}/lpr/{license_plate}/timestamps": {
+      "get": {
+        "description": "Returns the timestamps for when a specific license plate was detected by a\ncamera. Only works for cameras that are LPR enabled.\n\n### Path Parameters\n\n- **camera_id**: The unique identifier of the camera.\n- **license_plate**: The license plate number to search for.\n\n### Query Parameters\n\n- **start_time** (optional): Start of time range in ISO 8601 format\n  (e.g., `2025-01-17T00:00:00Z`). Defaults to 24 hours ago.\n- **end_time** (optional): End of time range in ISO 8601 format\n  (e.g., `2025-01-17T23:59:59Z`). Defaults to current time.\n- **limit** (optional): Page size, 1-200. Default 100.\n- **cursor** (optional): Pagination cursor from a previous response.\n\n### Pagination\n\nUse cursor-based pagination:\n- Set `limit` to control page size (1-200, default 100)\n- Use the returned `cursor` value in subsequent requests\n- Continue until `cursor` is null\n\n### Response Fields\n\n- `items`: Array of detection objects, each containing:\n  - `detected_at`: Detection timestamp in RFC 3339 format\n- `cursor`: Pagination cursor for the next page (null if no more results)",
+        "operationId": "getLPRTimestampsViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "camera_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "license_plate",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_time",
+            "required": false,
+            "schema": {
+              "description": "Start of the time range in ISO 8601 format (e.g., '2025-01-17T00:00:00Z'). Defaults to 24 hours before the current time.",
+              "title": "Start Time",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_time",
+            "required": false,
+            "schema": {
+              "description": "End of the time range in ISO 8601 format (e.g., '2025-01-17T23:59:59Z'). Defaults to the current time.",
+              "title": "End Time",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of items to return per page. Default is 100, maximum is 200.",
+              "exclusiveMinimum": true,
+              "maximum": 200,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor from a previous response to fetch the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LPRTimestampsResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get Timestamps for a License Plate",
+        "tags": [
+          "LPR"
         ],
         "security": [
           {
