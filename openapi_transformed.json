@@ -2409,6 +2409,133 @@
         "title": "CameraInfoItem",
         "type": "object"
       },
+      "CameraInfoItemV2": {
+        "additionalProperties": false,
+        "description": "A single camera in the organization.",
+        "properties": {
+          "camera_id": {
+            "description": "The unique identifier of the camera.",
+            "format": "uuid",
+            "title": "Camera Id",
+            "type": "string"
+          },
+          "cloud_retention_days": {
+            "description": "The number of days of cloud backup storage of the camera.",
+            "title": "Cloud Retention Days",
+            "type": "integer"
+          },
+          "date_added": {
+            "description": "When the camera was added to the organization, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+            "title": "Date Added",
+            "type": "string"
+          },
+          "device_retention_days": {
+            "description": "The number of days of storage available on the camera.",
+            "title": "Device Retention Days",
+            "type": "integer"
+          },
+          "firmware": {
+            "description": "The status of the camera firmware.",
+            "title": "Firmware",
+            "type": "string"
+          },
+          "firmware_update_schedule": {
+            "description": "Time windows during which the camera firmware can be updated.",
+            "items": {
+              "$ref": "#/components/schemas/FirmwareUpdateWindowV2"
+            },
+            "title": "Firmware Update Schedule",
+            "type": "array"
+          },
+          "last_online": {
+            "description": "The last time the camera was online, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+            "title": "Last Online",
+            "type": "string"
+          },
+          "local_ip": {
+            "description": "The local IP address of the camera.",
+            "title": "Local Ip",
+            "type": "string"
+          },
+          "location": {
+            "description": "The location of the camera.",
+            "title": "Location",
+            "type": "string"
+          },
+          "location_angle": {
+            "description": "The angle the camera is facing, in degrees.",
+            "title": "Location Angle",
+            "type": "number"
+          },
+          "location_lat": {
+            "description": "The latitude of the camera location.",
+            "title": "Location Lat",
+            "type": "number"
+          },
+          "location_lon": {
+            "description": "The longitude of the camera location.",
+            "title": "Location Lon",
+            "type": "number"
+          },
+          "mac": {
+            "description": "The MAC address of the camera.",
+            "title": "Mac",
+            "type": "string"
+          },
+          "model": {
+            "description": "The model name of the camera.",
+            "title": "Model",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the camera.",
+            "title": "Name",
+            "type": "string"
+          },
+          "people_history_enabled": {
+            "default": false,
+            "description": "Whether people history analytics is enabled for the camera.",
+            "title": "People History Enabled",
+            "type": "boolean"
+          },
+          "serial": {
+            "description": "The serial number of the camera.",
+            "title": "Serial",
+            "type": "string"
+          },
+          "site_id": {
+            "description": "The unique identifier of the camera's site.",
+            "title": "Site Id",
+            "type": "string"
+          },
+          "site_name": {
+            "description": "The display name of the camera's site.",
+            "title": "Site Name",
+            "type": "string"
+          },
+          "status": {
+            "description": "The connection status of the camera.",
+            "title": "Status",
+            "type": "string"
+          },
+          "timezone": {
+            "description": "The timezone the camera is located in.",
+            "title": "Timezone",
+            "type": "string"
+          },
+          "vehicle_history_enabled": {
+            "default": false,
+            "description": "Whether vehicle history analytics is enabled for the camera.",
+            "title": "Vehicle History Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "camera_id"
+        ],
+        "title": "CameraInfoItemV2",
+        "type": "object"
+      },
       "CameraInfoRequest": {
         "properties": {
           "page_num": {
@@ -2448,6 +2575,27 @@
           }
         },
         "title": "CameraInfoRequestV1",
+        "type": "object"
+      },
+      "CameraInfoRequestV2": {
+        "description": "Query parameters for listing cameras.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of cameras to return per page. Default is 100, maximum is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "CameraInfoRequestV2",
         "type": "object"
       },
       "CameraInfoResponse": {
@@ -2529,6 +2677,27 @@
           }
         },
         "title": "CameraInfoResponseV1",
+        "type": "object"
+      },
+      "CameraInfoResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing cameras.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for the next page of results. Continue paginating while this field is present.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "A page of camera devices in the organization.",
+            "items": {
+              "$ref": "#/components/schemas/CameraInfoItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "CameraInfoResponseV2",
         "type": "object"
       },
       "CardObjectResponseV1": {
@@ -2872,6 +3041,46 @@
           }
         },
         "title": "CreateLicensePlateOfInterestResponseV2",
+        "type": "object"
+      },
+      "CreateSdkTokenRequestV2": {
+        "description": "Request body for creating a Pass App SDK token",
+        "properties": {
+          "code_challenge": {
+            "description": "PKCE code challenge: base64url(SHA-256(code_verifier)) per RFC 7636, with no '=' padding. Must be 43-128 characters.",
+            "maxLength": 128,
+            "minLength": 43,
+            "pattern": "^[A-Za-z0-9\\-_]+$",
+            "title": "Code Challenge",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The Verkada user ID to create an SDK token for.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "code_challenge"
+        ],
+        "title": "CreateSdkTokenRequestV2",
+        "type": "object"
+      },
+      "CreateSdkTokenResponseV2": {
+        "additionalProperties": false,
+        "description": "Response for the create SDK token endpoint",
+        "properties": {
+          "sdk_token": {
+            "description": "The generated SDK token.",
+            "title": "Sdk Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sdk_token"
+        ],
+        "title": "CreateSdkTokenResponseV2",
         "type": "object"
       },
       "CreateUserRequestBody": {
@@ -4388,6 +4597,67 @@
         "title": "EventsResponseV2",
         "type": "object"
       },
+      "ExchangeSdkTokenRequestV2": {
+        "description": "Request body for exchanging a Pass App SDK token",
+        "properties": {
+          "code_verifier": {
+            "description": "The PKCE code verifier generated on-device by the SDK.",
+            "maxLength": 128,
+            "minLength": 43,
+            "pattern": "^[A-Za-z0-9\\-._~]+$",
+            "title": "Code Verifier",
+            "type": "string"
+          },
+          "sdk_token": {
+            "description": "The SDK token to exchange for session credentials.",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_\\-\\.]+$",
+            "title": "Sdk Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sdk_token",
+          "code_verifier"
+        ],
+        "title": "ExchangeSdkTokenRequestV2",
+        "type": "object"
+      },
+      "ExchangeSdkTokenResponseV2": {
+        "additionalProperties": false,
+        "description": "Response for the exchange SDK token endpoint",
+        "properties": {
+          "csrf_token": {
+            "description": "The CSRF token required for subsequent Pass App requests.",
+            "title": "Csrf Token",
+            "type": "string"
+          },
+          "org_id": {
+            "description": "The organization ID.",
+            "title": "Org Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The user ID.",
+            "title": "User Id",
+            "type": "string"
+          },
+          "user_token": {
+            "description": "The Pass App session user token.",
+            "title": "User Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_token",
+          "csrf_token",
+          "org_id",
+          "user_id"
+        ],
+        "title": "ExchangeSdkTokenResponseV2",
+        "type": "object"
+      },
       "FaceCredentialObjectResponseV1": {
         "additionalProperties": false,
         "properties": {
@@ -4489,6 +4759,30 @@
           }
         },
         "title": "FaceUnlockRequestV2",
+        "type": "object"
+      },
+      "FirmwareUpdateWindowV2": {
+        "additionalProperties": false,
+        "description": "A single time window during which firmware can be updated.",
+        "properties": {
+          "end_seconds_from_midnight": {
+            "description": "End of the firmware update window in seconds since midnight (camera-local time).",
+            "minimum": 0,
+            "title": "End Seconds From Midnight",
+            "type": "integer"
+          },
+          "start_seconds_from_midnight": {
+            "description": "Start of the firmware update window in seconds since midnight (camera-local time).",
+            "minimum": 0,
+            "title": "Start Seconds From Midnight",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_seconds_from_midnight",
+          "end_seconds_from_midnight"
+        ],
+        "title": "FirmwareUpdateWindowV2",
         "type": "object"
       },
       "FloorInfo": {
@@ -7007,6 +7301,51 @@
         "title": "OccupancyTrendsCamera",
         "type": "object"
       },
+      "OccupancyTrendsCameraItemV2": {
+        "additionalProperties": false,
+        "description": "A single camera with its occupancy trends line presets.",
+        "properties": {
+          "camera_id": {
+            "description": "The unique identifier of the camera.",
+            "title": "Camera Id",
+            "type": "string"
+          },
+          "presets": {
+            "description": "The line preset metadata for the camera.",
+            "items": {
+              "$ref": "#/components/schemas/OccupancyTrendsPresetV2"
+            },
+            "title": "Presets",
+            "type": "array"
+          }
+        },
+        "required": [
+          "camera_id"
+        ],
+        "title": "OccupancyTrendsCameraItemV2",
+        "type": "object"
+      },
+      "OccupancyTrendsCamerasRequestV2": {
+        "description": "Query parameters for listing cameras with occupancy trends.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of cameras to return per page. Default is 100, maximum is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "OccupancyTrendsCamerasRequestV2",
+        "type": "object"
+      },
       "OccupancyTrendsCamerasResponseV1": {
         "additionalProperties": false,
         "properties": {
@@ -7022,6 +7361,27 @@
           "cameras"
         ],
         "title": "OccupancyTrendsCamerasResponseV1",
+        "type": "object"
+      },
+      "OccupancyTrendsCamerasResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing cameras with occupancy trends.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for the next page of results. Continue paginating while this field is present.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "A page of cameras configured for occupancy trends.",
+            "items": {
+              "$ref": "#/components/schemas/OccupancyTrendsCameraItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "OccupancyTrendsCamerasResponseV2",
         "type": "object"
       },
       "OccupancyTrendsMQTTConfigSetRequestV1": {
@@ -7107,6 +7467,28 @@
           }
         },
         "title": "OccupancyTrendsPreset",
+        "type": "object"
+      },
+      "OccupancyTrendsPresetV2": {
+        "additionalProperties": false,
+        "description": "A single line preset configured on a camera for occupancy trends.",
+        "properties": {
+          "object_class": {
+            "description": "The object class the line preset is configured to count (e.g., 'person').",
+            "title": "Object Class",
+            "type": "string"
+          },
+          "preset_id": {
+            "description": "The unique identifier of the line preset.",
+            "title": "Preset Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "preset_id",
+          "object_class"
+        ],
+        "title": "OccupancyTrendsPresetV2",
         "type": "object"
       },
       "OccupancyTrendsRequestV1": {
@@ -7337,6 +7719,81 @@
           "label"
         ],
         "title": "PathPersonOfInterestRequest",
+        "type": "object"
+      },
+      "PeopleListCollectionResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing people lists.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results. Continue paginating while this field is present.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "People lists in the organization.",
+            "items": {
+              "$ref": "#/components/schemas/PeopleListItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "PeopleListCollectionResponseV2",
+        "type": "object"
+      },
+      "PeopleListItemV2": {
+        "additionalProperties": false,
+        "description": "A single people list.",
+        "properties": {
+          "is_public": {
+            "description": "Whether the people list is shared across the organization.",
+            "title": "Is Public",
+            "type": "boolean"
+          },
+          "list_id": {
+            "description": "Unique identifier for the people list.",
+            "title": "List Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the people list.",
+            "title": "Name",
+            "type": "string"
+          },
+          "system_list_category": {
+            "description": "System-managed list category when this is a system list.",
+            "title": "System List Category",
+            "type": "string"
+          }
+        },
+        "required": [
+          "list_id",
+          "name",
+          "is_public"
+        ],
+        "title": "PeopleListItemV2",
+        "type": "object"
+      },
+      "PeopleListsRequestV2": {
+        "description": "Request parameters for listing people lists.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of people lists to return. Default is 100, maximum is 1000.",
+            "exclusiveMinimum": true,
+            "maximum": 1000,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "PeopleListsRequestV2",
         "type": "object"
       },
       "PersonInfo": {
@@ -9307,6 +9764,98 @@
         ],
         "title": "SiteState",
         "type": "string"
+      },
+      "SmartListCollectionResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing smart lists.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results. Continue paginating while this field is present.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "Smart lists in the organization.",
+            "items": {
+              "$ref": "#/components/schemas/SmartListItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "SmartListCollectionResponseV2",
+        "type": "object"
+      },
+      "SmartListItemV2": {
+        "additionalProperties": false,
+        "description": "A single smart list.",
+        "properties": {
+          "allowed_people_list_ids": {
+            "description": "People List identifiers whitelisted in the smart list.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Allowed People List Ids",
+            "type": "array"
+          },
+          "camera_ids": {
+            "description": "Camera identifiers assigned to the smart list.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Camera Ids",
+            "type": "array"
+          },
+          "is_public": {
+            "description": "Whether the smart list is visible across the organization.",
+            "title": "Is Public",
+            "type": "boolean"
+          },
+          "list_id": {
+            "description": "Unique identifier for the smart list.",
+            "title": "List Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the smart list.",
+            "title": "Name",
+            "type": "string"
+          },
+          "onboarding_complete": {
+            "default": false,
+            "description": "Whether smart-list onboarding has been completed.",
+            "title": "Onboarding Complete",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "list_id",
+          "name",
+          "is_public"
+        ],
+        "title": "SmartListItemV2",
+        "type": "object"
+      },
+      "SmartListsRequestV2": {
+        "description": "Request parameters for listing smart lists.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for retrieving the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of smart lists to return. Default is 100, maximum is 1000.",
+            "exclusiveMinimum": true,
+            "maximum": 1000,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "SmartListsRequestV2",
+        "type": "object"
       },
       "ThumbnailImageRequestV1": {
         "properties": {
@@ -17349,6 +17898,59 @@
         ]
       }
     },
+    "/v2/cameras": {
+      "get": {
+        "description": "Returns details for cameras in the organization, paginated.\n\nEach item includes the camera's name, site, location, model, serial number,\ncamera ID, MAC address, local IP, device and cloud retention, the date the\ncamera was added, firmware update status, camera status, location latitude,\nlongitude and angle (in degrees), and analytics flags.\n\nContinue paginating while the response includes a `cursor` value.",
+        "operationId": "getCameraInfoViewV2",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of cameras to return per page. Default is 100, maximum is 200.",
+              "exclusiveMinimum": true,
+              "maximum": 200,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CameraInfoResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get Camera Data",
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
     "/v2/cameras/lpr/license_plates_of_interest": {
       "get": {
         "description": "Returns creation time, description, and license plate number for all\nLicense Plates of Interest for an organization.\n\nResults are paginated. Use the `cursor` from the response to fetch the\nnext page.",
@@ -17581,6 +18183,59 @@
         ]
       }
     },
+    "/v2/cameras/occupancy_trends": {
+      "get": {
+        "description": "Returns the cameras in the organization that have line presets configured\nfor occupancy trends, paginated.\n\nEach item includes the camera ID and the list of line presets configured\non that camera, with the object class each preset is counting.\n\nContinue paginating while the response includes a `cursor` value.",
+        "operationId": "getOccupancyTrendsCamerasViewV2",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of cameras to return per page. Default is 100, maximum is 200.",
+              "exclusiveMinimum": true,
+              "maximum": 200,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OccupancyTrendsCamerasResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get Occupancy Trends Cameras",
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
     "/v2/cameras/people/people_list/{list_id}": {
       "delete": {
         "description": "Deletes a People List and all identities that exclusively belong to it.\nIdentities shared across multiple lists will be removed from this list only.\nSystem lists cannot be deleted.",
@@ -17611,6 +18266,59 @@
         ]
       }
     },
+    "/v2/cameras/people/people_lists": {
+      "get": {
+        "description": "Returns all People Lists in the organization so API clients can retrieve\nlist identifiers in bulk.",
+        "operationId": "getPeopleListViewV2",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for retrieving the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of people lists to return. Default is 100, maximum is 1000.",
+              "exclusiveMinimum": true,
+              "maximum": 1000,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleListCollectionResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get People Lists",
+        "tags": [
+          "People Lists"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
     "/v2/cameras/people/smart_list/{list_id}": {
       "delete": {
         "description": "Deletes a Smart List (clustering group) and all whitelisted identities\nthat exclusively belong to it.",
@@ -17631,6 +18339,59 @@
           }
         },
         "summary": "Delete a Smart List",
+        "tags": [
+          "Smart Lists"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/cameras/people/smart_lists": {
+      "get": {
+        "description": "Returns all Smart Lists in the organization so API clients can retrieve\nlist identifiers in bulk.",
+        "operationId": "getSmartListViewV2",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for retrieving the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of smart lists to return. Default is 100, maximum is 1000.",
+              "exclusiveMinimum": true,
+              "maximum": 1000,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmartListCollectionResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get Smart Lists",
         "tags": [
           "Smart Lists"
         ],
