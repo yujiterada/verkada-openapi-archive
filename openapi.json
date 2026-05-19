@@ -3543,6 +3543,20 @@
                 "title": "DenyListBodyRequest",
                 "type": "object"
             },
+            "DenyListDeleteQueryV2": {
+                "additionalProperties": false,
+                "description": "Query parameters for deleting a deny list.\n\nMirrors the upload query so callers can use the same `site_id` filter when\ndeleting a site-scoped deny list. Omit `site_id` to delete the\norganization-wide deny list.",
+                "properties": {
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site whose deny list should be deleted. Valid sites can be retrieved with the Guest Site API. If omitted, the organization-wide deny list is deleted.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "title": "DenyListDeleteQueryV2",
+                "type": "object"
+            },
             "DenyListEntry": {
                 "additionalProperties": false,
                 "properties": {
@@ -3586,6 +3600,49 @@
                 "title": "DenyListEntry",
                 "type": "object"
             },
+            "DenyListEntryV2": {
+                "description": "A single deny list entry.",
+                "properties": {
+                    "date_of_birth": {
+                        "description": "The date of birth of the Deny List Entry in YYYY-MM-DD format.",
+                        "title": "Date Of Birth",
+                        "type": "string"
+                    },
+                    "deny_list_entry_id": {
+                        "description": "The unique identifier of the Deny List Entry.",
+                        "format": "uuid",
+                        "title": "Deny List Entry Id",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "A detailed description of the Deny List Entry, including their physical appearance, potential relationships with others, and any known actions or behaviors that may have contributed to their entry on the deny list.",
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "description": "The first name of the Deny List Entry.",
+                        "title": "First Name",
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "description": "The last name of the Deny List Entry.",
+                        "title": "Last Name",
+                        "type": "string"
+                    },
+                    "presigned_url": {
+                        "description": "A link to a server-side photo of the Deny List Entry.",
+                        "title": "Presigned Url",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "deny_list_entry_id",
+                    "first_name",
+                    "last_name"
+                ],
+                "title": "DenyListEntryV2",
+                "type": "object"
+            },
             "DenyListQueryRequest": {
                 "properties": {
                     "site_id": {
@@ -3596,6 +3653,149 @@
                     }
                 },
                 "title": "DenyListQueryRequest",
+                "type": "object"
+            },
+            "DenyListQueryRequestV2": {
+                "additionalProperties": false,
+                "description": "Query parameters for listing deny list entries.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor (base62-encoded) for retrieving the next page of results. Omit on the first request.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of deny list entries to return. Default is 100, maximum is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "site_id": {
+                        "description": "Optional unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API. If omitted, the organization-wide deny list is returned.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "title": "DenyListQueryRequestV2",
+                "type": "object"
+            },
+            "DenyListResponseV2": {
+                "description": "Paginated page of deny list entries for an organization or site.",
+                "example": {
+                    "cursor": null,
+                    "items": [
+                        {
+                            "date_of_birth": "1999-07-21",
+                            "deny_list_entry_id": "d4474397-efc2-44a7-a28c-892f9cffa72e",
+                            "description": "batmaaaaaaaaaaaaaaan",
+                            "first_name": "Bat",
+                            "last_name": "Man",
+                            "presigned_url": "https://your-bucket-name.s3.amazonaws.com/batman-photo.jpg"
+                        },
+                        {
+                            "date_of_birth": null,
+                            "deny_list_entry_id": "312fa240-1361-47fd-970f-e92d505a8ca7",
+                            "description": "supermaaaaaaaaaaaaaaan",
+                            "first_name": "Jebediah",
+                            "last_name": "Kerman",
+                            "presigned_url": null
+                        }
+                    ],
+                    "org_id": "fdf6e1f2-a986-418e-9a30-d0eb504e7f06",
+                    "site_id": "fc749669-1370-4a9d-84e3-daf777e0546c",
+                    "uploaded_at": "2021-04-16T14:00:00+00:00"
+                },
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor (base62-encoded) for retrieving the next page of results. Continue paginating while this field is present.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "A page of Deny List Entry objects.",
+                        "items": {
+                            "$ref": "#/components/schemas/DenyListEntryV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    },
+                    "org_id": {
+                        "description": "The unique identifier of the organization to which the Guest site belongs.",
+                        "format": "uuid",
+                        "title": "Org Id",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site, if filtered by site.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "uploaded_at": {
+                        "description": "RFC 3339 formatted time the deny list was last uploaded. Returns null if no upload has occurred.",
+                        "title": "Uploaded At",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "org_id"
+                ],
+                "title": "DenyListResponseV2",
+                "type": "object"
+            },
+            "DenyListUploadRequestV2": {
+                "description": "multipart/form-data body for uploading a deny list CSV.\n\nSend the CSV as the `file` part of a multipart upload. The optional\n`site_id` form field scopes the upload to a single Guest site; omit it to\napply the upload to the organization-wide deny list.",
+                "properties": {
+                    "file": {
+                        "default": "",
+                        "description": "The deny list CSV file. The file must include the columns `first_name`, `last_name`, `date_of_birth`, `notes`, and `photo_url`. Maximum 10 MiB.",
+                        "title": "File",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API. If omitted, the deny list applies to the organization.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "title": "DenyListUploadRequestV2",
+                "type": "object"
+            },
+            "DenyListUploadResponseV2": {
+                "description": "Response returned after uploading a deny list CSV.\n\nThe `base64_ascii_error_csv` field is always present:\n  - When all rows uploaded successfully it is `null`.\n  - When some rows failed, it contains a base64-encoded CSV with the\n    failed rows and an `error` column describing the failure for each.",
+                "example": {
+                    "base64_ascii_error_csv": "Zmlyc3RfbmFtZSxsYXN0X25hbWUsZGF0ZV9vZl9iaXJ0aCxub3RlcyxwaG90b191cmwsZXJyb3IKVGFyYSwsLCwsRW1wdHkgRnVsbG5hbWUK",
+                    "org_id": "fdf6e1f2-a986-418e-9a30-d0eb504e7f06",
+                    "site_id": "fc749669-1370-4a9d-84e3-daf777e0546c"
+                },
+                "properties": {
+                    "base64_ascii_error_csv": {
+                        "description": "Base64 encoded (ASCII) CSV containing rows that failed to be added to the deny list along with the failure reason. Null when all rows were uploaded successfully.",
+                        "title": "Base64 Ascii Error Csv",
+                        "type": "string"
+                    },
+                    "org_id": {
+                        "description": "The unique identifier of the organization to which the Guest site belongs.",
+                        "format": "uuid",
+                        "title": "Org Id",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site, if a site-scoped deny list was uploaded.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "org_id"
+                ],
+                "title": "DenyListUploadResponseV2",
                 "type": "object"
             },
             "DeviceAlertsData": {
@@ -5413,6 +5613,64 @@
                 "title": "GuestResponseItem",
                 "type": "object"
             },
+            "GuestResponseItemV2": {
+                "description": "The guest metadata associated with a visit.",
+                "properties": {
+                    "created_at": {
+                        "description": "The time the guest item was created in RFC 3339 format (e.g., '2025-08-04T21:51:53+00:00').",
+                        "title": "Created At",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email of the guest, if provided.",
+                        "title": "Email",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "description": "Full name of the guest, if provided.",
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "guest_id": {
+                        "description": "The unique identifier of the guest tied to this visit. Note that this will be different across visits, even if the guest is the same.",
+                        "format": "uuid",
+                        "title": "Guest Id",
+                        "type": "string"
+                    },
+                    "has_photo": {
+                        "description": "Whether the guest has a photo available.",
+                        "title": "Has Photo",
+                        "type": "boolean"
+                    },
+                    "image_url": {
+                        "description": "A non-permanent URL to the image of the guest. Only present if the guest provided an image at sign-in.",
+                        "title": "Image Url",
+                        "type": "string"
+                    },
+                    "is_signed_url": {
+                        "description": "Whether the provided image_url is a presigned URL. True by default. Undefined for student visits.",
+                        "title": "Is Signed Url",
+                        "type": "boolean"
+                    },
+                    "person_id": {
+                        "description": "The unique identifier of the Person of Interest created from this guest, if applicable.",
+                        "title": "Person Id",
+                        "type": "string"
+                    },
+                    "phone_number": {
+                        "description": "Phone number of the guest, if provided.",
+                        "title": "Phone Number",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "guest_id",
+                    "created_at",
+                    "has_photo"
+                ],
+                "title": "GuestResponseItemV2",
+                "type": "object"
+            },
             "GuestSiteResponse": {
                 "additionalProperties": false,
                 "example": {
@@ -5748,10 +6006,11 @@
                 "type": "object"
             },
             "HostResponseItemV2": {
+                "description": "The host metadata associated with a visit.",
                 "properties": {
-                    "email": {
-                        "description": "The email of the host.",
-                        "title": "Email",
+                    "delivery_location": {
+                        "description": "(Mailroom) The host's default package delivery location.",
+                        "title": "Delivery Location",
                         "type": "string"
                     },
                     "first_name": {
@@ -5767,6 +6026,16 @@
                     "has_delegate": {
                         "description": "Whether the host has a delegate assigned.",
                         "title": "Has Delegate",
+                        "type": "boolean"
+                    },
+                    "has_email": {
+                        "description": "Whether the host has an email address present.",
+                        "title": "Has Email",
+                        "type": "boolean"
+                    },
+                    "has_phone_number": {
+                        "description": "Whether the host has a phone number present.",
+                        "title": "Has Phone Number",
                         "type": "boolean"
                     },
                     "host_id": {
@@ -5785,15 +6054,20 @@
                         "title": "Original First Name",
                         "type": "string"
                     },
-                    "phone_number": {
-                        "description": "The phone number of the host.",
-                        "title": "Phone Number",
-                        "type": "string"
-                    },
                     "requires_host_approval": {
                         "description": "Whether the host requires host approval on all visits.",
                         "title": "Requires Host Approval",
                         "type": "boolean"
+                    },
+                    "student_id": {
+                        "description": "For student-related visits, the student ID of the visit's student.",
+                        "title": "Student Id",
+                        "type": "string"
+                    },
+                    "student_number": {
+                        "description": "For student-related visits, the student number of the visit's student.",
+                        "title": "Student Number",
+                        "type": "string"
                     }
                 },
                 "required": [
@@ -5803,7 +6077,9 @@
                     "full_name",
                     "original_first_name",
                     "requires_host_approval",
-                    "has_delegate"
+                    "has_delegate",
+                    "has_phone_number",
+                    "has_email"
                 ],
                 "title": "HostResponseItemV2",
                 "type": "object"
@@ -7629,6 +7905,34 @@
                 "title": "OccupancyTrendsTypeEnum",
                 "type": "string"
             },
+            "OpenEndedResponseItemV2": {
+                "description": "An open-ended question response associated with a visit.",
+                "properties": {
+                    "chosen_answers": {
+                        "description": "Chosen multiple-choice answers, if applicable.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Chosen Answers",
+                        "type": "array"
+                    },
+                    "question": {
+                        "description": "The question answered by the visitor.",
+                        "title": "Question",
+                        "type": "string"
+                    },
+                    "response": {
+                        "description": "The visitor's answer to the question. Also contains custom responses to multiple-choice questions.",
+                        "title": "Response",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "question"
+                ],
+                "title": "OpenEndedResponseItemV2",
+                "type": "object"
+            },
             "PatchLicensePlateOfInterestBodyRequest": {
                 "properties": {
                     "description": {
@@ -8719,6 +9023,27 @@
                 "title": "QuestionnaireResponseItem",
                 "type": "object"
             },
+            "QuestionnaireResponseItemV2": {
+                "description": "A questionnaire response associated with a visit.",
+                "properties": {
+                    "passed": {
+                        "description": "Whether or not the visitor passed the questionnaire.",
+                        "title": "Passed",
+                        "type": "boolean"
+                    },
+                    "questionnaire": {
+                        "description": "The name of the questionnaire completed by the visitor.",
+                        "title": "Questionnaire",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "questionnaire",
+                    "passed"
+                ],
+                "title": "QuestionnaireResponseItemV2",
+                "type": "object"
+            },
             "QueueData": {
                 "additionalProperties": false,
                 "properties": {
@@ -8970,14 +9295,6 @@
                 "title": "ScenarioState",
                 "type": "string"
             },
-            "ScenarioType": {
-                "description": "Enum for the Scenario Type.",
-                "enum": [
-                    "lockdown"
-                ],
-                "title": "ScenarioType",
-                "type": "string"
-            },
             "ScenarioV1": {
                 "description": "Schema for the Scenario.",
                 "properties": {
@@ -8995,6 +9312,14 @@
                             "type": "string"
                         },
                         "title": "Doors To Lock",
+                        "type": "array"
+                    },
+                    "doors_to_unlock": {
+                        "description": "IDs of doors the scenario unlocks.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors To Unlock",
                         "type": "array"
                     },
                     "message": {
@@ -9050,12 +9375,9 @@
                         "description": "State of the scenario."
                     },
                     "type": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ScenarioType"
-                            }
-                        ],
-                        "description": "Type of the scenario."
+                        "description": "Type of the scenario (e.g., lockdown, evacuate).",
+                        "title": "Type",
+                        "type": "string"
                     },
                     "user_groups_with_disable_access": {
                         "description": "IDs of user groups allowed to release the scenario.",
@@ -9706,6 +10028,42 @@
                 "title": "SignatureResponseItem",
                 "type": "object"
             },
+            "SignatureResponseItemV2": {
+                "description": "A document signature associated with a visit.",
+                "properties": {
+                    "doc_signature_id": {
+                        "description": "The unique identifier for the signed document.",
+                        "format": "uuid",
+                        "title": "Doc Signature Id",
+                        "type": "string"
+                    },
+                    "document_id": {
+                        "description": "The unique identifier of the document the visitor signed.",
+                        "format": "uuid",
+                        "title": "Document Id",
+                        "type": "string"
+                    },
+                    "pdf_url": {
+                        "description": "A non-permanent URL pointing to a PDF of the signed document.",
+                        "title": "Pdf Url",
+                        "type": "string"
+                    },
+                    "visit_id": {
+                        "description": "The unique identifier of the visit the document signature corresponds to.",
+                        "format": "uuid",
+                        "title": "Visit Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "doc_signature_id",
+                    "visit_id",
+                    "document_id",
+                    "pdf_url"
+                ],
+                "title": "SignatureResponseItemV2",
+                "type": "object"
+            },
             "SiteInfoV1": {
                 "additionalProperties": false,
                 "description": "Detailed information about a single site",
@@ -9742,6 +10100,95 @@
                     "site_name"
                 ],
                 "title": "SiteInfoV1",
+                "type": "object"
+            },
+            "SiteRequest": {
+                "additionalProperties": false,
+                "description": "Request query parameters for listing Guest sites.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of Guest sites to return. Default is 100, maximum is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "SiteRequest",
+                "type": "object"
+            },
+            "SiteResponse": {
+                "description": "Paginated response containing a list of Guest sites.",
+                "example": {
+                    "cursor": null,
+                    "items": [
+                        {
+                            "org_id": "fdf6e1f2-a986-418e-9a30-d0eb504e7f06",
+                            "site_id": "fc749669-1370-4a9d-84e3-daf777e0546c",
+                            "site_name": "Site 1"
+                        },
+                        {
+                            "org_id": "fdf6e1f2-a986-418e-9a30-d0eb504e7f06",
+                            "site_id": "828ed0ac-6070-49ac-90cb-e5caba0de838",
+                            "site_name": "Site 2"
+                        }
+                    ]
+                },
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results. Null if there are no more results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of Guest sites.",
+                        "items": {
+                            "$ref": "#/components/schemas/SiteResponseItem"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "SiteResponse",
+                "type": "object"
+            },
+            "SiteResponseItem": {
+                "description": "A single Guest site returned in the V2 listing response.",
+                "properties": {
+                    "org_id": {
+                        "description": "The unique identifier of the organization to which the Guest site belongs.",
+                        "format": "uuid",
+                        "title": "Org Id",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "site_name": {
+                        "description": "The name of the Guest site.",
+                        "title": "Site Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "org_id",
+                    "site_id",
+                    "site_name"
+                ],
+                "title": "SiteResponseItem",
                 "type": "object"
             },
             "SiteSecurityLevel": {
@@ -10862,6 +11309,74 @@
                 "title": "ViewingStationDevicesResponse",
                 "type": "object"
             },
+            "VisitListRequestV2": {
+                "additionalProperties": false,
+                "description": "Request parameters for listing Guest visits.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "description": "The end of the time range for requested visits in ISO 8601 format (e.g., '2025-07-17T22:06:20Z'). Must be at most 24 hours away from start_time.",
+                        "format": "date-time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of items to return per page. Default is 100, maximum is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site. Valid sites can be retrieved with the Guest Site API.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start of the time range for requested visits in ISO 8601 format (e.g., '2025-07-17T21:06:20Z'). Must be at most 24 hours away from end_time.",
+                        "format": "date-time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "site_id",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "VisitListRequestV2",
+                "type": "object"
+            },
+            "VisitListResponseV2": {
+                "description": "Paginated response containing a list of Guest visits.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results. Null if there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "The list of visits matching the requested time range and site.",
+                        "items": {
+                            "$ref": "#/components/schemas/VisitResponseItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "VisitListResponseV2",
+                "type": "object"
+            },
             "VisitRequest": {
                 "properties": {
                     "end_time": {
@@ -11052,6 +11567,131 @@
                     "signatures"
                 ],
                 "title": "VisitResponseItem",
+                "type": "object"
+            },
+            "VisitResponseItemV2": {
+                "description": "A single visit in the visits list response.",
+                "properties": {
+                    "approval_status": {
+                        "description": "The overall approval status of the visit - factoring in host approvals, questionnaires, and security screens. Can be one of: PENDING (host approval or background check not yet complete), APPROVED (all steps passed), or DENIED (visitor was denied entry due to one or more failures).",
+                        "title": "Approval Status",
+                        "type": "string"
+                    },
+                    "check_in_time": {
+                        "description": "Time at which the visitor checked in, in RFC 3339 format (e.g., '2025-08-04T21:51:53+00:00'). Only present if the visit is successful (as opposed to denied or pending).",
+                        "title": "Check In Time",
+                        "type": "string"
+                    },
+                    "deleted": {
+                        "description": "True if the visit has been deleted within Command, false otherwise.",
+                        "title": "Deleted",
+                        "type": "boolean"
+                    },
+                    "device_name": {
+                        "description": "Name of the tablet that checked in the visit, if applicable.",
+                        "title": "Device Name",
+                        "type": "string"
+                    },
+                    "guest": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/GuestResponseItemV2"
+                            }
+                        ],
+                        "description": "The guest metadata associated with this visit.",
+                        "title": "Guest"
+                    },
+                    "host": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/HostResponseItemV2"
+                            }
+                        ],
+                        "description": "The primary host metadata associated with this visit. Maintained for backward compatibility; prefer the hosts field for visits with multiple hosts.",
+                        "title": "Host"
+                    },
+                    "host_approval_status": {
+                        "description": "Only present if the visit required host approval. Can be one of: APPROVED (approved by host), PENDING (host hasn't responded yet), or DENIED (denied by host).",
+                        "title": "Host Approval Status",
+                        "type": "string"
+                    },
+                    "hosts": {
+                        "description": "The list of host metadata associated with this visit.",
+                        "items": {
+                            "$ref": "#/components/schemas/HostResponseItemV2"
+                        },
+                        "title": "Hosts",
+                        "type": "array"
+                    },
+                    "is_contactless": {
+                        "description": "True if the visit was made via the web, false if the visit was made via a tablet.",
+                        "title": "Is Contactless",
+                        "type": "boolean"
+                    },
+                    "open_ended_responses": {
+                        "description": "Any open-ended question responses associated with this visit.",
+                        "items": {
+                            "$ref": "#/components/schemas/OpenEndedResponseItemV2"
+                        },
+                        "title": "Open Ended Responses",
+                        "type": "array"
+                    },
+                    "questionnaires": {
+                        "description": "Any questionnaire responses associated with this visit.",
+                        "items": {
+                            "$ref": "#/components/schemas/QuestionnaireResponseItemV2"
+                        },
+                        "title": "Questionnaires",
+                        "type": "array"
+                    },
+                    "security_screen_status": {
+                        "description": "Only present if the visit required a security screen. Can be one of: NOT_STARTED (visit submitted, security screen not yet submitted to provider), START (visitor information submitted to provider), NO_MATCH (screening complete, no match found), NEEDS_REVIEW (screening found potential match, needs human verification), CONFIRMED_MATCH (user-confirmed match), ERROR (error with security screen provider), or CANCELED (security screen not completed due to cancellation or time-out).",
+                        "title": "Security Screen Status",
+                        "type": "string"
+                    },
+                    "sign_out_time": {
+                        "description": "Time at which the visitor signed out, in RFC 3339 format (e.g., '2025-08-04T21:51:53+00:00').",
+                        "title": "Sign Out Time",
+                        "type": "string"
+                    },
+                    "signatures": {
+                        "description": "Any document signatures associated with this visit.",
+                        "items": {
+                            "$ref": "#/components/schemas/SignatureResponseItemV2"
+                        },
+                        "title": "Signatures",
+                        "type": "array"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the Guest site this visit belongs to.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "visit_id": {
+                        "description": "The unique identifier of the visit.",
+                        "format": "uuid",
+                        "title": "Visit Id",
+                        "type": "string"
+                    },
+                    "visit_type": {
+                        "description": "Name of the visitor type the guest checked in as.",
+                        "title": "Visit Type",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "visit_id",
+                    "site_id",
+                    "is_contactless",
+                    "deleted",
+                    "visit_type",
+                    "approval_status",
+                    "open_ended_responses",
+                    "questionnaires",
+                    "signatures"
+                ],
+                "title": "VisitResponseItemV2",
                 "type": "object"
             },
             "WebhookConfigDeleteRequest": {
