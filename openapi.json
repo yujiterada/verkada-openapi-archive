@@ -11284,106 +11284,10 @@
                 "title": "ViewingStationDevice",
                 "type": "object"
             },
-            "ViewingStationDeviceV2": {
-                "additionalProperties": false,
-                "description": "Detailed information about a single Viewing Station.",
-                "properties": {
-                    "app_version": {
-                        "description": "The version of the Viewing Station application.",
-                        "title": "App Version",
-                        "type": "string"
-                    },
-                    "claimed_serial_number": {
-                        "description": "The serial number of the Viewing Station.",
-                        "title": "Claimed Serial Number",
-                        "type": "string"
-                    },
-                    "device_id": {
-                        "description": "The unique identifier of the Viewing Station.",
-                        "format": "uuid",
-                        "title": "Device Id",
-                        "type": "string"
-                    },
-                    "ip_address": {
-                        "description": "The IP address of the Viewing Station.",
-                        "title": "Ip Address",
-                        "type": "string"
-                    },
-                    "last_seen_at": {
-                        "description": "The last time the Viewing Station was online, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
-                        "title": "Last Seen At",
-                        "type": "string"
-                    },
-                    "last_status": {
-                        "description": "The last status of the Viewing Station. Possible values include \"online\" and \"offline\".",
-                        "title": "Last Status",
-                        "type": "string"
-                    },
-                    "location": {
-                        "description": "The location of the Viewing Station.",
-                        "title": "Location",
-                        "type": "string"
-                    },
-                    "location_lat": {
-                        "description": "The latitude of the Viewing Station location.",
-                        "title": "Location Lat",
-                        "type": "number"
-                    },
-                    "location_lon": {
-                        "description": "The longitude of the Viewing Station location.",
-                        "title": "Location Lon",
-                        "type": "number"
-                    },
-                    "name": {
-                        "description": "The name of the Viewing Station.",
-                        "title": "Name",
-                        "type": "string"
-                    },
-                    "site_id": {
-                        "description": "The unique identifier of the site that the Viewing Station belongs to.",
-                        "format": "uuid",
-                        "title": "Site Id",
-                        "type": "string"
-                    },
-                    "timezone": {
-                        "description": "The timezone of the Viewing Station.",
-                        "title": "Timezone",
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "device_id",
-                    "claimed_serial_number",
-                    "last_status"
-                ],
-                "title": "ViewingStationDeviceV2",
-                "type": "object"
-            },
             "ViewingStationDevicesRequest": {
                 "description": "A request for information about all Viewing Stations in an organization",
                 "properties": {},
                 "title": "ViewingStationDevicesRequest",
-                "type": "object"
-            },
-            "ViewingStationDevicesRequestV2": {
-                "description": "Query parameters for listing viewing station devices.",
-                "properties": {
-                    "cursor": {
-                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
-                        "title": "Cursor",
-                        "type": "string"
-                    },
-                    "limit": {
-                        "default": 100,
-                        "description": "Maximum number of viewing stations to return per page. Default is 100, maximum is 200.",
-                        "exclusiveMinimum": true,
-                        "maximum": 200,
-                        "minimum": 0,
-                        "title": "Limit",
-                        "type": "integer"
-                    }
-                },
-                "title": "ViewingStationDevicesRequestV2",
                 "type": "object"
             },
             "ViewingStationDevicesResponse": {
@@ -11403,27 +11307,6 @@
                     "devices"
                 ],
                 "title": "ViewingStationDevicesResponse",
-                "type": "object"
-            },
-            "ViewingStationDevicesResponseV2": {
-                "additionalProperties": false,
-                "description": "Response schema for listing viewing station devices.",
-                "properties": {
-                    "cursor": {
-                        "description": "Pagination cursor for the next page of results. Continue paginating while this field is non-null.",
-                        "title": "Cursor",
-                        "type": "string"
-                    },
-                    "items": {
-                        "description": "A page of Viewing Station devices in the organization.",
-                        "items": {
-                            "$ref": "#/components/schemas/ViewingStationDeviceV2"
-                        },
-                        "title": "Items",
-                        "type": "array"
-                    }
-                },
-                "title": "ViewingStationDevicesResponseV2",
                 "type": "object"
             },
             "VisitListRequestV2": {
