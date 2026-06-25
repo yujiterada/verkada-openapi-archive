@@ -7660,6 +7660,36 @@
         "title": "OccupancyTrendsCamerasResponseV2",
         "type": "object"
       },
+      "OccupancyTrendsMQTTConfigGetResponseV2": {
+        "additionalProperties": false,
+        "properties": {
+          "broker_cert": {
+            "description": "The CA-signed certificate of the MQTT broker used for the TLS connection. Returns null if no certificate has been configured.",
+            "title": "Broker Cert",
+            "type": "string"
+          },
+          "broker_host_port": {
+            "description": "The host and port of the MQTT broker currently configured for the camera. Returns null if no broker has been configured.",
+            "title": "Broker Host Port",
+            "type": "string"
+          },
+          "camera_id": {
+            "description": "The unique identifier of the camera.",
+            "title": "Camera Id",
+            "type": "string"
+          },
+          "client_username": {
+            "description": "The MQTT client username configured for the camera. Returns null if no username has been configured.",
+            "title": "Client Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "camera_id"
+        ],
+        "title": "OccupancyTrendsMQTTConfigGetResponseV2",
+        "type": "object"
+      },
       "OccupancyTrendsMQTTConfigSetRequestV1": {
         "properties": {
           "broker_cert": {
@@ -18564,6 +18594,43 @@
         "summary": "Enable Face Unlock with Uploaded Photo",
         "tags": [
           "Access Credentials"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/analytics/cameras/{camera_id}/mqtt_configs": {
+      "get": {
+        "description": "Returns the MQTT broker configuration currently set for a camera's Object Position Events.\n\nThe configured password is never returned in the response.",
+        "operationId": "getOccupancyTrendsMQTTConfigViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "camera_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OccupancyTrendsMQTTConfigGetResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get Object Position MQTT Config",
+        "tags": [
+          "Analytics"
         ],
         "security": [
           {
