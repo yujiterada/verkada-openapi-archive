@@ -3490,6 +3490,24 @@
         "title": "DeleteMFACodeQueryV1",
         "type": "object"
       },
+      "DeleteMFACodeQueryV2": {
+        "description": "Query schema for deleting an MFA code credential.",
+        "properties": {
+          "external_id": {
+            "description": "A unique identifier managed externally provided by the customer. Provide either user_id or external_id.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique identifier of the user managed by Verkada. Provide either user_id or external_id.",
+            "format": "uuid",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "title": "DeleteMFACodeQueryV2",
+        "type": "object"
+      },
       "DeleteProfilePhotoQuery": {
         "properties": {
           "external_id": {
@@ -5359,6 +5377,48 @@
         "title": "GetDoorInformationResponseV1",
         "type": "object"
       },
+      "GetLPRZoneQueryV2": {
+        "description": "Query parameters for listing License Plate Recognition Zones.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 200,
+            "description": "Maximum number of LPR Zones to return per page. Default is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "GetLPRZoneQueryV2",
+        "type": "object"
+      },
+      "GetLPRZoneResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing License Plate Recognition Zones.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for the next page of results. Null if no more pages.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "List of LPR Zones.",
+            "items": {
+              "$ref": "#/components/schemas/LPRZoneItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "GetLPRZoneResponseV2",
+        "type": "object"
+      },
       "GetLicensePlatesOfInterestQueryV2": {
         "description": "Query parameters for listing License Plates of Interest.",
         "properties": {
@@ -6594,6 +6654,46 @@
         "title": "LPRTimestampsResponseV2",
         "type": "object"
       },
+      "LPRZoneItemV2": {
+        "additionalProperties": false,
+        "description": "A single LPR zone.",
+        "properties": {
+          "created_at": {
+            "description": "RFC 3339 timestamp of when the zone was created.",
+            "title": "Created At",
+            "type": "string"
+          },
+          "preview_camera_id": {
+            "description": "Verkada UID for the preview camera for the zone.",
+            "title": "Preview Camera Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "description": "RFC 3339 timestamp of when the zone was last updated.",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "zone_id": {
+            "description": "Verkada UID for the zone.",
+            "title": "Zone Id",
+            "type": "string"
+          },
+          "zone_name": {
+            "description": "LPR Zone name.",
+            "title": "Zone Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "zone_id",
+          "zone_name",
+          "created_at",
+          "updated_at",
+          "preview_camera_id"
+        ],
+        "title": "LPRZoneItemV2",
+        "type": "object"
+      },
       "LatLon": {
         "description": "A latitude/longitude coordinate pair",
         "properties": {
@@ -7063,6 +7163,29 @@
           "code"
         ],
         "title": "MFACodeObjectResponseV1",
+        "type": "object"
+      },
+      "MFACodeObjectResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema describing an MFA code credential.",
+        "properties": {
+          "code": {
+            "description": "The code corresponding to a user's MFA code credential.",
+            "title": "Code",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique identifier of the user the MFA code is assigned to.",
+            "format": "uuid",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "user_id"
+        ],
+        "title": "MFACodeObjectResponseV2",
         "type": "object"
       },
       "MaxObjectCountsRequestV1": {
@@ -8650,6 +8773,33 @@
           "code"
         ],
         "title": "PostMFACodeBodyV1",
+        "type": "object"
+      },
+      "PostMFACodeBodyV2": {
+        "description": "Body schema for creating an MFA code credential.",
+        "properties": {
+          "code": {
+            "description": "The MFA code to assign to the user. Must be 4 to 16 numeric digits.",
+            "pattern": "^[0-9]{4,16}$",
+            "title": "Code",
+            "type": "string"
+          },
+          "external_id": {
+            "description": "A unique identifier managed externally provided by the customer. Provide either user_id or external_id.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique identifier of the user managed by Verkada. Provide either user_id or external_id.",
+            "format": "uuid",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "title": "PostMFACodeBodyV2",
         "type": "object"
       },
       "PostQRCodeBodyV2": {
