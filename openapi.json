@@ -217,6 +217,51 @@
                 "title": "AccessGroupAddUserResponseV1",
                 "type": "object"
             },
+            "AccessGroupErrorResponseV2": {
+                "additionalProperties": false,
+                "description": "Error response body shape for v2 access-groups endpoints.",
+                "properties": {
+                    "id": {
+                        "description": "Short stable identifier for the failure site (used by Verkada support).",
+                        "title": "Id",
+                        "type": "string"
+                    },
+                    "message": {
+                        "description": "Human-readable explanation of the failure.",
+                        "title": "Message",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "message"
+                ],
+                "title": "AccessGroupErrorResponseV2",
+                "type": "object"
+            },
+            "AccessGroupItemV2": {
+                "additionalProperties": false,
+                "description": "A single access group summary returned in list responses.",
+                "properties": {
+                    "group_id": {
+                        "description": "The unique identifier of the Access Group managed by Verkada.",
+                        "format": "uuid",
+                        "title": "Group Id",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the Access Group provided by the customer.",
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "group_id",
+                    "name"
+                ],
+                "title": "AccessGroupItemV2",
+                "type": "object"
+            },
             "AccessGroupObjectMetaResponseV1": {
                 "additionalProperties": false,
                 "properties": {
@@ -260,6 +305,59 @@
                     }
                 },
                 "title": "AccessGroupObjectResponseV1",
+                "type": "object"
+            },
+            "AccessGroupResponseV2": {
+                "additionalProperties": false,
+                "description": "Detailed access group object returned for single-group operations.",
+                "properties": {
+                    "group_id": {
+                        "description": "The unique identifier of the Access Group managed by Verkada.",
+                        "format": "uuid",
+                        "title": "Group Id",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the Access Group provided by the customer.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "user_ids": {
+                        "description": "The list of Verkada-defined user identifiers belonging to the access group.",
+                        "items": {
+                            "format": "uuid",
+                            "type": "string"
+                        },
+                        "title": "User Ids",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "group_id",
+                    "name"
+                ],
+                "title": "AccessGroupResponseV2",
+                "type": "object"
+            },
+            "AccessGroupsListResponseV2": {
+                "additionalProperties": false,
+                "description": "Paginated list of access groups.",
+                "properties": {
+                    "cursor": {
+                        "description": "Base62-encoded pagination cursor for retrieving the next page of results. Absent (null) when there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "The list of Access Group summary objects.",
+                        "items": {
+                            "$ref": "#/components/schemas/AccessGroupItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "AccessGroupsListResponseV2",
                 "type": "object"
             },
             "AccessGroupsResponseV1": {
@@ -621,6 +719,77 @@
                 "title": "AccessUserCodeOverrideRequestV1",
                 "type": "object"
             },
+            "AccessUserListItemV2": {
+                "description": "A single access user item in a paginated list.",
+                "properties": {
+                    "company_name": {
+                        "description": "The user's company name.",
+                        "title": "Company Name",
+                        "type": "string"
+                    },
+                    "department": {
+                        "description": "The user's department.",
+                        "title": "Department",
+                        "type": "string"
+                    },
+                    "department_id": {
+                        "description": "The user's department ID.",
+                        "title": "Department Id",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The user's email address.",
+                        "title": "Email",
+                        "type": "string"
+                    },
+                    "employee_id": {
+                        "description": "The organization-defined employee ID for the user.",
+                        "title": "Employee Id",
+                        "type": "string"
+                    },
+                    "employee_title": {
+                        "description": "The user's employee title.",
+                        "title": "Employee Title",
+                        "type": "string"
+                    },
+                    "external_id": {
+                        "description": "A customer-managed external identifier for the user.",
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "description": "The user's full name.",
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "has_profile_photo": {
+                        "description": "Whether the user has a profile photo on file.",
+                        "title": "Has Profile Photo",
+                        "type": "boolean"
+                    },
+                    "is_visitor": {
+                        "description": "Whether this user is a visitor rather than a permanent member.",
+                        "title": "Is Visitor",
+                        "type": "boolean"
+                    },
+                    "profile_photo_last_updated": {
+                        "description": "Timestamp the user's profile photo was last updated, in RFC 3339 format.",
+                        "title": "Profile Photo Last Updated",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique Verkada-managed identifier of the user.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user_id"
+                ],
+                "title": "AccessUserListItemV2",
+                "type": "object"
+            },
             "AccessUserRequestV1": {
                 "properties": {
                     "email": {
@@ -646,6 +815,64 @@
                     }
                 },
                 "title": "AccessUserRequestV1",
+                "type": "object"
+            },
+            "AccessUserResponseV2": {
+                "description": "Response for a single access user.",
+                "properties": {
+                    "ble_unlock": {
+                        "default": false,
+                        "description": "Whether the user is permitted to use Bluetooth Unlock.",
+                        "title": "Ble Unlock",
+                        "type": "boolean"
+                    },
+                    "end_date": {
+                        "description": "Latest time at which this user's credentials are valid, in RFC 3339 format. Null when no end date is set.",
+                        "title": "End Date",
+                        "type": "string"
+                    },
+                    "entry_code": {
+                        "description": "The user's keypad entry code. A string of 4-16 digits, unique within the organization.",
+                        "title": "Entry Code",
+                        "type": "string"
+                    },
+                    "external_id": {
+                        "description": "A customer-managed external identifier for the user.",
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "has_profile_photo": {
+                        "description": "Whether the user has a profile photo on file.",
+                        "title": "Has Profile Photo",
+                        "type": "boolean"
+                    },
+                    "profile_photo_last_updated": {
+                        "description": "Timestamp the user's profile photo was last updated, in RFC 3339 format.",
+                        "title": "Profile Photo Last Updated",
+                        "type": "string"
+                    },
+                    "remote_unlock": {
+                        "default": false,
+                        "description": "Whether the user is permitted to use Remote Unlock.",
+                        "title": "Remote Unlock",
+                        "type": "boolean"
+                    },
+                    "start_date": {
+                        "description": "Earliest time at which this user's credentials are valid, in RFC 3339 format. Null when no start date is set.",
+                        "title": "Start Date",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique Verkada-managed identifier of the user.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user_id"
+                ],
+                "title": "AccessUserResponseV2",
                 "type": "object"
             },
             "AddPeopleRequest": {
@@ -1715,6 +1942,43 @@
                 "title": "BatchJobStatusResponse",
                 "type": "object"
             },
+            "BleUnlockResponseV2": {
+                "additionalProperties": false,
+                "description": "Response for PUT /v2/access/users/<user_id>/ble.",
+                "properties": {
+                    "ble_unlock": {
+                        "description": "The permission state of the user's ability to perform a Bluetooth Unlock after the update. True if BLE unlock is active for the user, False otherwise.",
+                        "title": "Ble Unlock",
+                        "type": "boolean"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada.",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user_id",
+                    "ble_unlock"
+                ],
+                "title": "BleUnlockResponseV2",
+                "type": "object"
+            },
+            "BleUpdateRequestV2": {
+                "description": "Request body for PUT /v2/access/users/<user_id>/ble.",
+                "properties": {
+                    "active": {
+                        "description": "Whether Bluetooth unlock should be active for the user. True grants BLE unlock. False revokes it.",
+                        "title": "Active",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "active"
+                ],
+                "title": "BleUpdateRequestV2",
+                "type": "object"
+            },
             "CCRData": {
                 "additionalProperties": false,
                 "properties": {
@@ -2700,6 +2964,29 @@
                 "title": "CameraInfoResponseV2",
                 "type": "object"
             },
+            "CameraInfoV2": {
+                "additionalProperties": false,
+                "description": "Camera information associated with a door.",
+                "properties": {
+                    "inside_camera_id": {
+                        "description": "The ID of the nearby camera positioned inside the door.",
+                        "title": "Inside Camera Id",
+                        "type": "string"
+                    },
+                    "intercom_camera_id": {
+                        "description": "The ID of the intercom camera if the door is controlled by an intercom.",
+                        "title": "Intercom Camera Id",
+                        "type": "string"
+                    },
+                    "outside_camera_id": {
+                        "description": "The ID of the nearby camera positioned outside the door.",
+                        "title": "Outside Camera Id",
+                        "type": "string"
+                    }
+                },
+                "title": "CameraInfoV2",
+                "type": "object"
+            },
             "CardObjectResponseV1": {
                 "additionalProperties": false,
                 "properties": {
@@ -2736,6 +3023,48 @@
                     }
                 },
                 "title": "CardObjectResponseV1",
+                "type": "object"
+            },
+            "CardObjectResponseV2": {
+                "additionalProperties": false,
+                "description": "Response object representing a single access card credential.",
+                "properties": {
+                    "active": {
+                        "default": false,
+                        "description": "Whether the credential is currently active.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "card_id": {
+                        "description": "The unique identifier of the access card managed by Verkada.",
+                        "title": "Card Id",
+                        "type": "string"
+                    },
+                    "card_number": {
+                        "description": "The card number used to grant or deny access to a door.",
+                        "title": "Card Number",
+                        "type": "string"
+                    },
+                    "card_number_hex": {
+                        "description": "The card number in hexadecimal used to grant or deny access to a door.",
+                        "title": "Card Number Hex",
+                        "type": "string"
+                    },
+                    "facility_code": {
+                        "description": "The facility code used to grant or deny access to a door.",
+                        "title": "Facility Code",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "The type of card used during the credential evaluation process.",
+                        "title": "Type",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "card_id"
+                ],
+                "title": "CardObjectResponseV2",
                 "type": "object"
             },
             "CloudBackupSettingsGetRequest": {
@@ -2905,6 +3234,23 @@
                     "count"
                 ],
                 "title": "CountResponse",
+                "type": "object"
+            },
+            "CreateAccessGroupRequestV2": {
+                "description": "Request body for creating an access group.",
+                "properties": {
+                    "name": {
+                        "description": "The unique name of the Access Group to be created.",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "title": "CreateAccessGroupRequestV2",
                 "type": "object"
             },
             "CreateAccessLevelRequestV1": {
@@ -3465,6 +3811,46 @@
                 "title": "DeleteAccessGroupRequestQueryV1",
                 "type": "object"
             },
+            "DeleteCardQueryV2": {
+                "description": "Query parameters for `DELETE /v2/access/credentials/cards/<card_id>`.",
+                "properties": {
+                    "external_id": {
+                        "description": "A unique identifier managed externally provided by the customer. Provide either `user_id` or `external_id`, not both.",
+                        "maxLength": 256,
+                        "minLength": 1,
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "title": "DeleteCardQueryV2",
+                "type": "object"
+            },
+            "DeleteLicensePlateQueryV2": {
+                "description": "Query parameters for `DELETE /v2/access/credentials/license_plates/<plate_id>`.",
+                "properties": {
+                    "external_id": {
+                        "description": "A unique identifier managed externally provided by the customer. Provide either `user_id` or `external_id`, not both.",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "title": "DeleteLicensePlateQueryV2",
+                "type": "object"
+            },
             "DeleteMFACodeQueryV1": {
                 "properties": {
                     "code": {
@@ -3883,6 +4269,27 @@
                 "title": "DoorConfiguration",
                 "type": "object"
             },
+            "DoorConfigurationV2": {
+                "description": "A single door's lock configuration when a scenario is active.",
+                "properties": {
+                    "door_id": {
+                        "description": "Unique identifier of the door.",
+                        "title": "Door Id",
+                        "type": "string"
+                    },
+                    "door_lock_state": {
+                        "description": "Lock state applied to the door while the scenario is active. One of `ACCESS_CONTROL`, `LOCKED`, `UNLOCKED`.",
+                        "title": "Door Lock State",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "door_id",
+                    "door_lock_state"
+                ],
+                "title": "DoorConfigurationV2",
+                "type": "object"
+            },
             "DoorExceptionCalendarV1": {
                 "description": "Schema for the Door Exception Calendar.",
                 "properties": {
@@ -4018,6 +4425,99 @@
                 "title": "DoorExceptionV1",
                 "type": "object"
             },
+            "DoorExceptionV2": {
+                "description": "v2 response model for a Door Exception within an Exception Calendar.\n\nOverrides ``recurrence_rule`` to use ``RecurrenceRuleV2`` so that\n``by_day`` serialises as full weekday strings per v2-standards §8.",
+                "properties": {
+                    "all_day_default": {
+                        "default": false,
+                        "description": "Bool value specifying if Exception is an All Day Default. If <code>TRUE</code>, then:\n- <code>door_status</code> must be set to <code>access_controlled</code>\n- <code>start_time</code> and <code>end_time</code> will automatically be set to <code>00:00:00</code> and <code>23:59:59</code>, respectively. Different values should not be provided.\n- <code>first_person_in</code> and <code>double_badge</code> must be <code>FALSE</code>",
+                        "title": "All Day Default",
+                        "type": "boolean"
+                    },
+                    "calendar_id": {
+                        "default": "",
+                        "description": "Unique ID of the Door Exception Calendar that this Exception belongs to.",
+                        "title": "Calendar Id",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "Date of the Door Exception formatted as <code>YYYY-MM-DD</code> (according to ISO 8601).",
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "door_exception_id": {
+                        "default": "",
+                        "description": "The unique ID of the Door Exception.",
+                        "title": "Door Exception Id",
+                        "type": "string"
+                    },
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusEnum"
+                            }
+                        ],
+                        "default": "",
+                        "description": "The door status that this Exception should apply to all doors assigned to its Door Exception Calendar.\n\nPossible values are:\n- <code>locked</code>\n- <code>card_and_code</code>\n- <code>access_controlled</code>\n- <code>unlocked</code>"
+                    },
+                    "double_badge": {
+                        "default": false,
+                        "description": "Bool value specifying if the Double Badge setting should be enabled for relevant doors. If <code>TRUE</code>, <code>door_status</code> must be set to <code>access_controlled</code>.\n\nBy default, all users with access to relevant doors will be allowed to double badge.",
+                        "title": "Double Badge",
+                        "type": "boolean"
+                    },
+                    "double_badge_group_ids": {
+                        "description": "List of IDs for Access Groups that users must be a member of to be allowed to double badge on relevant doors.\n\n<code>double_badge</code> must also be set to <code>TRUE</code> if value is provided.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Double Badge Group Ids",
+                        "type": "array"
+                    },
+                    "end_time": {
+                        "description": "End time of the Door Exception formatted as <code>hh:mm</code> (according to ISO 8601).",
+                        "format": "time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "first_person_in": {
+                        "default": false,
+                        "description": "Bool value specifying if the First Person In setting should be enabled for relevant doors. If <code>TRUE</code>, <code>door_status</code> must be set to <code>card_and_code</code>, <code>access_controlled</code>, or <code>unlocked</code>.",
+                        "title": "First Person In",
+                        "type": "boolean"
+                    },
+                    "first_person_in_group_ids": {
+                        "description": "List of IDs for Access Groups including supervisors used for First Person In mode.\n\n<code>first_person_in</code> must also be set to <code>TRUE</code> if this value is provided.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "First Person In Group Ids",
+                        "type": "array"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "Recurrence rule with full weekday strings (Monday, Tuesday, ...).",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "Start time of the Door Exception formatted as <code>hh:mm</code> (according to ISO 8601).",
+                        "format": "time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "date",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "DoorExceptionV2",
+                "type": "object"
+            },
             "DoorInfo": {
                 "additionalProperties": false,
                 "properties": {
@@ -4040,6 +4540,62 @@
                 "title": "DoorInfo",
                 "type": "object"
             },
+            "DoorInfoV2": {
+                "additionalProperties": false,
+                "description": "Door information object returned in the V2 response.",
+                "properties": {
+                    "acu_id": {
+                        "description": "The ID of the access control unit (ACU) the door is attached to.",
+                        "title": "Acu Id",
+                        "type": "string"
+                    },
+                    "acu_name": {
+                        "description": "The name of the access control unit (ACU) the door is attached to.",
+                        "title": "Acu Name",
+                        "type": "string"
+                    },
+                    "api_control_enabled": {
+                        "description": "Whether 'Control Door via API' is enabled in door settings.",
+                        "title": "Api Control Enabled",
+                        "type": "boolean"
+                    },
+                    "camera_info": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CameraInfoV2"
+                            }
+                        ],
+                        "description": "IDs of the door's nearby cameras.",
+                        "title": "Camera Info"
+                    },
+                    "door_id": {
+                        "description": "The unique identifier of the door.",
+                        "title": "Door Id",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the door.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "site": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SiteInfoV2"
+                            }
+                        ],
+                        "description": "The site this door belongs to.",
+                        "title": "Site"
+                    },
+                    "timezone": {
+                        "description": "The IANA timezone the door is located in.",
+                        "title": "Timezone",
+                        "type": "string"
+                    }
+                },
+                "title": "DoorInfoV2",
+                "type": "object"
+            },
             "DoorStatus": {
                 "description": "Door status for Access Schedule Events. Always set to access_granted.",
                 "enum": [
@@ -4058,6 +4614,22 @@
                 ],
                 "title": "DoorStatusEnum",
                 "type": "string"
+            },
+            "EntryCodeResponseV2": {
+                "additionalProperties": false,
+                "description": "Response for setting an access user's entry code.",
+                "properties": {
+                    "user_id": {
+                        "description": "The user ID for which the entry code was set.",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user_id"
+                ],
+                "title": "EntryCodeResponseV2",
+                "type": "object"
             },
             "Event": {
                 "additionalProperties": false,
@@ -4815,6 +5387,166 @@
                 "title": "EventsResponseV2",
                 "type": "object"
             },
+            "ExceptionCalendarV2": {
+                "additionalProperties": false,
+                "description": "Schema for an Exception Calendar.",
+                "properties": {
+                    "calendar_id": {
+                        "default": "",
+                        "description": "Unique ID of the Exception Calendar.",
+                        "title": "Calendar Id",
+                        "type": "string"
+                    },
+                    "doors": {
+                        "description": "Door IDs of doors that the calendar's exceptions are applied to.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors",
+                        "type": "array"
+                    },
+                    "exceptions": {
+                        "description": "Exceptions for this Exception Calendar.",
+                        "items": {
+                            "$ref": "#/components/schemas/ExceptionV2"
+                        },
+                        "title": "Exceptions",
+                        "type": "array"
+                    },
+                    "last_updated_at": {
+                        "description": "RFC 3339 timestamp of when the Exception Calendar was last updated (for example <code>2025-08-04T21:51:53+00:00</code>).",
+                        "title": "Last Updated At",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Name of the Exception Calendar.",
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "title": "ExceptionCalendarV2",
+                "type": "object"
+            },
+            "ExceptionErrorResponseV2": {
+                "description": "Structured error body returned for all 4xx/5xx responses on these endpoints.",
+                "properties": {
+                    "data": {
+                        "description": "Optional additional error context.",
+                        "title": "Data",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "Short alphanumeric error code for support triage.",
+                        "title": "Id",
+                        "type": "string"
+                    },
+                    "message": {
+                        "description": "Human-readable error message.",
+                        "title": "Message",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "message"
+                ],
+                "title": "ExceptionErrorResponseV2",
+                "type": "object"
+            },
+            "ExceptionV2": {
+                "description": "Schema for a Door Exception within an Exception Calendar.",
+                "properties": {
+                    "all_day_default": {
+                        "default": false,
+                        "description": "If true, the exception applies for the full day. <code>door_status</code> must be <code>access_controlled</code>, <code>start_time</code> defaults to <code>00:00:00</code>, <code>end_time</code> defaults to <code>23:59:59</code>, and both <code>first_person_in</code> and <code>double_badge</code> must be false.",
+                        "title": "All Day Default",
+                        "type": "boolean"
+                    },
+                    "calendar_id": {
+                        "default": "",
+                        "description": "Unique ID of the Exception Calendar that this exception belongs to.",
+                        "title": "Calendar Id",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "Date of the exception, formatted as <code>YYYY-MM-DD</code> (ISO 8601).",
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusEnum"
+                            }
+                        ],
+                        "description": "The door status applied by this exception. One of <code>locked</code>, <code>card_and_code</code>, <code>access_controlled</code>, <code>unlocked</code>."
+                    },
+                    "double_badge": {
+                        "default": false,
+                        "description": "If true, Double Badge is enabled for relevant doors. When enabled, <code>door_status</code> must be <code>access_controlled</code>.",
+                        "title": "Double Badge",
+                        "type": "boolean"
+                    },
+                    "double_badge_group_ids": {
+                        "description": "List of Access Group IDs whose members are allowed to double badge on relevant doors. Required when <code>double_badge</code> is true.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Double Badge Group Ids",
+                        "type": "array"
+                    },
+                    "end_time": {
+                        "description": "End time of the exception formatted as <code>hh:mm</code> (ISO 8601). Required when <code>all_day_default</code> is false.",
+                        "format": "time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "exception_id": {
+                        "default": "",
+                        "description": "The unique ID of the Exception.",
+                        "title": "Exception Id",
+                        "type": "string"
+                    },
+                    "first_person_in": {
+                        "default": false,
+                        "description": "If true, First Person In is enabled for relevant doors. When enabled, <code>door_status</code> must be <code>card_and_code</code>, <code>access_controlled</code>, or <code>unlocked</code>.",
+                        "title": "First Person In",
+                        "type": "boolean"
+                    },
+                    "first_person_in_group_ids": {
+                        "description": "List of Access Group IDs whose members act as supervisors for First Person In. Required when <code>first_person_in</code> is true.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "First Person In Group Ids",
+                        "type": "array"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "A recurrence rule (RFC 5545) specifying when the exception should repeat.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "Start time of the exception formatted as <code>hh:mm</code> (ISO 8601). Required when <code>all_day_default</code> is false.",
+                        "format": "time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "door_status",
+                    "date"
+                ],
+                "title": "ExceptionV2",
+                "type": "object"
+            },
             "ExchangeSdkTokenRequestV2": {
                 "description": "Request body for exchanging a Pass App SDK token",
                 "properties": {
@@ -5377,6 +6109,134 @@
                 "title": "GetDoorInformationResponseV1",
                 "type": "object"
             },
+            "GetDoorsQueryV2": {
+                "description": "Query parameters for listing doors.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor returned by a previous response. Pass this to retrieve the next page of results.",
+                        "minLength": 1,
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "door_ids": {
+                        "description": "Comma-separated list of door UUIDs to filter by. Cannot be used together with `site_ids`.",
+                        "title": "Door Ids",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of doors to return per page (1-1000, default 100).",
+                        "maximum": 1000,
+                        "minimum": 1,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "site_ids": {
+                        "description": "Comma-separated list of site UUIDs to filter by. Cannot be used together with `door_ids`.",
+                        "title": "Site Ids",
+                        "type": "string"
+                    }
+                },
+                "title": "GetDoorsQueryV2",
+                "type": "object"
+            },
+            "GetDoorsResponseV2": {
+                "additionalProperties": false,
+                "description": "Paginated response for listing doors.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor. When non-null, more results are available. Pass this value as the `cursor` query parameter on the next request.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of door information objects.",
+                        "items": {
+                            "$ref": "#/components/schemas/DoorInfoV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "GetDoorsResponseV2",
+                "type": "object"
+            },
+            "GetLPRZoneMetricsQueryV2": {
+                "description": "Query parameters for retrieving aggregated LPR Zone metrics over a time range.",
+                "properties": {
+                    "end_time": {
+                        "description": "End of the time range (exclusive) in ISO 8601 format (e.g., '2025-08-05T00:00:00Z').",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "Start of the time range (inclusive) in ISO 8601 format (e.g., '2025-08-04T00:00:00Z').",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "GetLPRZoneMetricsQueryV2",
+                "type": "object"
+            },
+            "GetLPRZoneMetricsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for aggregated LPR Zone metrics over a time range.",
+                "properties": {
+                    "avg_time_in_zone": {
+                        "description": "Average time spent in the zone within the given range, as an ISO 8601 duration (e.g., 'PT17M').",
+                        "title": "Avg Time In Zone",
+                        "type": "string"
+                    },
+                    "entries": {
+                        "description": "Total number of entries within the given range.",
+                        "title": "Entries",
+                        "type": "integer"
+                    },
+                    "exits": {
+                        "description": "Total number of exits within the given range.",
+                        "title": "Exits",
+                        "type": "integer"
+                    },
+                    "max_time_in_zone": {
+                        "description": "Maximum time spent in the zone within the given range, as an ISO 8601 duration (e.g., 'PT27M').",
+                        "title": "Max Time In Zone",
+                        "type": "string"
+                    },
+                    "median_time_in_zone": {
+                        "description": "Median time spent in the zone within the given range, as an ISO 8601 duration (e.g., 'PT15M').",
+                        "title": "Median Time In Zone",
+                        "type": "string"
+                    },
+                    "occupancy": {
+                        "description": "Total occupancy at the end of the given range.",
+                        "title": "Occupancy",
+                        "type": "integer"
+                    },
+                    "unique_visitors": {
+                        "description": "Total number of unique visitors within the given range.",
+                        "title": "Unique Visitors",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "occupancy",
+                    "entries",
+                    "exits",
+                    "unique_visitors",
+                    "median_time_in_zone",
+                    "max_time_in_zone",
+                    "avg_time_in_zone"
+                ],
+                "title": "GetLPRZoneMetricsResponseV2",
+                "type": "object"
+            },
             "GetLPRZoneQueryV2": {
                 "description": "Query parameters for listing License Plate Recognition Zones.",
                 "properties": {
@@ -5396,6 +6256,66 @@
                     }
                 },
                 "title": "GetLPRZoneQueryV2",
+                "type": "object"
+            },
+            "GetLPRZoneRecordsQueryV2": {
+                "description": "Query parameters for listing LPR Zone visit records.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "description": "End of the time range in ISO 8601 format (e.g., '2025-08-05T00:00:00Z'). Defaults to the current time.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of records to return per page. Default is 100, maximum is 100.",
+                        "exclusiveMinimum": true,
+                        "maximum": 100,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "start_time": {
+                        "description": "Start of the time range in ISO 8601 format (e.g., '2025-08-04T00:00:00Z'). Defaults to 24 hours before the current time.",
+                        "title": "Start Time",
+                        "type": "string"
+                    },
+                    "vehicle_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/LPRZoneRecordStatusV2"
+                            }
+                        ],
+                        "description": "Filter records by vehicle status. One of 'still_in' or 'departed'. When omitted, records of all statuses are returned."
+                    }
+                },
+                "title": "GetLPRZoneRecordsQueryV2",
+                "type": "object"
+            },
+            "GetLPRZoneRecordsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing LPR Zone visit records.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of LPR Zone visit records.",
+                        "items": {
+                            "$ref": "#/components/schemas/LPRZoneRecordItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "GetLPRZoneRecordsResponseV2",
                 "type": "object"
             },
             "GetLPRZoneResponseV2": {
@@ -5482,6 +6402,19 @@
                     }
                 },
                 "title": "GetProfilePhotoQuery",
+                "type": "object"
+            },
+            "GetProfilePhotoQueryV2": {
+                "description": "Query parameters for retrieving a profile photo.",
+                "properties": {
+                    "original": {
+                        "default": false,
+                        "description": "Whether to return the original image. Defaults to false (cropped image).",
+                        "title": "Original",
+                        "type": "boolean"
+                    }
+                },
+                "title": "GetProfilePhotoQueryV2",
                 "type": "object"
             },
             "GetUserRequest": {
@@ -6694,6 +7627,86 @@
                 "title": "LPRZoneItemV2",
                 "type": "object"
             },
+            "LPRZoneRecordItemV2": {
+                "additionalProperties": false,
+                "description": "A single LPR zone visit record.",
+                "properties": {
+                    "dwell_time": {
+                        "description": "Time spent in the zone as an ISO 8601 duration (e.g., 'PT5H24M59S'). For vehicles still in the zone this is the running duration up to the query time.",
+                        "title": "Dwell Time",
+                        "type": "string"
+                    },
+                    "entry_camera_id": {
+                        "description": "Verkada UID for the entry camera.",
+                        "title": "Entry Camera Id",
+                        "type": "string"
+                    },
+                    "entry_time": {
+                        "description": "RFC 3339 timestamp of the entry event.",
+                        "title": "Entry Time",
+                        "type": "string"
+                    },
+                    "exit_camera_id": {
+                        "description": "Verkada UID for the exit camera.",
+                        "title": "Exit Camera Id",
+                        "type": "string"
+                    },
+                    "exit_time": {
+                        "description": "RFC 3339 timestamp of the exit event.",
+                        "title": "Exit Time",
+                        "type": "string"
+                    },
+                    "invalid": {
+                        "description": "Whether the record was marked invalid.",
+                        "title": "Invalid",
+                        "type": "boolean"
+                    },
+                    "invalid_reason": {
+                        "description": "If the record was marked invalid, the reason why.",
+                        "title": "Invalid Reason",
+                        "type": "string"
+                    },
+                    "license_plate": {
+                        "description": "The alphanumeric license plate string (e.g., 'ABC123').",
+                        "title": "License Plate",
+                        "type": "string"
+                    },
+                    "plate_thumbnail_url": {
+                        "description": "Signed URL to the captured license plate crop. Null if unavailable.",
+                        "title": "Plate Thumbnail Url",
+                        "type": "string"
+                    },
+                    "vehicle_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/LPRZoneRecordStatusV2"
+                            }
+                        ],
+                        "description": "Vehicle status: 'still_in' if the vehicle has not yet exited, otherwise 'departed'."
+                    },
+                    "vehicle_thumbnail_url": {
+                        "description": "Signed URL to the captured vehicle crop. Null if unavailable.",
+                        "title": "Vehicle Thumbnail Url",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "license_plate",
+                    "vehicle_status",
+                    "invalid"
+                ],
+                "title": "LPRZoneRecordItemV2",
+                "type": "object"
+            },
+            "LPRZoneRecordStatusV2": {
+                "description": "Presence status of a vehicle within an LPR zone.",
+                "enum": [
+                    "still_in",
+                    "departed"
+                ],
+                "title": "LPRZoneRecordStatusV2",
+                "type": "string"
+            },
             "LatLon": {
                 "description": "A latitude/longitude coordinate pair",
                 "properties": {
@@ -6781,6 +7794,33 @@
                     "name"
                 ],
                 "title": "LicensePlateObjectResponseV1",
+                "type": "object"
+            },
+            "LicensePlateObjectResponseV2": {
+                "additionalProperties": false,
+                "description": "Response object representing a single license plate credential.",
+                "properties": {
+                    "active": {
+                        "default": false,
+                        "description": "Whether the credential is currently active.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "license_plate_number": {
+                        "description": "The license plate number identifying the credential.",
+                        "title": "License Plate Number",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The display name of the license plate credential.",
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "license_plate_number"
+                ],
+                "title": "LicensePlateObjectResponseV2",
                 "type": "object"
             },
             "LicensePlateOfInterest": {
@@ -7100,6 +8140,124 @@
                     "event_time"
                 ],
                 "title": "LicensePlateSearchResultV2",
+                "type": "object"
+            },
+            "ListAccessGroupsQueryV2": {
+                "description": "Query parameters for listing access groups.",
+                "properties": {
+                    "cursor": {
+                        "description": "Base62-encoded pagination cursor for retrieving the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of access groups to return. Default is 100, maximum is 1000.",
+                        "exclusiveMinimum": true,
+                        "maximum": 1000,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ListAccessGroupsQueryV2",
+                "type": "object"
+            },
+            "ListAccessUsersRequestV2": {
+                "description": "Query parameters for listing access users.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor returned by a previous request. Omit to start from the first page.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "include_visitors": {
+                        "default": false,
+                        "description": "Whether visitor users should be included in the response. Defaults to false.",
+                        "title": "Include Visitors",
+                        "type": "boolean"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of access users to return per page. Default is 100, maximum is 1000.",
+                        "exclusiveMinimum": true,
+                        "maximum": 1000,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ListAccessUsersRequestV2",
+                "type": "object"
+            },
+            "ListAccessUsersResponseV2": {
+                "description": "Paginated list of access users.",
+                "properties": {
+                    "cursor": {
+                        "description": "Cursor for fetching the next page of results. Null when there are no more results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "The page of access users for this organization.",
+                        "items": {
+                            "$ref": "#/components/schemas/AccessUserListItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "items"
+                ],
+                "title": "ListAccessUsersResponseV2",
+                "type": "object"
+            },
+            "ListExceptionCalendarsQueryV2": {
+                "description": "Query parameters for GET /v2/access/exception_calendars.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor returned by a previous list response. Omit on the first page.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "last_updated_after": {
+                        "description": "Filter to Exception Calendars updated after this timestamp. ISO 8601 / RFC 3339 (for example <code>2025-08-04T21:51:53Z</code>).",
+                        "title": "Last Updated After",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of Exception Calendars to return. Default 100, maximum 1000.",
+                        "exclusiveMinimum": true,
+                        "maximum": 1000,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ListExceptionCalendarsQueryV2",
+                "type": "object"
+            },
+            "ListExceptionCalendarsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response body for GET /v2/access/exception_calendars.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page. Absent when there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "Page of Exception Calendars.",
+                        "items": {
+                            "$ref": "#/components/schemas/ExceptionCalendarV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ListExceptionCalendarsResponseV2",
                 "type": "object"
             },
             "Lockdown": {
@@ -8086,6 +9244,129 @@
                 "title": "OpenEndedResponseItemV2",
                 "type": "object"
             },
+            "PassInviteRequestV2": {
+                "description": "Request body for pass app invitation endpoint",
+                "properties": {
+                    "invitation_methods": {
+                        "description": "Methods to send the Pass app invitation through. Currently only \"email\" is supported. Defaults to [\"email\"] when the field is omitted or an empty list.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "maxItems": 10,
+                        "title": "Invitation Methods",
+                        "type": "array"
+                    }
+                },
+                "title": "PassInviteRequestV2",
+                "type": "object"
+            },
+            "PassInviteResponseV2": {
+                "additionalProperties": false,
+                "description": "Response for pass app invitation endpoint",
+                "properties": {
+                    "invitations_failed": {
+                        "description": "The methods the invitation failed to send through.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Invitations Failed",
+                        "type": "array"
+                    },
+                    "invitations_sent": {
+                        "description": "The methods the invitation was successfully sent through.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Invitations Sent",
+                        "type": "array"
+                    },
+                    "user_id": {
+                        "description": "The user ID for which the Pass app invitation was sent.",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user_id"
+                ],
+                "title": "PassInviteResponseV2",
+                "type": "object"
+            },
+            "PatchAccessUserBodyV2": {
+                "description": "Body for partially updating an access user.\n\nAt least one of ``start_date`` or ``end_date`` must be supplied. Other\nsub-resources (entry_code, profile_photo, ble_unlock, remote_unlock,\ncredentials) have their own dedicated v2 endpoints under\n``/v2/access/users/<user_id>/...``.",
+                "properties": {
+                    "end_date": {
+                        "description": "Latest time at which this user's credentials remain valid, in ISO 8601 format with explicit timezone (e.g. 2025-07-17T21:06:20Z). Omit to leave the end date unchanged.",
+                        "format": "date-time",
+                        "title": "End Date",
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "description": "Earliest time at which this user's credentials become valid, in ISO 8601 format with explicit timezone (e.g. 2025-07-17T21:06:20Z). Omit to leave the start date unchanged.",
+                        "format": "date-time",
+                        "title": "Start Date",
+                        "type": "string"
+                    }
+                },
+                "title": "PatchAccessUserBodyV2",
+                "type": "object"
+            },
+            "PatchCardBodyV2": {
+                "description": "Body for `PATCH /v2/access/credentials/cards/<card_id>`.\n\nConsolidates the v1 `PUT /credentials/card/activate` and\n`/deactivate` endpoints into a single state-change call.",
+                "properties": {
+                    "active": {
+                        "description": "Whether the credential should be active. Replaces the dedicated v1 activate/deactivate endpoints.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "external_id": {
+                        "description": "A unique identifier managed externally provided by the customer. Provide either `user_id` or `external_id`, not both.",
+                        "maxLength": 256,
+                        "minLength": 1,
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "active"
+                ],
+                "title": "PatchCardBodyV2",
+                "type": "object"
+            },
+            "PatchLicensePlateBodyV2": {
+                "description": "Body for `PATCH /v2/access/credentials/license_plates/<plate_id>`.\n\nConsolidates the v1 `PUT /credentials/license_plate/activate` and\n`/deactivate` endpoints into a single state-change call.",
+                "properties": {
+                    "active": {
+                        "description": "Whether the credential should be active. Replaces the dedicated v1 activate/deactivate endpoints.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "external_id": {
+                        "description": "A unique identifier managed externally provided by the customer. Provide either `user_id` or `external_id`, not both.",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "active"
+                ],
+                "title": "PatchLicensePlateBodyV2",
+                "type": "object"
+            },
             "PatchLicensePlateOfInterestBodyRequest": {
                 "properties": {
                     "description": {
@@ -8540,6 +9821,12 @@
                 "title": "PostAdminAPIUnlockBodyV1",
                 "type": "object"
             },
+            "PostAdminUnlockBodyV2": {
+                "description": "Body for admin door unlock. The door_id is provided in the URL path; no body fields are required.",
+                "properties": {},
+                "title": "PostAdminUnlockBodyV2",
+                "type": "object"
+            },
             "PostCardBodyV1": {
                 "properties": {
                     "active": {
@@ -8573,6 +9860,60 @@
                     "type"
                 ],
                 "title": "PostCardBodyV1",
+                "type": "object"
+            },
+            "PostCardBodyV2": {
+                "description": "Body for `POST /v2/access/credentials/cards`.",
+                "properties": {
+                    "active": {
+                        "default": false,
+                        "description": "Whether the credential is currently active. Defaults to `false`.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "card_number": {
+                        "description": "The card number used to grant or deny access to a door. Numeric only, up to 20 digits. Mutually exclusive with `card_number_hex`.",
+                        "pattern": "^[0-9]{1,20}$",
+                        "title": "Card Number",
+                        "type": "string"
+                    },
+                    "card_number_hex": {
+                        "description": "The card number in hexadecimal used to grant or deny access to a door. Mutually exclusive with `card_number`. When using card_number_hex, facility_code must be omitted.",
+                        "pattern": "^[0-9A-Fa-f]{1,40}$",
+                        "title": "Card Number Hex",
+                        "type": "string"
+                    },
+                    "external_id": {
+                        "description": "A unique identifier managed externally provided by the customer. Provide either `user_id` or `external_id`, not both.",
+                        "maxLength": 256,
+                        "minLength": 1,
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "facility_code": {
+                        "description": "The facility code used to grant or deny access to a door. Numeric only, up to 10 digits. Required when `card_number` is supplied. Must be omitted when `card_number_hex` is supplied.",
+                        "pattern": "^[0-9]{1,10}$",
+                        "title": "Facility Code",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "One of the supported card types: `Standard 26-bit Wiegand`, `HID 37-bit`, `HID 37-bit No Facility Code`, `HID 34-bit`, `Casi Rusco 40-Bit`, `HID Corporate 1000-35`, `HID Corporate 1000-48`, `HID iClass`, `DESFire CSN`, `Verkada DESFire EV3`, `Third Party DESFire 40X`, `Apple Wallet Pass`, `MiFare 4-Byte (32 bit) CSN`, `MDC Custom 64-bit`, `HID 36-bit Keyscan`, `HID 33-bit DSX`, `HID 33-bit RS2`, `HID 36-bit Simplex`, `Cansec 37-bit`, `Credit Card BIN Number`, `Credit Card BIN Number (191-bit)`, `Kantech XSF`, `Schlage 34-bit`, `Schlage 34-bit N`, `Schlage 37-bit`, `RBH 50-bit`, `Guardall G-Prox II 36-bit`, `AMAG 32-bit`, `Securitas 37-bit`, `Kastle 32-bit`, `PointGuard MDI 37-bit`, `Blackboard 64-bit`, `IDm 64-bit`, `Continental 36-bit`, `AWID 34-bit`, `HID Infinity 37-bit`, `HID Ceridian 26-bit`, `iClass 35-bit`, `Andover Controls 37-bit`, `FASC-N 200-bit`, `Acro 27-bit`, `Trevecca 64-bit`, `Allied Universal 37-bit`, `42-bit HIDext-CRYPD`, `HID 10304 37-bit (Custom)`, `ISO7811 115-bit`, `Avigilon 56-Bit`, `Wiegand 32 Bit`, `Cyprus 37-Bit`, `PIV`, `34-Bit JCI`, `MiFare 4-Byte (32 bit) CSN Reverse`.",
+                        "maxLength": 128,
+                        "minLength": 1,
+                        "title": "Type",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "type"
+                ],
+                "title": "PostCardBodyV2",
                 "type": "object"
             },
             "PostCredentialQueryV1": {
@@ -8736,6 +10077,140 @@
                 "title": "PostDoorExceptionCalendarBodyV1",
                 "type": "object"
             },
+            "PostDoorUnlockResponseV2": {
+                "additionalProperties": false,
+                "description": "Returned on a successful door unlock.",
+                "properties": {
+                    "door_id": {
+                        "description": "The unique identifier of the door that was unlocked.",
+                        "title": "Door Id",
+                        "type": "string"
+                    },
+                    "unlock_duration": {
+                        "description": "The duration of the unlock in seconds.",
+                        "title": "Unlock Duration",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "door_id",
+                    "unlock_duration"
+                ],
+                "title": "PostDoorUnlockResponseV2",
+                "type": "object"
+            },
+            "PostExceptionBodyV2": {
+                "description": "Request body for POST /v2/access/exception_calendars/<calendar_id>/exceptions.",
+                "properties": {
+                    "all_day_default": {
+                        "default": false,
+                        "description": "Bool value specifying if Exception is an All Day Default. If <code>TRUE</code>, then:\n- <code>door_status</code> must be set to <code>access_controlled</code>\n- <code>start_time</code> and <code>end_time</code> will automatically be set to <code>00:00:00</code> and <code>23:59:59</code>, respectively. Different values should not be provided.\n- <code>first_person_in</code> and <code>double_badge</code> must be <code>FALSE</code>",
+                        "title": "All Day Default",
+                        "type": "boolean"
+                    },
+                    "date": {
+                        "description": "Date of the Door Exception formatted as <code>YYYY-MM-DD</code> (according to ISO 8601).",
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusEnum"
+                            }
+                        ],
+                        "default": "",
+                        "description": "The door status that this Exception should apply to all doors assigned to its Door Exception Calendar.\n\nPossible values are:\n- <code>locked</code>\n- <code>card_and_code</code>\n- <code>access_controlled</code>\n- <code>unlocked</code>"
+                    },
+                    "double_badge": {
+                        "default": false,
+                        "description": "Bool value specifying if the Double Badge setting should be enabled for relevant doors. If <code>TRUE</code>, <code>door_status</code> must be set to <code>access_controlled</code>.\n\nBy default, all users with access to relevant doors will be allowed to double badge.",
+                        "title": "Double Badge",
+                        "type": "boolean"
+                    },
+                    "double_badge_group_ids": {
+                        "description": "List of IDs for Access Groups that users must be a member of to be allowed to double badge on relevant doors.\n\n<code>double_badge</code> must also be set to <code>TRUE</code> if value is provided.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Double Badge Group Ids",
+                        "type": "array"
+                    },
+                    "end_time": {
+                        "description": "End time of the Door Exception formatted as <code>hh:mm</code> (according to ISO 8601).",
+                        "format": "time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "first_person_in": {
+                        "default": false,
+                        "description": "Bool value specifying if the First Person In setting should be enabled for relevant doors. If <code>TRUE</code>, <code>door_status</code> must be set to <code>card_and_code</code>, <code>access_controlled</code>, or <code>unlocked</code>.",
+                        "title": "First Person In",
+                        "type": "boolean"
+                    },
+                    "first_person_in_group_ids": {
+                        "description": "List of IDs for Access Groups including supervisors used for First Person In mode.\n\n<code>first_person_in</code> must also be set to <code>TRUE</code> if this value is provided.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "First Person In Group Ids",
+                        "type": "array"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecurrenceRule"
+                            }
+                        ],
+                        "description": "A recurrence rule object specifying when the exception should repeat.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "Start time of the Door Exception formatted as <code>hh:mm</code> (according to ISO 8601).",
+                        "format": "time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "date",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "PostExceptionBodyV2",
+                "type": "object"
+            },
+            "PostExceptionCalendarBodyV2": {
+                "description": "Request body for POST /v2/access/exception_calendars.",
+                "properties": {
+                    "doors": {
+                        "description": "Door IDs of doors that the calendar's exceptions should be applied to.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors",
+                        "type": "array"
+                    },
+                    "exceptions": {
+                        "description": "Exceptions for this Exception Calendar.",
+                        "items": {
+                            "$ref": "#/components/schemas/UnidentifiedValidatedExceptionV2"
+                        },
+                        "title": "Exceptions",
+                        "type": "array"
+                    },
+                    "name": {
+                        "description": "Name of the Exception Calendar.",
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "title": "PostExceptionCalendarBodyV2",
+                "type": "object"
+            },
             "PostLicensePlateBodyV1": {
                 "properties": {
                     "active": {
@@ -8759,6 +10234,48 @@
                     "license_plate_number"
                 ],
                 "title": "PostLicensePlateBodyV1",
+                "type": "object"
+            },
+            "PostLicensePlateBodyV2": {
+                "description": "Body for `POST /v2/access/credentials/license_plates`.",
+                "properties": {
+                    "active": {
+                        "default": false,
+                        "description": "Whether the credential is currently active. Defaults to `false`.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "external_id": {
+                        "description": "A unique identifier managed externally provided by the customer. Provide either `user_id` or `external_id`, not both.",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "license_plate_number": {
+                        "description": "The unique license plate number identifying the credential within the organization.",
+                        "maxLength": 16,
+                        "minLength": 2,
+                        "title": "License Plate Number",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name to display for the license plate credential. Defaults to the license plate number when omitted.",
+                        "maxLength": 128,
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "license_plate_number"
+                ],
+                "title": "PostLicensePlateBodyV2",
                 "type": "object"
             },
             "PostMFACodeBodyV1": {
@@ -8855,6 +10372,13 @@
                 "title": "PostScenarioActionResponseV1",
                 "type": "object"
             },
+            "PostScenarioActionResponseV2": {
+                "additionalProperties": false,
+                "description": "Response body for activate and release actions.",
+                "properties": {},
+                "title": "PostScenarioActionResponseV2",
+                "type": "object"
+            },
             "PostUserAPIUnlockBodyV1": {
                 "description": "User unlock parameters. Requires a user for whom to evaluate permission to unlock.",
                 "properties": {
@@ -8877,6 +10401,30 @@
                     }
                 },
                 "title": "PostUserAPIUnlockBodyV1",
+                "type": "object"
+            },
+            "PostUserUnlockBodyV2": {
+                "description": "Body for user door unlock. The door_id is provided in the URL path; exactly one of user_id or external_id must be supplied.",
+                "properties": {
+                    "external_id": {
+                        "description": "An externally defined unique identifier for the unlocking user.",
+                        "title": "External Id",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the unlocking user managed by Verkada.",
+                        "format": "uuid",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "title": "PostUserUnlockBodyV2",
+                "type": "object"
+            },
+            "ProfilePhotoResponseV2": {
+                "description": "Empty response body for profile photo mutation endpoints (PUT, DELETE).",
+                "properties": {},
+                "title": "ProfilePhotoResponseV2",
                 "type": "object"
             },
             "PutAccessGroupRequestBodyV1": {
@@ -9041,6 +10589,149 @@
                     "entry_code"
                 ],
                 "title": "PutEntryCodeAccessUserRequestBodyV1",
+                "type": "object"
+            },
+            "PutEntryCodeRequestBodyV2": {
+                "description": "Request body for setting an access user's entry code (PIN).",
+                "properties": {
+                    "entry_code": {
+                        "description": "The access entry code used for keypad readers alone or in 2FA mode. Formatted as a string of digits between 4 and 16 in length. Must be unique within the organization.",
+                        "maxLength": 16,
+                        "minLength": 4,
+                        "pattern": "^[0-9]{4,16}$",
+                        "title": "Entry Code",
+                        "type": "string"
+                    },
+                    "override": {
+                        "default": false,
+                        "description": "If true, applies the entry code to the user even if the entry code is already in use by another user in the organization. The other user's entry code will be cleared. Default is false.",
+                        "title": "Override",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "entry_code"
+                ],
+                "title": "PutEntryCodeRequestBodyV2",
+                "type": "object"
+            },
+            "PutExceptionBodyV2": {
+                "description": "Request body for PUT /v2/access/exception_calendars/<calendar_id>/exceptions/<exception_id>.",
+                "properties": {
+                    "all_day_default": {
+                        "default": false,
+                        "description": "Bool value specifying if Exception is an All Day Default. If <code>TRUE</code>, then:\n- <code>door_status</code> must be set to <code>access_controlled</code>\n- <code>start_time</code> and <code>end_time</code> will automatically be set to <code>00:00:00</code> and <code>23:59:59</code>, respectively. Different values should not be provided.\n- <code>first_person_in</code> and <code>double_badge</code> must be <code>FALSE</code>",
+                        "title": "All Day Default",
+                        "type": "boolean"
+                    },
+                    "date": {
+                        "description": "Date of the Door Exception formatted as <code>YYYY-MM-DD</code> (according to ISO 8601).",
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusEnum"
+                            }
+                        ],
+                        "default": "",
+                        "description": "The door status that this Exception should apply to all doors assigned to its Door Exception Calendar.\n\nPossible values are:\n- <code>locked</code>\n- <code>card_and_code</code>\n- <code>access_controlled</code>\n- <code>unlocked</code>"
+                    },
+                    "double_badge": {
+                        "default": false,
+                        "description": "Bool value specifying if the Double Badge setting should be enabled for relevant doors. If <code>TRUE</code>, <code>door_status</code> must be set to <code>access_controlled</code>.\n\nBy default, all users with access to relevant doors will be allowed to double badge.",
+                        "title": "Double Badge",
+                        "type": "boolean"
+                    },
+                    "double_badge_group_ids": {
+                        "description": "List of IDs for Access Groups that users must be a member of to be allowed to double badge on relevant doors.\n\n<code>double_badge</code> must also be set to <code>TRUE</code> if value is provided.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Double Badge Group Ids",
+                        "type": "array"
+                    },
+                    "end_time": {
+                        "description": "End time of the Door Exception formatted as <code>hh:mm</code> (according to ISO 8601).",
+                        "format": "time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "first_person_in": {
+                        "default": false,
+                        "description": "Bool value specifying if the First Person In setting should be enabled for relevant doors. If <code>TRUE</code>, <code>door_status</code> must be set to <code>card_and_code</code>, <code>access_controlled</code>, or <code>unlocked</code>.",
+                        "title": "First Person In",
+                        "type": "boolean"
+                    },
+                    "first_person_in_group_ids": {
+                        "description": "List of IDs for Access Groups including supervisors used for First Person In mode.\n\n<code>first_person_in</code> must also be set to <code>TRUE</code> if this value is provided.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "First Person In Group Ids",
+                        "type": "array"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecurrenceRule"
+                            }
+                        ],
+                        "description": "A recurrence rule object specifying when the exception should repeat.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "Start time of the Door Exception formatted as <code>hh:mm</code> (according to ISO 8601).",
+                        "format": "time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "date",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "PutExceptionBodyV2",
+                "type": "object"
+            },
+            "PutExceptionCalendarBodyV2": {
+                "description": "Request body for PUT /v2/access/exception_calendars/<calendar_id>.",
+                "properties": {
+                    "doors": {
+                        "description": "Door IDs of doors that the calendar's exceptions should be applied to.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors",
+                        "type": "array"
+                    },
+                    "exceptions": {
+                        "description": "Exceptions for this Exception Calendar.",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/ValidatedExceptionV2"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/UnidentifiedValidatedExceptionV2"
+                                }
+                            ]
+                        },
+                        "title": "Exceptions",
+                        "type": "array"
+                    },
+                    "name": {
+                        "description": "Name of the Exception Calendar.",
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "title": "PutExceptionCalendarBodyV2",
                 "type": "object"
             },
             "PutStartDateAccessUserRequestBodyV1": {
@@ -9335,6 +11026,117 @@
                 "title": "RecurrenceRule",
                 "type": "object"
             },
+            "RecurrenceRuleV2": {
+                "description": "A recurrence rule object specifying when the exception should repeat (RFC 5545).",
+                "properties": {
+                    "by_day": {
+                        "description": "For recurrences where <code>frequency</code> is <code>WEEKLY</code>, <code>MONTHLY</code>, or <code>YEARLY</code>. List of weekday names (full strings such as <code>Monday</code>) on which the recurrence should repeat (see <code>BYDAY</code> in RFC 5545). Required when <code>frequency</code> is <code>WEEKLY</code>. When <code>frequency</code> is <code>MONTHLY</code> or <code>YEARLY</code>, only allowed if <code>by_set_pos</code> is set, and may contain only a single weekday.",
+                        "items": {
+                            "$ref": "#/components/schemas/WeekdayEnum"
+                        },
+                        "type": "array"
+                    },
+                    "by_month": {
+                        "description": "For recurrences where <code>frequency</code> is <code>YEARLY</code>. The month number on which the recurrence should repeat (see <code>BYMONTH</code> in RFC 5545). Supported values are 1-12. Required when <code>frequency</code> is <code>YEARLY</code>.",
+                        "maximum": 12,
+                        "minimum": 1,
+                        "title": "By Month",
+                        "type": "integer"
+                    },
+                    "by_month_day": {
+                        "description": "For recurrences where <code>frequency</code> is <code>MONTHLY</code> or <code>YEARLY</code>. The day of the month on which the recurrence should repeat (see <code>BYMONTHDAY</code> in RFC 5545). Supported values are 1-31. Either <code>by_month_day</code> or <code>by_set_pos</code> is required for <code>MONTHLY</code> or <code>YEARLY</code> frequencies (only one is allowed).",
+                        "maximum": 31,
+                        "minimum": 1,
+                        "title": "By Month Day",
+                        "type": "integer"
+                    },
+                    "by_set_pos": {
+                        "description": "For recurrences where <code>frequency</code> is <code>MONTHLY</code> or <code>YEARLY</code>. The position of the weekday specified in <code>by_day</code> within the month (see <code>BYSETPOS</code> in RFC 5545). For example, set <code>by_set_pos</code> to <code>3</code> and <code>by_day</code> to <code>['Tuesday']</code> to specify the third Tuesday of a month. Supported values are 1-5.",
+                        "maximum": 5,
+                        "minimum": 1,
+                        "title": "By Set Pos",
+                        "type": "integer"
+                    },
+                    "count": {
+                        "description": "The total number of times that the recurrence should repeat before ending (see <code>COUNT</code> in RFC 5545). Only one of <code>count</code> or <code>until</code> is allowed.",
+                        "exclusiveMinimum": true,
+                        "minimum": 0,
+                        "title": "Count",
+                        "type": "integer"
+                    },
+                    "excluded_dates": {
+                        "description": "A list of dates to exclude for the recurrence, formatted as <code>YYYY-MM-DD</code> (ISO 8601). See <code>EXDATE</code> in RFC 5545.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Excluded Dates",
+                        "type": "array"
+                    },
+                    "frequency": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/FrequencyEnum"
+                            }
+                        ],
+                        "description": "Frequency type of the recurrence (see <code>FREQ</code> in RFC 5545). Supported values: <code>DAILY</code>, <code>WEEKLY</code>, <code>MONTHLY</code>, <code>YEARLY</code>."
+                    },
+                    "interval": {
+                        "description": "Interval at which the recurrence repeats according to the frequency type (see <code>INTERVAL</code> in RFC 5545). Must be greater than 0.",
+                        "exclusiveMinimum": true,
+                        "minimum": 0,
+                        "title": "Interval",
+                        "type": "integer"
+                    },
+                    "until": {
+                        "description": "The final date on which the recurrence should occur, formatted as <code>YYYY-MM-DD</code> (ISO 8601). See <code>UNTIL</code> in RFC 5545. Only one of <code>count</code> or <code>until</code> is allowed.",
+                        "title": "Until",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "frequency",
+                    "interval"
+                ],
+                "title": "RecurrenceRuleV2",
+                "type": "object"
+            },
+            "RemoteUnlockRequestV2": {
+                "description": "Request body for the remote unlock state-change endpoint.",
+                "properties": {
+                    "active": {
+                        "description": "Set to true to enable remote unlock capability for the user, or false to disable it.",
+                        "title": "Active",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "active"
+                ],
+                "title": "RemoteUnlockRequestV2",
+                "type": "object"
+            },
+            "RemoteUnlockResponseV2": {
+                "additionalProperties": false,
+                "description": "Response for the remote unlock state-change endpoint.",
+                "properties": {
+                    "remote_unlock": {
+                        "description": "The resulting remote unlock state for the user after the update.",
+                        "title": "Remote Unlock",
+                        "type": "boolean"
+                    },
+                    "user_id": {
+                        "description": "The unique identifier of the user managed by Verkada whose remote unlock state was updated.",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user_id",
+                    "remote_unlock"
+                ],
+                "title": "RemoteUnlockResponseV2",
+                "type": "object"
+            },
             "RemovePeopleRequest": {
                 "description": "Request to remove people from approved lists",
                 "properties": {
@@ -9451,6 +11253,51 @@
                 "title": "ScenarioListQueryV1",
                 "type": "object"
             },
+            "ScenarioListQueryV2": {
+                "description": "Query parameters for `GET /v2/access/scenarios`.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor returned by a previous response.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of scenarios to return. Default 100, maximum 1000.",
+                        "exclusiveMinimum": true,
+                        "maximum": 1000,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "scenario_ids": {
+                        "description": "Filter the response to scenarios with these IDs.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Scenario Ids",
+                        "type": "array"
+                    },
+                    "scenario_types": {
+                        "description": "Filter the response to scenarios of any of these types (for example `LOCKDOWN`, `EVACUATE`).",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Scenario Types",
+                        "type": "array"
+                    },
+                    "site_ids": {
+                        "description": "Filter the response to scenarios that apply to any of these site IDs.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Site Ids",
+                        "type": "array"
+                    }
+                },
+                "title": "ScenarioListQueryV2",
+                "type": "object"
+            },
             "ScenarioListResponseV1": {
                 "description": "Schema for the list scenarios response.",
                 "properties": {
@@ -9466,6 +11313,26 @@
                 "title": "ScenarioListResponseV1",
                 "type": "object"
             },
+            "ScenarioListResponseV2": {
+                "description": "Response envelope for `GET /v2/access/scenarios`.",
+                "properties": {
+                    "cursor": {
+                        "description": "Cursor to fetch the next page. Absent or null when there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of scenarios matching the query.",
+                        "items": {
+                            "$ref": "#/components/schemas/ScenarioV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ScenarioListResponseV2",
+                "type": "object"
+            },
             "ScenarioState": {
                 "description": "Enum for the Scenario State.",
                 "enum": [
@@ -9473,6 +11340,15 @@
                     "INACTIVE"
                 ],
                 "title": "ScenarioState",
+                "type": "string"
+            },
+            "ScenarioStateV2": {
+                "description": "The current activation state of a scenario.",
+                "enum": [
+                    "ACTIVE",
+                    "INACTIVE"
+                ],
+                "title": "ScenarioStateV2",
                 "type": "string"
             },
             "ScenarioV1": {
@@ -9592,6 +11468,114 @@
                     "site_count"
                 ],
                 "title": "ScenarioV1",
+                "type": "object"
+            },
+            "ScenarioV2": {
+                "description": "An access scenario (lockdown).",
+                "properties": {
+                    "door_configurations": {
+                        "description": "Per-door lock configuration applied while the scenario is active.",
+                        "items": {
+                            "$ref": "#/components/schemas/DoorConfigurationV2"
+                        },
+                        "title": "Door Configurations",
+                        "type": "array"
+                    },
+                    "doors_to_lock": {
+                        "description": "IDs of doors locked when the scenario is active.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors To Lock",
+                        "type": "array"
+                    },
+                    "message": {
+                        "default": "",
+                        "description": "Human-readable message describing the scenario.",
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Display name of the scenario.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "scenario_color": {
+                        "description": "Display color of the scenario in `#RRGGBB` hex format.",
+                        "pattern": "^#[0-9A-Fa-f]{6}$",
+                        "title": "Scenario Color",
+                        "type": "string"
+                    },
+                    "scenario_id": {
+                        "description": "Unique identifier of the scenario.",
+                        "title": "Scenario Id",
+                        "type": "string"
+                    },
+                    "scenario_message": {
+                        "description": "Additional customer-facing message shown when the scenario is active.",
+                        "title": "Scenario Message",
+                        "type": "string"
+                    },
+                    "scenario_type": {
+                        "description": "Scenario type discriminator (for example `LOCKDOWN`, `EVACUATE`, or a custom type defined by the organization).",
+                        "title": "Scenario Type",
+                        "type": "string"
+                    },
+                    "site_count": {
+                        "description": "Number of sites the scenario applies to.",
+                        "minimum": 0,
+                        "title": "Site Count",
+                        "type": "integer"
+                    },
+                    "sites": {
+                        "description": "IDs of the sites the scenario applies to.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Sites",
+                        "type": "array"
+                    },
+                    "state": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ScenarioStateV2"
+                            }
+                        ],
+                        "description": "Current activation state of the scenario."
+                    },
+                    "user_groups_with_disable_access": {
+                        "description": "IDs of user groups allowed to release the scenario.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "User Groups With Disable Access",
+                        "type": "array"
+                    },
+                    "user_groups_with_door_access": {
+                        "description": "IDs of user groups with access to the doors the scenario locks.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "User Groups With Door Access",
+                        "type": "array"
+                    },
+                    "user_groups_with_enable_access": {
+                        "description": "IDs of user groups allowed to activate the scenario.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "User Groups With Enable Access",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "scenario_id",
+                    "name",
+                    "state",
+                    "scenario_type",
+                    "site_count"
+                ],
+                "title": "ScenarioV2",
                 "type": "object"
             },
             "SensorAlert": {
@@ -10282,6 +12266,24 @@
                 "title": "SiteInfoV1",
                 "type": "object"
             },
+            "SiteInfoV2": {
+                "additionalProperties": false,
+                "description": "Site information associated with a door.",
+                "properties": {
+                    "name": {
+                        "description": "The name of the site.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the site.",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "title": "SiteInfoV2",
+                "type": "object"
+            },
             "SiteRequest": {
                 "additionalProperties": false,
                 "description": "Request query parameters for listing Guest sites.",
@@ -10656,6 +12658,85 @@
                 "title": "UnidentifiedValidatedDoorExceptionV1",
                 "type": "object"
             },
+            "UnidentifiedValidatedExceptionV2": {
+                "description": "Validated exception schema for input bodies (without server-assigned IDs).",
+                "properties": {
+                    "all_day_default": {
+                        "default": false,
+                        "description": "If true, the exception applies for the full day. <code>door_status</code> must be <code>access_controlled</code>, <code>start_time</code> defaults to <code>00:00:00</code>, <code>end_time</code> defaults to <code>23:59:59</code>, and both <code>first_person_in</code> and <code>double_badge</code> must be false.",
+                        "title": "All Day Default",
+                        "type": "boolean"
+                    },
+                    "date": {
+                        "description": "Date of the exception, formatted as <code>YYYY-MM-DD</code> (ISO 8601).",
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusEnum"
+                            }
+                        ],
+                        "description": "The door status applied by this exception. One of <code>locked</code>, <code>card_and_code</code>, <code>access_controlled</code>, <code>unlocked</code>."
+                    },
+                    "double_badge": {
+                        "default": false,
+                        "description": "If true, Double Badge is enabled for relevant doors. When enabled, <code>door_status</code> must be <code>access_controlled</code>.",
+                        "title": "Double Badge",
+                        "type": "boolean"
+                    },
+                    "double_badge_group_ids": {
+                        "description": "List of Access Group IDs whose members are allowed to double badge on relevant doors. Required when <code>double_badge</code> is true.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Double Badge Group Ids",
+                        "type": "array"
+                    },
+                    "end_time": {
+                        "description": "End time of the exception formatted as <code>hh:mm</code> (ISO 8601). Required when <code>all_day_default</code> is false.",
+                        "format": "time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "first_person_in": {
+                        "default": false,
+                        "description": "If true, First Person In is enabled for relevant doors. When enabled, <code>door_status</code> must be <code>card_and_code</code>, <code>access_controlled</code>, or <code>unlocked</code>.",
+                        "title": "First Person In",
+                        "type": "boolean"
+                    },
+                    "first_person_in_group_ids": {
+                        "description": "List of Access Group IDs whose members act as supervisors for First Person In. Required when <code>first_person_in</code> is true.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "First Person In Group Ids",
+                        "type": "array"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "A recurrence rule (RFC 5545) specifying when the exception should repeat.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "Start time of the exception formatted as <code>hh:mm</code> (ISO 8601). Required when <code>all_day_default</code> is false.",
+                        "format": "time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "door_status",
+                    "date"
+                ],
+                "title": "UnidentifiedValidatedExceptionV2",
+                "type": "object"
+            },
             "UpdateAccessLevelRequestV1": {
                 "description": "Request schema for updating Access Levels.",
                 "properties": {
@@ -10892,6 +12973,18 @@
                 "title": "UploadProfilePhotoBody",
                 "type": "object"
             },
+            "UploadProfilePhotoBodyV2": {
+                "description": "Multipart form-data body for uploading a profile photo.\n\nThe image must be JPG, JPEG, or PNG and no larger than 10 MB.",
+                "properties": {
+                    "file": {
+                        "description": "Profile photo file. Submit as multipart/form-data with the field name 'file'.",
+                        "title": "File",
+                        "type": "string"
+                    }
+                },
+                "title": "UploadProfilePhotoBodyV2",
+                "type": "object"
+            },
             "UploadProfilePhotoQuery": {
                 "properties": {
                     "external_id": {
@@ -10913,6 +13006,19 @@
                     }
                 },
                 "title": "UploadProfilePhotoQuery",
+                "type": "object"
+            },
+            "UploadProfilePhotoQueryV2": {
+                "description": "Query parameters for uploading a profile photo.",
+                "properties": {
+                    "overwrite": {
+                        "default": false,
+                        "description": "Whether to overwrite an existing profile photo. Defaults to false.",
+                        "title": "Overwrite",
+                        "type": "boolean"
+                    }
+                },
+                "title": "UploadProfilePhotoQueryV2",
                 "type": "object"
             },
             "UserInfo": {
@@ -11092,6 +13198,97 @@
                     "end_time"
                 ],
                 "title": "ValidatedDoorExceptionV1",
+                "type": "object"
+            },
+            "ValidatedExceptionV2": {
+                "description": "Exception with full input validation.",
+                "properties": {
+                    "all_day_default": {
+                        "default": false,
+                        "description": "If true, the exception applies for the full day. <code>door_status</code> must be <code>access_controlled</code>, <code>start_time</code> defaults to <code>00:00:00</code>, <code>end_time</code> defaults to <code>23:59:59</code>, and both <code>first_person_in</code> and <code>double_badge</code> must be false.",
+                        "title": "All Day Default",
+                        "type": "boolean"
+                    },
+                    "calendar_id": {
+                        "default": "",
+                        "description": "Unique ID of the Exception Calendar that this exception belongs to.",
+                        "title": "Calendar Id",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "Date of the exception, formatted as <code>YYYY-MM-DD</code> (ISO 8601).",
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusEnum"
+                            }
+                        ],
+                        "description": "The door status applied by this exception. One of <code>locked</code>, <code>card_and_code</code>, <code>access_controlled</code>, <code>unlocked</code>."
+                    },
+                    "double_badge": {
+                        "default": false,
+                        "description": "If true, Double Badge is enabled for relevant doors. When enabled, <code>door_status</code> must be <code>access_controlled</code>.",
+                        "title": "Double Badge",
+                        "type": "boolean"
+                    },
+                    "double_badge_group_ids": {
+                        "description": "List of Access Group IDs whose members are allowed to double badge on relevant doors. Required when <code>double_badge</code> is true.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Double Badge Group Ids",
+                        "type": "array"
+                    },
+                    "end_time": {
+                        "description": "End time of the exception formatted as <code>hh:mm</code> (ISO 8601). Required when <code>all_day_default</code> is false.",
+                        "format": "time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "exception_id": {
+                        "default": "",
+                        "description": "The unique ID of the Exception.",
+                        "title": "Exception Id",
+                        "type": "string"
+                    },
+                    "first_person_in": {
+                        "default": false,
+                        "description": "If true, First Person In is enabled for relevant doors. When enabled, <code>door_status</code> must be <code>card_and_code</code>, <code>access_controlled</code>, or <code>unlocked</code>.",
+                        "title": "First Person In",
+                        "type": "boolean"
+                    },
+                    "first_person_in_group_ids": {
+                        "description": "List of Access Group IDs whose members act as supervisors for First Person In. Required when <code>first_person_in</code> is true.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "First Person In Group Ids",
+                        "type": "array"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "A recurrence rule (RFC 5545) specifying when the exception should repeat.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "Start time of the exception formatted as <code>hh:mm</code> (ISO 8601). Required when <code>all_day_default</code> is false.",
+                        "format": "time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "door_status",
+                    "date"
+                ],
+                "title": "ValidatedExceptionV2",
                 "type": "object"
             },
             "VideoTaggingEventGetRequestV1": {
@@ -12136,15 +14333,29 @@
             "WeekdayEnum": {
                 "description": "An enumeration.",
                 "enum": [
-                    "MO",
-                    "TU",
-                    "WE",
-                    "TH",
-                    "FR",
-                    "SA",
-                    "SU"
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday"
                 ],
                 "title": "WeekdayEnum",
+                "type": "string"
+            },
+            "WeekdayFullEnum": {
+                "description": "Full weekday names used in v2 recurrence_rule.by_day responses.",
+                "enum": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday"
+                ],
+                "title": "WeekdayFullEnum",
                 "type": "string"
             },
             "Widget": {
@@ -18026,6 +20237,157 @@
                 ]
             }
         },
+        "/v2/access/scenarios": {
+            "get": {
+                "description": "Returns a paginated list of access scenarios (lockdowns) for the organization.\nResults can be filtered by scenario IDs, site IDs, and scenario types. The\nresponse always includes a `cursor` field; pass it back to fetch the next page,\nor expect `null` when no more pages remain. The filter set should remain stable\nacross pages; changing filters mid-pagination may skip or repeat items.\n\nGranular API keys scoped to specific access sites only see scenarios in those\nsites; requesting `site_ids` outside the token's scope returns 403. Legacy\nAPI keys are organization-wide and bypass the site filter.",
+                "operationId": "getScenariosListViewV2",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "scenario_ids",
+                        "required": false,
+                        "schema": {
+                            "description": "Filter the response to scenarios with these IDs.",
+                            "items": {
+                                "type": "string"
+                            },
+                            "title": "Scenario Ids",
+                            "type": "array"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "site_ids",
+                        "required": false,
+                        "schema": {
+                            "description": "Filter the response to scenarios that apply to any of these site IDs.",
+                            "items": {
+                                "type": "string"
+                            },
+                            "title": "Site Ids",
+                            "type": "array"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "scenario_types",
+                        "required": false,
+                        "schema": {
+                            "description": "Filter the response to scenarios of any of these types (for example `LOCKDOWN`, `EVACUATE`).",
+                            "items": {
+                                "type": "string"
+                            },
+                            "title": "Scenario Types",
+                            "type": "array"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor returned by a previous response.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 100,
+                            "description": "Maximum number of scenarios to return. Default 100, maximum 1000.",
+                            "exclusiveMinimum": true,
+                            "maximum": 1000,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScenarioListResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "List Access Scenarios",
+                "tags": [
+                    "Access Scenarios"
+                ]
+            }
+        },
+        "/v2/access/scenarios/{scenario_id}/activate": {
+            "post": {
+                "description": "Activates the access scenario identified by `scenario_id`. Activating an\nalready-active scenario is a no-op for the underlying lockdown engine.\n\nGranular API keys scoped to specific access sites can only activate\nscenarios fully within those sites; a scenario that touches any\ninaccessible site is rejected with 403. Legacy API keys are\norganization-wide.",
+                "operationId": "postScenariosActivateViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "scenario_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostScenarioActionResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Activate Access Scenario",
+                "tags": [
+                    "Access Scenarios"
+                ]
+            }
+        },
+        "/v2/access/scenarios/{scenario_id}/release": {
+            "post": {
+                "description": "Releases the access scenario identified by `scenario_id`. Releasing an\ninactive scenario is a no-op for the underlying lockdown engine.\n\nGranular API keys scoped to specific access sites can only release\nscenarios fully within those sites; a scenario that touches any\ninaccessible site is rejected with 403. Legacy API keys are\norganization-wide.",
+                "operationId": "postScenariosReleaseViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "scenario_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostScenarioActionResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Release Access Scenario",
+                "tags": [
+                    "Access Scenarios"
+                ]
+            }
+        },
         "/v2/access/users/{user_id}/face_unlock": {
             "delete": {
                 "description": "Disable face unlock for a user. This will delete their face credential and disable the face unlock\naccess method. Any pending mobile enrollment invitations for this user will also be deleted.",
@@ -18180,6 +20542,268 @@
                 "summary": "Enable Face Unlock with Uploaded Photo",
                 "tags": [
                     "Access Credentials"
+                ]
+            }
+        },
+        "/v2/access/users/{user_id}/profile_photo": {
+            "delete": {
+                "description": "Delete the profile photo for the specified access user.",
+                "operationId": "deleteProfilePhotoUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "502": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Bad Gateway"
+                    }
+                },
+                "summary": "Delete Profile Photo",
+                "tags": [
+                    "Access User Information"
+                ]
+            },
+            "get": {
+                "description": "Retrieve the profile photo for the specified access user. By default the cropped image is returned.\nPass original=true to retrieve the original uploaded image.",
+                "operationId": "getProfilePhotoUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "original",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to return the original image. Defaults to false (cropped image).",
+                            "title": "Original",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "502": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Bad Gateway"
+                    }
+                },
+                "summary": "Get Profile Photo",
+                "tags": [
+                    "Access User Information"
+                ]
+            },
+            "put": {
+                "description": "Upload a profile photo for the specified access user. The image must be provided as a\nmultipart/form-data file in the 'file' field. Allowed types are JPG, JPEG, and PNG with a\nmaximum size of 10 MB. PUT is a full replacement. Pass overwrite=true when a profile photo\nalready exists.",
+                "operationId": "putProfilePhotoUserViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "overwrite",
+                        "required": false,
+                        "schema": {
+                            "default": false,
+                            "description": "Whether to overwrite an existing profile photo. Defaults to false.",
+                            "title": "Overwrite",
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadProfilePhotoBodyV2"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProfilePhotoResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Conflict"
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Request Entity Too Large"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Unprocessable Entity"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "502": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                }
+                            }
+                        },
+                        "description": "Bad Gateway"
+                    }
+                },
+                "summary": "Upload Profile Photo",
+                "tags": [
+                    "Access User Information"
                 ]
             }
         },
