@@ -21105,6 +21105,195 @@
                 ]
             }
         },
+        "/v2/cameras/lpr/zones": {
+            "get": {
+                "description": "Returns zone ID, zone name, creation time, update time, and preview camera ID for all\nLPR Zones for an organization.\n\nResults are paginated. Use the `cursor` from the response to fetch the\nnext page.",
+                "operationId": "getLPRZoneViewV2",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 200,
+                            "description": "Maximum number of LPR Zones to return per page. Default is 200.",
+                            "exclusiveMinimum": true,
+                            "maximum": 200,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetLPRZoneResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get All LPR Zones",
+                "tags": [
+                    "LPR"
+                ]
+            }
+        },
+        "/v2/cameras/lpr/zones/{zone_id}/metrics": {
+            "get": {
+                "description": "Returns aggregated metrics for a single LPR Zone over the requested time\nrange, including end-of-range occupancy, entry/exit/unique-visitor counts,\nand median, maximum, and average time spent in the zone.",
+                "operationId": "getLPRZoneMetricsViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "zone_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": true,
+                        "schema": {
+                            "description": "Start of the time range (inclusive) in ISO 8601 format (e.g., '2025-08-04T00:00:00Z').",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": true,
+                        "schema": {
+                            "description": "End of the time range (exclusive) in ISO 8601 format (e.g., '2025-08-05T00:00:00Z').",
+                            "title": "End Time",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetLPRZoneMetricsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get LPR Zone Metrics",
+                "tags": [
+                    "LPR"
+                ]
+            }
+        },
+        "/v2/cameras/lpr/zones/{zone_id}/records": {
+            "get": {
+                "description": "Returns the visit records for a single LPR Zone, including license plate, entry/exit\ntimes and cameras, dwell time, and vehicle status. Defaults to the last 24 hours.\n\nResults are paginated. Use the `cursor` from the response to fetch the\nnext page.",
+                "operationId": "getLPRZoneRecordsViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "zone_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": false,
+                        "schema": {
+                            "description": "Start of the time range in ISO 8601 format (e.g., '2025-08-04T00:00:00Z'). Defaults to 24 hours before the current time.",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": false,
+                        "schema": {
+                            "description": "End of the time range in ISO 8601 format (e.g., '2025-08-05T00:00:00Z'). Defaults to the current time.",
+                            "title": "End Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "vehicle_status",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/LPRZoneRecordStatusV2"
+                                }
+                            ],
+                            "description": "Filter records by vehicle status. One of 'still_in' or 'departed'. When omitted, records of all statuses are returned."
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 100,
+                            "description": "Maximum number of records to return per page. Default is 100, maximum is 100.",
+                            "exclusiveMinimum": true,
+                            "maximum": 100,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetLPRZoneRecordsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get LPR Zone Records",
+                "tags": [
+                    "LPR"
+                ]
+            }
+        },
         "/v2/cameras/ncic/license_plates/search": {
             "post": {
                 "description": "Searches for license plate detection events within a specified time range\nand geographic area.\n\n**Access Restriction**: This endpoint is only available to organizations with\nCJIS (Criminal Justice Information Services) access enabled. Contact Verkada\nsupport to enable this feature for your organization.\n\n### Search Capabilities\n\n**Plate Search with Wildcards**:\n\nUse the `license_plate` field with wildcard (`*`) support for flexible matching:\n- `ABC123` - Exact match\n- `ABC*` - Starts with \"ABC\"\n- `*123` - Ends with \"123\"\n- `*BC1*` - Contains \"BC1\"\n\n**Geographic Filtering**:\n- `geo_fence`: Define a polygon (3-700 coordinate pairs) to filter events\n  by camera location. Only events from cameras within the polygon are returned.\n\n**Time Range**:\n- Maximum query range is 3 years\n- Results are returned in reverse chronological order (newest first)\n\n### Response Fields\n\nEach result includes:\n- `read_id`: Unique identifier for the detection event\n- `plate`: The detected license plate number\n- `plate_state`: Two-character state code (may be null)\n- `lat`/`lon`: Camera location coordinates\n- `event_time`: Detection timestamp in RFC 3339 format\n- `image_data`: URL to the license plate image\n- `additional_image`: URL to the full vehicle image\n- `agency_name`: Name of the organization owning the camera\n- `ori`: Originating Agency Identifier (for NCIC events)\n\n### Pagination\n\nUse cursor-based pagination:\n- Set `limit` to control page size (1-1000, default 100)\n- Use the returned `cursor` value in subsequent requests to get more results\n- Continue until `cursor` is null\n\n### Example Request\n\n```json\n{\n    \"start_time\": \"2025-01-01T00:00:00Z\",\n    \"end_time\": \"2025-01-15T23:59:59Z\",\n    \"license_plate\": \"*ABC*\",\n    \"geo_fence\": [\n        {\"latitude\": 37.7749, \"longitude\": -122.4194},\n        {\"latitude\": 37.7849, \"longitude\": -122.4094},\n        {\"latitude\": 37.7649, \"longitude\": -122.4094}\n    ],\n    \"limit\": 100\n}\n```",
