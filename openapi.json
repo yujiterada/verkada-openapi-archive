@@ -7445,6 +7445,122 @@
                 "title": "LPRImagesResponseV2",
                 "type": "object"
             },
+            "LPRReadSearchErrorResponse": {
+                "additionalProperties": false,
+                "description": "Error response schema",
+                "properties": {
+                    "error": {
+                        "description": "Error code",
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "message": {
+                        "description": "Human-readable error message",
+                        "title": "Message",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "error",
+                    "message"
+                ],
+                "title": "LPRReadSearchErrorResponse",
+                "type": "object"
+            },
+            "LPRReadSearchResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for the org-wide LPR read search API",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for retrieving the next page of results. Null if there are no more results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of license plate reads matching the search criteria.",
+                        "items": {
+                            "$ref": "#/components/schemas/LPRReadSearchResultV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "LPRReadSearchResponseV2",
+                "type": "object"
+            },
+            "LPRReadSearchResultV2": {
+                "additionalProperties": false,
+                "description": "A single license plate read, regardless of alert/watchlist status",
+                "properties": {
+                    "additional_image": {
+                        "description": "URL to the full vehicle image.",
+                        "title": "Additional Image",
+                        "type": "string"
+                    },
+                    "agency_name": {
+                        "description": "Name of the agency/organization that owns the camera.",
+                        "title": "Agency Name",
+                        "type": "string"
+                    },
+                    "camera_name": {
+                        "description": "Name of the camera that captured the plate.",
+                        "title": "Camera Name",
+                        "type": "string"
+                    },
+                    "event_time": {
+                        "description": "Timestamp when the plate was detected, in RFC 3339 format.",
+                        "title": "Event Time",
+                        "type": "string"
+                    },
+                    "image_data": {
+                        "description": "URL to the license plate image.",
+                        "title": "Image Data",
+                        "type": "string"
+                    },
+                    "lat": {
+                        "description": "Latitude of the camera location, if known.",
+                        "title": "Lat",
+                        "type": "number"
+                    },
+                    "lon": {
+                        "description": "Longitude of the camera location, if known.",
+                        "title": "Lon",
+                        "type": "number"
+                    },
+                    "ori": {
+                        "description": "Originating Agency Identifier (ORI code). Only populated for government/CJIS-enabled organizations.",
+                        "title": "Ori",
+                        "type": "string"
+                    },
+                    "plate": {
+                        "description": "The detected license plate number.",
+                        "title": "Plate",
+                        "type": "string"
+                    },
+                    "plate_state": {
+                        "description": "Two-character state code of the license plate. May be null if not detected.",
+                        "title": "Plate State",
+                        "type": "string"
+                    },
+                    "read_id": {
+                        "description": "Unique identifier for the LPR read.",
+                        "title": "Read Id",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "User identifier (reserved for future use). Always null.",
+                        "title": "User Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "read_id",
+                    "plate",
+                    "event_time"
+                ],
+                "title": "LPRReadSearchResultV2",
+                "type": "object"
+            },
             "LPRTimestampItemV2": {
                 "additionalProperties": false,
                 "description": "A single license plate detection timestamp.",
