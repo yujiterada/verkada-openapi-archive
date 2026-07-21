@@ -3389,6 +3389,29 @@
                 "title": "CreateLicensePlateOfInterestResponseV2",
                 "type": "object"
             },
+            "CreatePersonOfInterestRequestV2": {
+                "description": "Request body for creating a Person of Interest.\n\nV2 changes from v1:\n- `base64_image` and `label` are validated to be non-empty and are\n  whitespace-stripped (v1 accepted empty strings).",
+                "properties": {
+                    "base64_image": {
+                        "description": "The base64 encoded string of the face image of the Person of Interest.",
+                        "minLength": 1,
+                        "title": "Base64 Image",
+                        "type": "string"
+                    },
+                    "label": {
+                        "description": "The name/label of the Person of Interest.",
+                        "minLength": 1,
+                        "title": "Label",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "base64_image",
+                    "label"
+                ],
+                "title": "CreatePersonOfInterestRequestV2",
+                "type": "object"
+            },
             "CreateSdkTokenRequestV2": {
                 "description": "Request body for creating a Pass App SDK token",
                 "properties": {
@@ -6379,6 +6402,48 @@
                     }
                 },
                 "title": "GetLicensePlatesOfInterestResponseV2",
+                "type": "object"
+            },
+            "GetPersonsOfInterestQueryV2": {
+                "description": "Query parameters for listing Persons of Interest (cursor-based pagination).\n\nV2 changes from v1:\n- `page_size` (int) -> `limit` (int), same default (100) and max (200).\n- `page_token` (str) -> `cursor` (str), a Base62-encoded opaque cursor.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of Persons of Interest to return per page. Default is 100. Max is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "GetPersonsOfInterestQueryV2",
+                "type": "object"
+            },
+            "GetPersonsOfInterestResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing Persons of Interest.\n\nV2 changes from v1:\n- `persons_of_interest` (array) -> `items` (array), per v2 pagination spec.\n- `next_token` (str) -> `cursor` (str), a Base62-encoded opaque cursor that\n  is `null` when there are no more pages.\n- Each item uses the shared `PersonOfInterestResponseV2` representation with\n  RFC 3339 timestamps instead of Unix epoch integers.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of Persons of Interest.",
+                        "items": {
+                            "$ref": "#/components/schemas/PersonOfInterestResponseV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "GetPersonsOfInterestResponseV2",
                 "type": "object"
             },
             "GetProfilePhotoQuery": {
@@ -9512,6 +9577,22 @@
                 "title": "PatchLicensePlateOfInterestRequestV2",
                 "type": "object"
             },
+            "PatchPersonOfInterestRequestV2": {
+                "description": "Request body for updating a Person of Interest label.\n\nV2 changes from v1:\n- `person_id` moves out of the request context (it is now a URL path\n  parameter), so the body carries only the mutable `label` field.\n- `label` is validated to be non-empty and is whitespace-stripped.",
+                "properties": {
+                    "label": {
+                        "description": "The updated name/label of the Person of Interest.",
+                        "minLength": 1,
+                        "title": "Label",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "label"
+                ],
+                "title": "PatchPersonOfInterestRequestV2",
+                "type": "object"
+            },
             "PatchQRCodeBodyV2": {
                 "description": "Schema for updating QR code activation state",
                 "properties": {
@@ -9808,6 +9889,34 @@
                     "label"
                 ],
                 "title": "PersonOfInterestPostBodyRequest",
+                "type": "object"
+            },
+            "PersonOfInterestResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for a single Person of Interest in v2 format.\n\nReturned by the PATCH endpoint. Defined here so that all POI v2 operations\n(GET/POST/PATCH) share a single, consistent v2 representation. The DELETE\nendpoint does not use it (it returns 204 No Content).\n\nV2 changes from v1:\n- `created` (Unix epoch int) -> `created_at` (RFC 3339 string)\n- `last_seen` (Unix epoch int) -> `last_seen_at` (RFC 3339 string)",
+                "properties": {
+                    "created_at": {
+                        "description": "When the Person of Interest was created, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+                        "title": "Created At",
+                        "type": "string"
+                    },
+                    "label": {
+                        "description": "The name/label of the Person of Interest.",
+                        "title": "Label",
+                        "type": "string"
+                    },
+                    "last_seen_at": {
+                        "description": "When the Person of Interest was last seen, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+                        "title": "Last Seen At",
+                        "type": "string"
+                    },
+                    "person_id": {
+                        "description": "The unique identifier of the Person of Interest.",
+                        "title": "Person Id",
+                        "type": "string"
+                    }
+                },
+                "title": "PersonOfInterestResponseV2",
                 "type": "object"
             },
             "PersonToAdd": {
