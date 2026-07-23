@@ -2292,6 +2292,11 @@
             "description": "Label/name of the person of interest detected",
             "title": "Person Label",
             "type": "string"
+          },
+          "rounded_inactivity_duration_mins": {
+            "description": "For inactivity alerts, how long (in minutes) the camera/group was inactive, rounded down to the nearest multiple of the alert rule's configured inactivity duration.",
+            "title": "Rounded Inactivity Duration Mins",
+            "type": "integer"
           }
         },
         "title": "CameraEventInfo",
@@ -4652,6 +4657,56 @@
           "user_id"
         ],
         "title": "EntryCodeResponseV2",
+        "type": "object"
+      },
+      "EnvironmentSensorV2": {
+        "additionalProperties": false,
+        "description": "A single environmental sensor device.",
+        "properties": {
+          "device_id": {
+            "description": "The unique identifier of the device.",
+            "format": "uuid",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "device_name": {
+            "description": "The name of the device.",
+            "title": "Device Name",
+            "type": "string"
+          },
+          "device_serial": {
+            "description": "The serial number of the device.",
+            "title": "Device Serial",
+            "type": "string"
+          },
+          "is_online": {
+            "description": "Whether the device is currently online.",
+            "title": "Is Online",
+            "type": "boolean"
+          },
+          "model": {
+            "description": "The model identifier of the device (e.g. SV25).",
+            "title": "Model",
+            "type": "string"
+          },
+          "readings": {
+            "description": "The sensor readings this device reports (e.g. temperature, humidity). Use these values with the `fields` parameter of the sensor data endpoint.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Readings",
+            "type": "array"
+          },
+          "timezone": {
+            "description": "The IANA timezone the device is configured with (e.g. America/Los_Angeles).",
+            "title": "Timezone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "device_id"
+        ],
+        "title": "EnvironmentSensorV2",
         "type": "object"
       },
       "Event": {
@@ -10001,6 +10056,28 @@
         "title": "PersonToRemove",
         "type": "object"
       },
+      "PivCardObjectResponseV2": {
+        "additionalProperties": false,
+        "description": "Response object representing a single PIV card credential.",
+        "properties": {
+          "active": {
+            "default": true,
+            "description": "Whether the credential is currently active.",
+            "title": "Active",
+            "type": "boolean"
+          },
+          "piv_card_id": {
+            "description": "The primary identifier of the PIV card credential. For PIV cards: the 50-character hex-encoded FASC-N (25 raw bytes). For PIV-I cards: the 32-character hex-encoded GUID (no hyphens).",
+            "title": "Piv Card Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "piv_card_id"
+        ],
+        "title": "PivCardObjectResponseV2",
+        "type": "object"
+      },
       "PostAPIUnlockResponseV1": {
         "additionalProperties": false,
         "description": "Returned on a successful unlock.",
@@ -10542,6 +10619,147 @@
           "code"
         ],
         "title": "PostMFACodeBodyV2",
+        "type": "object"
+      },
+      "PostPivCardBodyV2": {
+        "description": "Body for `POST /v2/access/credentials/piv_cards`.",
+        "properties": {
+          "active": {
+            "description": "Whether the credential is active. Defaults to `true` if omitted.",
+            "title": "Active",
+            "type": "boolean"
+          },
+          "affiliation": {
+            "description": "The cardholder's affiliation (e.g. `Employee`, `Contractor`).",
+            "title": "Affiliation",
+            "type": "string"
+          },
+          "card_auth_cert": {
+            "description": "Base64-encoded Card Authentication Key (CAK) certificate (DER).",
+            "title": "Card Auth Cert",
+            "type": "string"
+          },
+          "card_capability_container": {
+            "description": "Base64-encoded Card Capability Container. Accepted for compatibility but not persisted.",
+            "title": "Card Capability Container",
+            "type": "string"
+          },
+          "card_id_number": {
+            "description": "The card identification number (CIN).",
+            "title": "Card Id Number",
+            "type": "string"
+          },
+          "cardholder_uuid": {
+            "description": "The cardholder UUID embedded in the PIV card, if present.",
+            "format": "uuid",
+            "title": "Cardholder Uuid",
+            "type": "string"
+          },
+          "chuid_expiration": {
+            "description": "The CHUID expiration date, ISO 8601. Required if `signed_chuid` is omitted.",
+            "title": "Chuid Expiration",
+            "type": "string"
+          },
+          "chuid_fascn": {
+            "description": "The CHUID's FASC-N as 50 hex characters (25 bytes). Required if `signed_chuid` is omitted.",
+            "pattern": "^[0-9A-Fa-f]{50}$",
+            "title": "Chuid Fascn",
+            "type": "string"
+          },
+          "chuid_guid": {
+            "description": "The CHUID's GUID. Required if `signed_chuid` is omitted.",
+            "title": "Chuid Guid",
+            "type": "string"
+          },
+          "chuid_signer_cert": {
+            "description": "Base64-encoded CHUID signer certificate (DER). Required if `signed_chuid` is omitted.",
+            "title": "Chuid Signer Cert",
+            "type": "string"
+          },
+          "external_id": {
+            "description": "A unique identifier managed externally provided by the customer. Provide either `user_id` or `external_id`, not both.",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "External Id",
+            "type": "string"
+          },
+          "fingerprint_metadata_1": {
+            "description": "Metadata associated with `fingerprint_template_1`.",
+            "title": "Fingerprint Metadata 1",
+            "type": "string"
+          },
+          "fingerprint_metadata_2": {
+            "description": "Metadata associated with `fingerprint_template_2`.",
+            "title": "Fingerprint Metadata 2",
+            "type": "string"
+          },
+          "fingerprint_template_1": {
+            "description": "Base64-encoded first fingerprint biometric template.",
+            "title": "Fingerprint Template 1",
+            "type": "string"
+          },
+          "fingerprint_template_2": {
+            "description": "Base64-encoded second fingerprint biometric template.",
+            "title": "Fingerprint Template 2",
+            "type": "string"
+          },
+          "issuer_id_number": {
+            "description": "The issuer identification number (IIN).",
+            "title": "Issuer Id Number",
+            "type": "string"
+          },
+          "org_affiliation": {
+            "description": "The cardholder's organizational affiliation (e.g. department or agency name).",
+            "title": "Org Affiliation",
+            "type": "string"
+          },
+          "piv_auth_cert": {
+            "description": "Base64-encoded PIV Authentication certificate (DER).",
+            "title": "Piv Auth Cert",
+            "type": "string"
+          },
+          "portrait_jpg": {
+            "description": "Base64-encoded JPEG portrait of the cardholder.",
+            "title": "Portrait Jpg",
+            "type": "string"
+          },
+          "portrait_jpg2000": {
+            "description": "Base64-encoded JPEG2000 portrait of the cardholder. Takes priority over `portrait_jpg` if both are provided.",
+            "title": "Portrait Jpg2000",
+            "type": "string"
+          },
+          "printed_name": {
+            "description": "The cardholder's full printed name.",
+            "title": "Printed Name",
+            "type": "string"
+          },
+          "security_object": {
+            "description": "Base64-encoded PIV Security Object container payload.",
+            "title": "Security Object",
+            "type": "string"
+          },
+          "signed_chuid": {
+            "description": "Base64-encoded signed PIV CHUID data object. When present, FASC-N, GUID, expiration, and signer certificate are extracted from it, and the discrete `chuid_*` fields below are ignored. When absent, all `chuid_*` fields are required.",
+            "title": "Signed Chuid",
+            "type": "string"
+          },
+          "sm_cert_signer": {
+            "description": "Base64-encoded Secure Messaging signer certificate (DER).",
+            "title": "Sm Cert Signer",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
+            "format": "uuid",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "piv_auth_cert",
+          "card_auth_cert"
+        ],
+        "title": "PostPivCardBodyV2",
         "type": "object"
       },
       "PostQRCodeBodyV2": {
@@ -11863,6 +12081,108 @@
         "title": "SensorAlert",
         "type": "object"
       },
+      "SensorAlertItemV2": {
+        "additionalProperties": false,
+        "description": "A single sensor alert event in v2 format.\n\nV2 changes from v1: `start_time` and `end_time` are RFC 3339 strings instead\nof Unix epoch integers.",
+        "properties": {
+          "alert_event_id": {
+            "description": "The unique identifier for the triggered alert.",
+            "title": "Alert Event Id",
+            "type": "string"
+          },
+          "device_id": {
+            "description": "The unique identifier of the device.",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "device_name": {
+            "description": "The name of the device.",
+            "title": "Device Name",
+            "type": "string"
+          },
+          "device_serial": {
+            "description": "The serial number of the device.",
+            "title": "Device Serial",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "The end time of the alert, in RFC 3339 format (e.g. 2025-08-04T21:51:53+00:00).",
+            "title": "End Time",
+            "type": "string"
+          },
+          "is_above_max_event": {
+            "description": "If the alert can be configured with a low and a high threshold, this value will be <code>true</code> if the value that triggered the alert was above the high threshold.\n\nThis only applies to temperature and humidity alerts.",
+            "title": "Is Above Max Event",
+            "type": "boolean"
+          },
+          "most_extreme_value": {
+            "description": "The most extreme value for the sensor that was detected during the alert window.",
+            "title": "Most Extreme Value",
+            "type": "number"
+          },
+          "reading": {
+            "description": "The sensor type of the alert.",
+            "title": "Reading",
+            "type": "string"
+          },
+          "start_time": {
+            "description": "The start time of the alert, in RFC 3339 format (e.g. 2025-08-04T21:51:53+00:00).",
+            "title": "Start Time",
+            "type": "string"
+          },
+          "threshold": {
+            "description": "The user-defined threshold of the alert.",
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "title": "SensorAlertItemV2",
+        "type": "object"
+      },
+      "SensorAlertsQueryV2": {
+        "description": "Query parameters for listing sensor alerts.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "device_ids": {
+            "description": "A comma separated list of sensor IDs.",
+            "title": "Device Ids",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "The end of the time range for requested alerts, in ISO 8601 format (e.g. 2025-07-17T21:06:20Z). Defaults to the current time.",
+            "title": "End Time",
+            "type": "string"
+          },
+          "fields": {
+            "description": "Retrieves alerts only for the given fields.\n\nFields must be one or multiple comma separated values from <code>humidity</code>, <code>motion</code>, <code>noise_level</code>, <code>pm_2_5</code>, <code>pm_4_0</code>, <code>pm_1_0_0</code>, <code>tamper</code>, <code>temperature</code>, <code>tvoc</code>(SV11), <code>usa_air_quality_index</code>, <code>vape_index</code>, <code>carbon_dioxide</code>, <code>carbon_monoxide</code>, <code>barometric_pressure</code>, <code>formaldehyde</code>, <code>ambient_light</code>, <code>tvoc_index</code>(SV23/SV25),<code>heat_index</code>.\n\nIf left blank, alerts of all sensor types will be returned in the response.",
+            "title": "Fields",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "The maximum number of items returned in a single response. Default is 100. Max is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "start_time": {
+            "description": "The start of the time range for requested alerts, in ISO 8601 format (e.g. 2025-07-17T21:06:20Z). Defaults to one hour before `end_time`.",
+            "title": "Start Time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "device_ids"
+        ],
+        "title": "SensorAlertsQueryV2",
+        "type": "object"
+      },
       "SensorAlertsRequest": {
         "properties": {
           "device_ids": {
@@ -12044,6 +12364,44 @@
         "title": "SensorAlertsResponseV1",
         "type": "object"
       },
+      "SensorAlertsResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing sensor alerts.",
+        "example": {
+          "cursor": "MTAw",
+          "items": [
+            {
+              "alert_event_id": "25e15d7d-b19f-44a6-89b7-d37e460ce928",
+              "device_id": "b9ca7d11-66e2-47f0-a09e-05d6765c756a",
+              "device_name": "Third Floor Main Conference Room",
+              "device_serial": "UAIS-FSIL-3UTO",
+              "end_time": "2022-01-04T22:59:31+00:00",
+              "is_above_max_event": true,
+              "most_extreme_value": 1085.0,
+              "reading": "tvoc",
+              "start_time": "2022-01-04T22:59:25+00:00",
+              "threshold": 1000.0
+            }
+          ]
+        },
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for the next page of results. Null if there are no more pages.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "A list of sensor alert events.",
+            "items": {
+              "$ref": "#/components/schemas/SensorAlertItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "SensorAlertsResponseV2",
+        "type": "object"
+      },
       "SensorDataRequest": {
         "properties": {
           "end_time": {
@@ -12131,6 +12489,47 @@
           "device_id"
         ],
         "title": "SensorDataRequestV1",
+        "type": "object"
+      },
+      "SensorDataRequestV2": {
+        "description": "Query parameters for the v2 sensor data endpoint.\n\nNote: ``device_id`` is supplied as a path parameter (not a query parameter)\nin v2, so it is intentionally absent from this schema.",
+        "properties": {
+          "cursor": {
+            "description": "Base62-encoded pagination cursor from a previous response. Omit to fetch the first page.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "The end of the time range for requested sensor data, as an ISO 8601 timestamp (e.g. 2025-07-17T21:06:20Z). Defaults to the current time.",
+            "title": "End Time",
+            "type": "string"
+          },
+          "fields": {
+            "description": "One or multiple comma separated values from <code>humidity</code>, <code>motion</code>, <code>noise_level</code>, <code>pm_2_5</code>, <code>pm_4_0</code>, <code>pm_1_0_0</code>, <code>tamper</code>, <code>temperature</code>, <code>tvoc</code>(SV11), <code>usa_air_quality_index</code>, <code>vape_index</code>, <code>carbon_dioxide</code>, <code>carbon_monoxide</code>, <code>barometric_pressure</code>, <code>formaldehyde</code>, <code>ambient_light</code>, <code>tvoc_index</code>(SV23/SV25), <code>heat_index</code>.\n\nIf blank, all sensor readings will be returned in the response.",
+            "title": "Fields",
+            "type": "string"
+          },
+          "interval": {
+            "description": "The time interval for the requested sensor data, as an ISO 8601 duration (e.g. PT1S, PT5M, PT1H).\n\nData is stored with 1 second intervals for 30 days, and with 5 minute intervals for data between 30 days and 365 days old.\n\nIf left blank, a default resolution is calculated based on the time range.",
+            "title": "Interval",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "The maximum number of readings returned in a single response. Default is 100. Max is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "start_time": {
+            "description": "The start of the time range for requested sensor data, as an ISO 8601 timestamp (e.g. 2025-07-17T21:06:20Z). Defaults to one hour before `end_time`.",
+            "title": "Start Time",
+            "type": "string"
+          }
+        },
+        "title": "SensorDataRequestV2",
         "type": "object"
       },
       "SensorDataResponse": {
@@ -12303,6 +12702,53 @@
         "title": "SensorDataResponseV1",
         "type": "object"
       },
+      "SensorDataResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for a page of sensor readings.",
+        "properties": {
+          "cursor": {
+            "description": "Base62-encoded pagination cursor for the next page of results. Continue paginating while this field is non-null.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "device_id": {
+            "description": "The unique identifier of the device.",
+            "format": "uuid",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "device_name": {
+            "description": "The name of the device.",
+            "title": "Device Name",
+            "type": "string"
+          },
+          "device_serial": {
+            "default": "",
+            "description": "The serial number of the device.",
+            "title": "Device Serial",
+            "type": "string"
+          },
+          "interval": {
+            "default": "",
+            "description": "The time interval of the returned sensor data, as an ISO 8601 duration (e.g. PT1S, PT5M, PT1H).",
+            "title": "Interval",
+            "type": "string"
+          },
+          "items": {
+            "description": "A page of sensor readings ordered by ascending timestamp.",
+            "items": {
+              "$ref": "#/components/schemas/SensorReadingV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "device_id"
+        ],
+        "title": "SensorDataResponseV2",
+        "type": "object"
+      },
       "SensorEvent": {
         "additionalProperties": false,
         "description": "Sensor event",
@@ -12380,6 +12826,178 @@
           }
         },
         "title": "SensorEventInfo",
+        "type": "object"
+      },
+      "SensorListQueryV2": {
+        "description": "Query parameters for listing an org's environmental sensors.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "The maximum number of sensors returned in a single response. Default is 100. Max is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "SensorListQueryV2",
+        "type": "object"
+      },
+      "SensorListResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing environmental sensors.",
+        "example": {
+          "cursor": "MTAw",
+          "items": [
+            {
+              "device_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
+              "device_name": "Third Floor Main Conference Room",
+              "device_serial": "CHQX-GMW6-NR69",
+              "is_online": true,
+              "model": "SV25",
+              "readings": [
+                "temperature",
+                "humidity",
+                "motion",
+                "pm_2_5"
+              ],
+              "timezone": "America/Los_Angeles"
+            }
+          ]
+        },
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor for the next page of results. Null if there are no more pages.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "A list of environmental sensors in the organization.",
+            "items": {
+              "$ref": "#/components/schemas/EnvironmentSensorV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "SensorListResponseV2",
+        "type": "object"
+      },
+      "SensorReadingV2": {
+        "additionalProperties": false,
+        "description": "A single sensor reading at a point in time.\n\nOnly the readings requested (or supported by the device) are populated;\nunset readings are omitted from the serialized response.",
+        "properties": {
+          "ambient_light": {
+            "description": "Ambient Light sensor reading.",
+            "title": "Ambient Light",
+            "type": "number"
+          },
+          "barometric_pressure": {
+            "description": "Barometric Pressure sensor reading.",
+            "title": "Barometric Pressure",
+            "type": "number"
+          },
+          "carbon_dioxide": {
+            "description": "Carbon Dioxide sensor reading.",
+            "title": "Carbon Dioxide",
+            "type": "number"
+          },
+          "carbon_monoxide": {
+            "description": "Carbon Monoxide sensor reading.",
+            "title": "Carbon Monoxide",
+            "type": "number"
+          },
+          "formaldehyde": {
+            "description": "Formaldehyde sensor reading.",
+            "title": "Formaldehyde",
+            "type": "number"
+          },
+          "heat_index": {
+            "description": "Heat Index sensor reading.",
+            "title": "Heat Index",
+            "type": "number"
+          },
+          "humidity": {
+            "description": "Humidity sensor reading.",
+            "title": "Humidity",
+            "type": "number"
+          },
+          "motion": {
+            "description": "Motion sensor reading.",
+            "title": "Motion",
+            "type": "integer"
+          },
+          "noise_level": {
+            "description": "Noise level sensor reading.",
+            "title": "Noise Level",
+            "type": "number"
+          },
+          "pm_1_0_0": {
+            "description": "PM10.0 sensor reading.",
+            "title": "Pm 1 0 0",
+            "type": "number"
+          },
+          "pm_2_5": {
+            "description": "PM2.5 sensor reading.",
+            "title": "Pm 2 5",
+            "type": "number"
+          },
+          "pm_4_0": {
+            "description": "PM4.0 sensor reading.",
+            "title": "Pm 4 0",
+            "type": "number"
+          },
+          "tamper": {
+            "description": "Tamper sensor reading.",
+            "title": "Tamper",
+            "type": "integer"
+          },
+          "temperature": {
+            "description": "Temperature sensor reading.",
+            "title": "Temperature",
+            "type": "number"
+          },
+          "timestamp": {
+            "description": "The time of the sensor reading, in RFC 3339 format (e.g. 2025-08-04T21:51:53+00:00).",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "tvoc": {
+            "description": "TVOC sensor reading.",
+            "title": "Tvoc",
+            "type": "integer"
+          },
+          "tvoc_index": {
+            "description": "TVOC Index sensor reading.",
+            "title": "Tvoc Index",
+            "type": "number"
+          },
+          "usa_air_quality_index": {
+            "description": "USA Air Quality Index sensor reading.",
+            "title": "Usa Air Quality Index",
+            "type": "integer"
+          },
+          "vape_index": {
+            "description": "Vape Index sensor reading.",
+            "title": "Vape Index",
+            "type": "integer"
+          },
+          "vape_index_experimental": {
+            "description": "Vape Index experimental sensor reading.",
+            "title": "Vape Index Experimental",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "timestamp"
+        ],
+        "title": "SensorReadingV2",
         "type": "object"
       },
       "SignatureResponseItem": {
@@ -22717,7 +23335,7 @@
     },
     "/v2/events": {
       "get": {
-        "description": "Returns unified events from camera, access control, and sensor devices within a specified time range.\n\nThis endpoint consolidates events from camera, access control, and sensor devices in your organization,\nproviding a single interface to retrieve security events, access control events, and environmental sensor events.\n\n**Default Behavior**: Returns events from all supported product types from the last hour if no filters are specified.\n\n### Supported Event Types\n\n**Camera Events:**\n- `camera_online`, `camera_offline` - Camera connectivity status\n- `motion` - Motion detection events\n- `person_of_interest` - Person of Interest detections\n- `license_plate_of_interest` - License Plate of Interest detections\n- `tamper` - Camera tampering events\n- `crowd` - Crowd detection events\n- `line_crossing` - Line crossing rule violations\n- `loitering` - Loitering/dwell time violations\n\n**Access Control Events:**\n- `door_opened`, `door_granted`, `door_rejected` - Access events\n- `door_forced_open`, `door_held_open` - Security violations\n- `door_tailgating` - Tailgating detection\n- `door_tamper` - Door tampering events\n- `door_offline` - Access control unit connectivity\n- Plus 50+ additional access control event types for comprehensive monitoring\n\n**Sensor Events:**\n- `temperature`, `humidity` - Climate monitoring alerts\n- `tvoc`, `co2`, `pm25` - Air quality alerts\n- `noise` - Noise level alerts\n- `sensor_motion` - Motion detection from sensors\n- `air_quality` - General air quality alerts\n\n### Filtering\n\nUse these query parameters to filter results:\n- **`product_types`**: Comma-separated product types (`camera`, `access_control`, `sensor`)\n- **`device_ids`**: Comma-separated list of device IDs to filter by\n- **`event_types`**: Comma-separated list of event types (see supported types above)\n- **`start_time`**: Start time in ISO 8601 format (e.g., `2025-01-17T09:00:00Z`)\n- **`end_time`**: End time in ISO 8601 format (defaults to current time if not specified)\n- **`site_ids`**: Comma-separated list of site IDs (for access control events)\n\n### Pagination\n\nThis endpoint uses cursor-based pagination with these parameters:\n- **`limit`**: Number of events to return (1-1000, default 100)\n- **`cursor`**: Pagination cursor from previous response for next page\n- Continue paginating while the response includes a `cursor` value\n\n\n\n### Examples\n\nGet all events from the last hour:\n```\nGET /v2/events\n```\n\nGet only camera motion events from a specific time range:\n```\nGET /v2/events?product_types=camera&event_types=motion&start_time=2025-01-17T09:00:00Z&end_time=2025-01-17T17:00:00Z\n```\n\nGet access control events for specific doors:\n```\nGET /v2/events?product_types=access_control&device_ids=door1,door2&limit=50\n```\n\nGet sensor temperature and humidity alerts:\n```\nGET /v2/events?product_types=sensor&event_types=temperature,humidity&start_time=2025-01-17T09:00:00Z\n```",
+        "description": "Returns unified events from camera, access control, and sensor devices within a specified time range.\n\nThis endpoint consolidates events from camera, access control, and sensor devices in your organization,\nproviding a single interface to retrieve security events, access control events, and environmental sensor events.\n\n**Default Behavior**: Returns events from all supported product types from the last hour if no filters are specified.\n\n### Supported Event Types\n\n**Camera Events:**\n- `camera_online`, `camera_offline` - Camera connectivity status\n- `motion` - Motion detection events\n- `person_of_interest` - Person of Interest detections\n- `license_plate_of_interest` - License Plate of Interest detections\n- `tamper` - Camera tampering events\n- `crowd` - Crowd detection events\n- `line_crossing` - Line crossing rule violations\n- `loitering` - Loitering/dwell time violations\n- `inactivity` - Inactivity/no-motion alert violations\n\n**Access Control Events:**\n- `door_opened`, `door_granted`, `door_rejected` - Access events\n- `door_forced_open`, `door_held_open` - Security violations\n- `door_tailgating` - Tailgating detection\n- `door_tamper` - Door tampering events\n- `door_offline` - Access control unit connectivity\n- Plus 50+ additional access control event types for comprehensive monitoring\n\n**Sensor Events:**\n- `temperature`, `humidity` - Climate monitoring alerts\n- `tvoc`, `co2`, `pm25` - Air quality alerts\n- `noise` - Noise level alerts\n- `sensor_motion` - Motion detection from sensors\n- `air_quality` - General air quality alerts\n\n### Filtering\n\nUse these query parameters to filter results:\n- **`product_types`**: Comma-separated product types (`camera`, `access_control`, `sensor`)\n- **`device_ids`**: Comma-separated list of device IDs to filter by\n- **`event_types`**: Comma-separated list of event types (see supported types above)\n- **`start_time`**: Start time in ISO 8601 format (e.g., `2025-01-17T09:00:00Z`)\n- **`end_time`**: End time in ISO 8601 format (defaults to current time if not specified)\n- **`site_ids`**: Comma-separated list of site IDs (for access control events)\n\n### Pagination\n\nThis endpoint uses cursor-based pagination with these parameters:\n- **`limit`**: Number of events to return (1-1000, default 100)\n- **`cursor`**: Pagination cursor from previous response for next page\n- Continue paginating while the response includes a `cursor` value\n\n\n\n### Examples\n\nGet all events from the last hour:\n```\nGET /v2/events\n```\n\nGet only camera motion events from a specific time range:\n```\nGET /v2/events?product_types=camera&event_types=motion&start_time=2025-01-17T09:00:00Z&end_time=2025-01-17T17:00:00Z\n```\n\nGet access control events for specific doors:\n```\nGET /v2/events?product_types=access_control&device_ids=door1,door2&limit=50\n```\n\nGet sensor temperature and humidity alerts:\n```\nGET /v2/events?product_types=sensor&event_types=temperature,humidity&start_time=2025-01-17T09:00:00Z\n```",
         "operationId": "getEventsViewV2",
         "parameters": [
           {
