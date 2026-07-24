@@ -1011,6 +1011,38 @@
                 "title": "ApiErrorModel",
                 "type": "object"
             },
+            "ApiErrorResponseV2": {
+                "additionalProperties": false,
+                "description": "Error response shape for v2 API endpoints.",
+                "properties": {
+                    "data": {
+                        "description": "Additional error context, if any.",
+                        "title": "Data"
+                    },
+                    "error_code": {
+                        "description": "Stable customer-facing error category. See ErrorCode taxonomy.",
+                        "title": "Error Code",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "Internal support/Datadog pinpoint code for error diagnosis.",
+                        "title": "Id",
+                        "type": "string"
+                    },
+                    "message": {
+                        "description": "Human-readable error description.",
+                        "title": "Message",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "error_code",
+                    "message"
+                ],
+                "title": "ApiErrorResponseV2",
+                "type": "object"
+            },
             "ApiKeyItem": {
                 "additionalProperties": false,
                 "properties": {
@@ -1194,8 +1226,7 @@
                 },
                 "required": [
                     "approved_list_id",
-                    "name",
-                    "site_id"
+                    "name"
                 ],
                 "title": "ApprovedListItem",
                 "type": "object"
@@ -9646,6 +9677,78 @@
                     "label"
                 ],
                 "title": "PatchPersonOfInterestRequestV2",
+                "type": "object"
+            },
+            "PatchPivCardBodyV2": {
+                "description": "Body for `PATCH /v2/access/credentials/piv_cards/<piv_card_id>`.",
+                "properties": {
+                    "active": {
+                        "description": "Whether the credential is active.",
+                        "title": "Active",
+                        "type": "boolean"
+                    },
+                    "affiliation": {
+                        "description": "The cardholder's affiliation.",
+                        "title": "Affiliation",
+                        "type": "string"
+                    },
+                    "card_auth_cert": {
+                        "description": "Base64-encoded Card Authentication Key (CAK) certificate (DER).",
+                        "title": "Card Auth Cert",
+                        "type": "string"
+                    },
+                    "card_capability_container": {
+                        "description": "Base64-encoded Card Capability Container. Accepted for compatibility but not persisted.",
+                        "title": "Card Capability Container",
+                        "type": "string"
+                    },
+                    "chuid_expiration": {
+                        "description": "The CHUID expiration date, ISO 8601.",
+                        "title": "Chuid Expiration",
+                        "type": "string"
+                    },
+                    "chuid_signer_cert": {
+                        "description": "Base64-encoded CHUID signer certificate (DER).",
+                        "title": "Chuid Signer Cert",
+                        "type": "string"
+                    },
+                    "org_affiliation": {
+                        "description": "The cardholder's organizational affiliation.",
+                        "title": "Org Affiliation",
+                        "type": "string"
+                    },
+                    "piv_auth_cert": {
+                        "description": "Base64-encoded PIV Authentication certificate (DER).",
+                        "title": "Piv Auth Cert",
+                        "type": "string"
+                    },
+                    "portrait_jpg": {
+                        "description": "Base64-encoded JPEG portrait.",
+                        "title": "Portrait Jpg",
+                        "type": "string"
+                    },
+                    "portrait_jpg2000": {
+                        "description": "Base64-encoded JPEG2000 portrait. Takes priority over `portrait_jpg` if both are provided.",
+                        "title": "Portrait Jpg2000",
+                        "type": "string"
+                    },
+                    "printed_name": {
+                        "description": "The cardholder's full printed name.",
+                        "title": "Printed Name",
+                        "type": "string"
+                    },
+                    "security_object": {
+                        "description": "Base64-encoded PIV Security Object container payload.",
+                        "title": "Security Object",
+                        "type": "string"
+                    },
+                    "sm_cert_signer": {
+                        "description": "Base64-encoded Secure Messaging signer certificate (DER).",
+                        "title": "Sm Cert Signer",
+                        "type": "string"
+                    }
+                },
+                "title": "PatchPivCardBodyV2",
                 "type": "object"
             },
             "PatchQRCodeBodyV2": {
