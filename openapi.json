@@ -344,7 +344,7 @@
                 "description": "Paginated list of access groups.",
                 "properties": {
                     "cursor": {
-                        "description": "Base62-encoded pagination cursor for retrieving the next page of results. Absent (null) when there are no more pages.",
+                        "description": "Base64url-encoded pagination cursor for retrieving the next page of results. Absent (null) when there are no more pages.",
                         "title": "Cursor",
                         "type": "string"
                     },
@@ -4123,7 +4123,7 @@
                 "description": "Query parameters for listing deny list entries.",
                 "properties": {
                     "cursor": {
-                        "description": "Pagination cursor (base62-encoded) for retrieving the next page of results. Omit on the first request.",
+                        "description": "Pagination cursor (base64url-encoded) for retrieving the next page of results. Omit on the first request.",
                         "title": "Cursor",
                         "type": "string"
                     },
@@ -4174,7 +4174,7 @@
                 },
                 "properties": {
                     "cursor": {
-                        "description": "Pagination cursor (base62-encoded) for retrieving the next page of results. Continue paginating while this field is present.",
+                        "description": "Pagination cursor (base64url-encoded) for retrieving the next page of results. Continue paginating while this field is present.",
                         "title": "Cursor",
                         "type": "string"
                     },
@@ -6491,7 +6491,7 @@
                 "type": "object"
             },
             "GetPersonsOfInterestQueryV2": {
-                "description": "Query parameters for listing Persons of Interest (cursor-based pagination).\n\nV2 changes from v1:\n- `page_size` (int) -> `limit` (int), same default (100) and max (200).\n- `page_token` (str) -> `cursor` (str), a Base62-encoded opaque cursor.",
+                "description": "Query parameters for listing Persons of Interest (cursor-based pagination).\n\nV2 changes from v1:\n- `page_size` (int) -> `limit` (int), same default (100) and max (200).\n- `page_token` (str) -> `cursor` (str), a Base64url-encoded opaque cursor.",
                 "properties": {
                     "cursor": {
                         "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
@@ -6513,7 +6513,7 @@
             },
             "GetPersonsOfInterestResponseV2": {
                 "additionalProperties": false,
-                "description": "Response schema for listing Persons of Interest.\n\nV2 changes from v1:\n- `persons_of_interest` (array) -> `items` (array), per v2 pagination spec.\n- `next_token` (str) -> `cursor` (str), a Base62-encoded opaque cursor that\n  is `null` when there are no more pages.\n- Each item uses the shared `PersonOfInterestResponseV2` representation with\n  RFC 3339 timestamps instead of Unix epoch integers.",
+                "description": "Response schema for listing Persons of Interest.\n\nV2 changes from v1:\n- `persons_of_interest` (array) -> `items` (array), per v2 pagination spec.\n- `next_token` (str) -> `cursor` (str), a Base64url-encoded opaque cursor that\n  is `null` when there are no more pages.\n- Each item uses the shared `PersonOfInterestResponseV2` representation with\n  RFC 3339 timestamps instead of Unix epoch integers.",
                 "properties": {
                     "cursor": {
                         "description": "Pagination cursor for the next page of results. Null if no more pages.",
@@ -8413,7 +8413,7 @@
                 "description": "Query parameters for listing access groups.",
                 "properties": {
                     "cursor": {
-                        "description": "Base62-encoded pagination cursor for retrieving the next page of results.",
+                        "description": "Base64url-encoded pagination cursor for retrieving the next page of results.",
                         "title": "Cursor",
                         "type": "string"
                     },
@@ -12598,7 +12598,7 @@
                 "description": "Query parameters for the v2 sensor data endpoint.\n\nNote: ``device_id`` is supplied as a path parameter (not a query parameter)\nin v2, so it is intentionally absent from this schema.",
                 "properties": {
                     "cursor": {
-                        "description": "Base62-encoded pagination cursor from a previous response. Omit to fetch the first page.",
+                        "description": "Base64url-encoded pagination cursor from a previous response. Omit to fetch the first page.",
                         "title": "Cursor",
                         "type": "string"
                     },
@@ -12810,7 +12810,7 @@
                 "description": "Response schema for a page of sensor readings.",
                 "properties": {
                     "cursor": {
-                        "description": "Base62-encoded pagination cursor for the next page of results. Continue paginating while this field is non-null.",
+                        "description": "Base64url-encoded pagination cursor for the next page of results. Continue paginating while this field is non-null.",
                         "title": "Cursor",
                         "type": "string"
                     },
