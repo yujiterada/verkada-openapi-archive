@@ -1226,7 +1226,8 @@
         },
         "required": [
           "approved_list_id",
-          "name"
+          "name",
+          "site_id"
         ],
         "title": "ApprovedListItem",
         "type": "object"
@@ -1449,6 +1450,42 @@
         "title": "AuditLogRequestV1",
         "type": "object"
       },
+      "AuditLogRequestV2": {
+        "properties": {
+          "cursor": {
+            "description": "The pagination cursor used to fetch the next page of results. Provide the `cursor` value returned by a previous request; omit it to start from the first page.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "The end of the time range for requested audit logs.\nFormatted as an ISO 8601 timestamp (e.g. '2025-01-17T10:00:00Z').\nDefaults to the current time if not specified.",
+            "title": "End Time",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "The maximum number of audit logs returned in a single response.\nDefault is 100. Max is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "start_time": {
+            "description": "The start of the time range for requested audit logs.\nFormatted as an ISO 8601 timestamp (e.g. '2025-01-17T09:00:00Z').\nDefaults to one hour before `end_time` if not specified.",
+            "title": "Start Time",
+            "type": "string"
+          },
+          "use_processed_timestamp": {
+            "default": false,
+            "description": "Whether to return audit logs where `processed_timestamp` is between `start_time` and `end_time` instead of `timestamp`. Useful when polling for new audit logs on a regular cadence to ensure logs that had not finished processing during an earlier polling window are still eventually captured.\n\nNote that audit logs where `timestamp` is before 2025-08-12 do not support this feature.",
+            "title": "Use Processed Timestamp",
+            "type": "boolean"
+          }
+        },
+        "title": "AuditLogRequestV2",
+        "type": "object"
+      },
       "AuditLogResponse": {
         "additionalProperties": false,
         "example": {
@@ -1582,6 +1619,73 @@
         "title": "AuditLogResponseItem",
         "type": "object"
       },
+      "AuditLogResponseItemV2": {
+        "additionalProperties": false,
+        "description": "A single audit log entry.\n\nMirrors the v0 audit log item but omits ``organization_id``: the org context\nis implied by the API key per the v2 contract.",
+        "properties": {
+          "details": {
+            "description": "The details of the audit log entry.",
+            "title": "Details",
+            "type": "object"
+          },
+          "devices": {
+            "description": "The list of devices associated with the audit log entry.",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogDeviceDetails"
+            },
+            "title": "Devices",
+            "type": "array"
+          },
+          "event_description": {
+            "description": "The description of the event.",
+            "title": "Event Description",
+            "type": "string"
+          },
+          "event_name": {
+            "description": "The name of the event.",
+            "title": "Event Name",
+            "type": "string"
+          },
+          "ip_address": {
+            "description": "The IP address of the user.",
+            "title": "Ip Address",
+            "type": "string"
+          },
+          "processed_timestamp": {
+            "description": "The timestamp when the audit log entry had finished processing and became available to retrieve via API.\nFormatted in ISO 8601 date time format.",
+            "title": "Processed Timestamp",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "The timestamp when the action identified by the audit log entry occurred.\nFormatted in ISO 8601 date time format.",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "user_email": {
+            "description": "The email of the user.",
+            "title": "User Email",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique identifier of the user for the audit log entry.",
+            "format": "uuid",
+            "title": "User Id",
+            "type": "string"
+          },
+          "user_name": {
+            "description": "The user name for the audit log entry.",
+            "title": "User Name",
+            "type": "string"
+          },
+          "verkada_support_id": {
+            "description": "The unique identifier used by Verkada support.",
+            "title": "Verkada Support Id",
+            "type": "string"
+          }
+        },
+        "title": "AuditLogResponseItemV2",
+        "type": "object"
+      },
       "AuditLogResponseV1": {
         "additionalProperties": false,
         "example": {
@@ -1639,6 +1743,63 @@
           }
         },
         "title": "AuditLogResponseV1",
+        "type": "object"
+      },
+      "AuditLogResponseV2": {
+        "additionalProperties": false,
+        "example": {
+          "cursor": "Mg",
+          "items": [
+            {
+              "details": {
+                "success": true
+              },
+              "devices": null,
+              "event_description": "Login successful",
+              "event_name": "User Login",
+              "ip_address": "fd1b:9a8c:d3ef:20a3:fdca:f931:608b:1fa5",
+              "timestamp": "2021-07-21T04:11:51Z",
+              "user_id": "11205c1c-16d3-469f-b704-9e3dfa33097b",
+              "user_name": "John Doe",
+              "verkada_support_id": null
+            },
+            {
+              "details": null,
+              "devices": [
+                {
+                  "details": null,
+                  "device_id": "d6ec4e98-c660-4079-8f7a-2adf3b4af1f2",
+                  "device_name": "Front door",
+                  "device_site_name": "San Mateo HQ",
+                  "device_type": "camera"
+                }
+              ],
+              "event_description": "Live Stream started",
+              "event_name": "Live Stream Started",
+              "ip_address": "fdfc:6b74:3a02:baf1:fda6:1b58:7c40:374c",
+              "timestamp": "2021-07-21T04:11:38Z",
+              "user_id": "8df56f16-0966-4532-822a-ca9a1e52e6c6",
+              "user_name": "John Doe 2",
+              "verkada_support_id": null
+            }
+          ]
+        },
+        "properties": {
+          "cursor": {
+            "description": "The pagination cursor used to fetch the next page of results. `null` when there are no more results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "A list of audit logs.",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogResponseItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "AuditLogResponseV2",
         "type": "object"
       },
       "BadRequestCreate": {
@@ -3554,6 +3715,74 @@
         "title": "CreateUserRequestBody",
         "type": "object"
       },
+      "CreateUserRequestV2": {
+        "additionalProperties": false,
+        "description": "Request body for POST /v2/core/users.\n\nAt least one of email, first_name, or last_name must be provided.",
+        "properties": {
+          "company_name": {
+            "description": "The name of the company the user is part of.",
+            "title": "Company Name",
+            "type": "string"
+          },
+          "department": {
+            "description": "The name of the user's department.",
+            "title": "Department",
+            "type": "string"
+          },
+          "department_id": {
+            "description": "The user's department ID.",
+            "title": "Department Id",
+            "type": "string"
+          },
+          "email": {
+            "description": "The email address of the user.",
+            "title": "Email",
+            "type": "string"
+          },
+          "employee_id": {
+            "description": "The user's employee ID; not required to be unique.",
+            "title": "Employee Id",
+            "type": "string"
+          },
+          "employee_title": {
+            "description": "The user's employee title.",
+            "title": "Employee Title",
+            "type": "string"
+          },
+          "employee_type": {
+            "description": "The type of employee.",
+            "title": "Employee Type",
+            "type": "string"
+          },
+          "external_id": {
+            "description": "A customer-managed external identifier to set on the user.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "first_name": {
+            "description": "The first name of the user.",
+            "title": "First Name",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "The last name of the user.",
+            "title": "Last Name",
+            "type": "string"
+          },
+          "middle_name": {
+            "description": "The middle name of the user.",
+            "title": "Middle Name",
+            "type": "string"
+          },
+          "phone": {
+            "description": "The main phone number of the user.",
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "title": "CreateUserRequestV2",
+        "type": "object"
+      },
       "CreateUserResponse": {
         "additionalProperties": false,
         "properties": {
@@ -3984,6 +4213,24 @@
           }
         },
         "title": "DeleteUserRequest",
+        "type": "object"
+      },
+      "DeleteUserRequestV2": {
+        "additionalProperties": false,
+        "description": "Query parameters for DELETE /v2/core/users. Exactly one identifier is required.",
+        "properties": {
+          "external_id": {
+            "description": "A customer-managed external identifier for the user.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique Verkada-managed identifier of the user.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "title": "DeleteUserRequestV2",
         "type": "object"
       },
       "DeleteUserResponse": {
@@ -6584,6 +6831,24 @@
         "title": "GetUserRequest",
         "type": "object"
       },
+      "GetUserRequestV2": {
+        "additionalProperties": false,
+        "description": "Query parameters for GET /v2/core/users.",
+        "properties": {
+          "external_id": {
+            "description": "A customer-managed external identifier set on the user at creation. Provide either user_id or external_id, not both.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique Verkada-managed identifier of the user. Must be a UUID. Provide either user_id or external_id, not both.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "title": "GetUserRequestV2",
+        "type": "object"
+      },
       "GetUserResponse": {
         "additionalProperties": false,
         "description": "Response schema for the get user endpoint.",
@@ -6661,6 +6926,87 @@
           }
         },
         "title": "GetUserResponse",
+        "type": "object"
+      },
+      "GetUserResponseV2": {
+        "description": "Response schema for GET /v2/core/users.",
+        "properties": {
+          "active": {
+            "description": "Whether the user is active in the system.",
+            "title": "Active",
+            "type": "boolean"
+          },
+          "company_name": {
+            "description": "The name of the company the user is part of.",
+            "title": "Company Name",
+            "type": "string"
+          },
+          "department": {
+            "description": "The name of the user's department.",
+            "title": "Department",
+            "type": "string"
+          },
+          "department_id": {
+            "description": "The user's department ID.",
+            "title": "Department Id",
+            "type": "string"
+          },
+          "email": {
+            "description": "The email address of the user.",
+            "title": "Email",
+            "type": "string"
+          },
+          "employee_id": {
+            "description": "The user's employee ID; not required to be unique.",
+            "title": "Employee Id",
+            "type": "string"
+          },
+          "employee_title": {
+            "description": "The user's employee title.",
+            "title": "Employee Title",
+            "type": "string"
+          },
+          "employee_type": {
+            "description": "The type of employee.",
+            "title": "Employee Type",
+            "type": "string"
+          },
+          "external_id": {
+            "description": "A customer-managed external identifier for the user.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "first_name": {
+            "description": "The first name of the user.",
+            "title": "First Name",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "The last name of the user.",
+            "title": "Last Name",
+            "type": "string"
+          },
+          "middle_name": {
+            "description": "The middle name of the user.",
+            "title": "Middle Name",
+            "type": "string"
+          },
+          "phone": {
+            "description": "The main phone number of the user.",
+            "title": "Phone",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "The unique Verkada-managed identifier of the user.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "active"
+        ],
+        "title": "GetUserResponseV2",
         "type": "object"
       },
       "GranularApiKeyRoles": {
@@ -8705,6 +9051,255 @@
         ],
         "title": "ModifyAccessScheduleEventRequestV1",
         "type": "object"
+      },
+      "NJSnapPOI": {
+        "description": "A single POI record from the NJ SNAP Hotlist feed.\n\nAlways required: `ID`, `Status`, `PlateNumber` \u2014 the spec highlights PlateNumber as\nmandatory in all three schemas (\u00a74.1 ADD, \u00a75.1 EDIT, \u00a76.1 DELETE), and \u00a76.1 states a DELETE\n\"will be a full record to coincide with the Unique identifier of the original record\".\n`PlateSt` is required for `ADD`/`EDIT` only, since those write a document that needs a state.\nMirrors vsight's validate_pois, so the two layers accept the same inputs.\n\nAll other fields are optional. Extra undocumented fields (e.g. `DeptORI`, `DeptName`,\n`EntryDate`, which appear in the spec examples but not the schema) are preserved via\n`extra = \"allow\"` so downstream consumers can stash them.",
+        "properties": {
+          "CaseNo": {
+            "description": "NJ SNAP case number.",
+            "title": "Caseno",
+            "type": "string"
+          },
+          "Comment": {
+            "description": "Free-text notes about the POI.",
+            "title": "Comment",
+            "type": "string"
+          },
+          "ContactEmail": {
+            "description": "Comma- or semicolon-separated emails to notify on a hit.",
+            "title": "Contactemail",
+            "type": "string"
+          },
+          "ContactName": {
+            "description": "Person who created the POI in NJ SNAP.",
+            "title": "Contactname",
+            "type": "string"
+          },
+          "ContactNo": {
+            "description": "Comma-separated phone numbers to notify on a hit.",
+            "title": "Contactno",
+            "type": "string"
+          },
+          "ExpirationDate": {
+            "description": "When the NJ SNAP record expires (UTC). Normalized to RFC 3339.",
+            "title": "Expirationdate",
+            "type": "string"
+          },
+          "ID": {
+            "description": "Unique identifier of the POI assigned by NJ SNAP.",
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "NICNum": {
+            "description": "NCIC Identifier Number.",
+            "title": "Nicnum",
+            "type": "string"
+          },
+          "NJSNAPHitNotification": {
+            "description": "Y/N. If Y, plate-read hits must be sent back to NJ SNAP.",
+            "title": "Njsnaphitnotification",
+            "type": "string"
+          },
+          "PlateNumber": {
+            "description": "License plate number on the POI hotlist.",
+            "minLength": 1,
+            "title": "Platenumber",
+            "type": "string"
+          },
+          "PlateSt": {
+            "description": "Two-letter US state code for the plate (NJ/PA/NY/etc). Required for ADD and EDIT.",
+            "minLength": 1,
+            "title": "Platest",
+            "type": "string"
+          },
+          "Reason": {
+            "description": "Free-text reason (e.g. 'Agg Assault', 'Robbery', 'BOLO ALERT').",
+            "title": "Reason",
+            "type": "string"
+          },
+          "ReasonType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NJSnapReasonType"
+              }
+            ],
+            "description": "One of ALERT, NCIC, NJDMV, NJSNAP. Deprecated NON-NCIC is treated as ALERT."
+          },
+          "StartDate": {
+            "description": "When the NJ SNAP record was created (UTC). Normalized to RFC 3339.",
+            "title": "Startdate",
+            "type": "string"
+          },
+          "Status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NJSnapPOIStatus"
+              }
+            ],
+            "description": "ADD, EDIT, or DELETE (case sensitive)."
+          },
+          "UserVisibility": {
+            "description": "Y/N. If Y, the agency that recorded a hit may receive details.",
+            "title": "Uservisibility",
+            "type": "string"
+          },
+          "VehicleColor": {
+            "description": "Vehicle color.",
+            "title": "Vehiclecolor",
+            "type": "string"
+          },
+          "VehicleMake": {
+            "description": "Vehicle make.",
+            "title": "Vehiclemake",
+            "type": "string"
+          },
+          "VehicleModel": {
+            "description": "Vehicle model.",
+            "title": "Vehiclemodel",
+            "type": "string"
+          },
+          "VehicleSize": {
+            "description": "Vehicle size class.",
+            "title": "Vehiclesize",
+            "type": "string"
+          },
+          "VehicleYear": {
+            "description": "Vehicle year.",
+            "title": "Vehicleyear",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ID",
+          "Status",
+          "PlateNumber"
+        ],
+        "title": "NJSnapPOI",
+        "type": "object"
+      },
+      "NJSnapPOIBatchRequestV2": {
+        "description": "Inbound request body \u2014 `{\"POIs\": [...]}` per spec \u00a74.1.\n\nNo upper bound on batch size: the spec places none, and NJ SNAP's queue-and-flush-on-\nreconnect design (see the POI Hits/Entries addendum) can legitimately replay a large\nbacklog in one push. NJSnapPOIHandlerV2 chunks the batch into <=MAX_POIS_PER_REQUEST\nsub-batches when forwarding to vsight, per the vpublicapi convention of chunking\nunbounded downstream calls rather than rejecting large inputs outright.",
+        "properties": {
+          "POIs": {
+            "description": "List of POI records to add, edit, or delete.",
+            "items": {
+              "$ref": "#/components/schemas/NJSnapPOI"
+            },
+            "minItems": 1,
+            "title": "Pois",
+            "type": "array"
+          }
+        },
+        "required": [
+          "POIs"
+        ],
+        "title": "NJSnapPOIBatchRequestV2",
+        "type": "object"
+      },
+      "NJSnapPOIBatchResponseV2": {
+        "additionalProperties": false,
+        "description": "200 response body for a successful batch ingest.",
+        "properties": {
+          "results": {
+            "description": "One result per POI in the input, in the same order.",
+            "items": {
+              "$ref": "#/components/schemas/NJSnapPOIResultV2"
+            },
+            "title": "Results",
+            "type": "array"
+          }
+        },
+        "title": "NJSnapPOIBatchResponseV2",
+        "type": "object"
+      },
+      "NJSnapPOIResultError": {
+        "additionalProperties": false,
+        "description": "Per-record error detail returned inside a 200 response.",
+        "properties": {
+          "code": {
+            "description": "Machine-readable error code, e.g. 'not_found' for an EDIT/DELETE on a missing POI.",
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "description": "Human-readable error message.",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "NJSnapPOIResultError",
+        "type": "object"
+      },
+      "NJSnapPOIResultStatus": {
+        "description": "Per-record outcome returned to NJ SNAP.",
+        "enum": [
+          "added",
+          "updated",
+          "deleted",
+          "error"
+        ],
+        "title": "NJSnapPOIResultStatus",
+        "type": "string"
+      },
+      "NJSnapPOIResultV2": {
+        "additionalProperties": false,
+        "description": "Result of applying one POI from the batch.",
+        "properties": {
+          "error": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NJSnapPOIResultError"
+              }
+            ],
+            "description": "Error detail. Present only when `status` is 'error'.",
+            "title": "Error"
+          },
+          "id": {
+            "description": "The POI ID from the request.",
+            "title": "Id",
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NJSnapPOIResultStatus"
+              }
+            ],
+            "description": "Outcome: added, updated, deleted, or error."
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ],
+        "title": "NJSnapPOIResultV2",
+        "type": "object"
+      },
+      "NJSnapPOIStatus": {
+        "description": "NJ SNAP POI Status \u2014 uppercase per spec \u00a78 ('Must be Upper Case').",
+        "enum": [
+          "ADD",
+          "EDIT",
+          "DELETE"
+        ],
+        "title": "NJSnapPOIStatus",
+        "type": "string"
+      },
+      "NJSnapReasonType": {
+        "description": "ReasonType per spec \u00a78 Data Dictionary. Deprecated `NON-NCIC` is coerced to ALERT.",
+        "enum": [
+          "ALERT",
+          "NCIC",
+          "NJDMV",
+          "NJSNAP"
+        ],
+        "title": "NJSnapReasonType",
+        "type": "string"
       },
       "NotFound": {
         "description": "User not found, either user ID or external ID is invalid.",
@@ -13814,6 +14409,74 @@
           }
         },
         "title": "UpdateUserRequestQuery",
+        "type": "object"
+      },
+      "UpdateUserRequestV2": {
+        "additionalProperties": false,
+        "description": "Request body for PATCH /v2/core/users. Only provided fields are updated.",
+        "properties": {
+          "company_name": {
+            "description": "The name of the company the user is part of.",
+            "title": "Company Name",
+            "type": "string"
+          },
+          "department": {
+            "description": "The name of the user's department.",
+            "title": "Department",
+            "type": "string"
+          },
+          "department_id": {
+            "description": "The user's department ID.",
+            "title": "Department Id",
+            "type": "string"
+          },
+          "email": {
+            "description": "The email address of the user.",
+            "title": "Email",
+            "type": "string"
+          },
+          "employee_id": {
+            "description": "The user's employee ID; not required to be unique.",
+            "title": "Employee Id",
+            "type": "string"
+          },
+          "employee_title": {
+            "description": "The user's employee title.",
+            "title": "Employee Title",
+            "type": "string"
+          },
+          "employee_type": {
+            "description": "The type of employee.",
+            "title": "Employee Type",
+            "type": "string"
+          },
+          "external_id": {
+            "description": "A new customer-managed external identifier for the user.",
+            "title": "External Id",
+            "type": "string"
+          },
+          "first_name": {
+            "description": "The first name of the user.",
+            "title": "First Name",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "The last name of the user.",
+            "title": "Last Name",
+            "type": "string"
+          },
+          "middle_name": {
+            "description": "The middle name of the user.",
+            "title": "Middle Name",
+            "type": "string"
+          },
+          "phone": {
+            "description": "The main phone number of the user.",
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "title": "UpdateUserRequestV2",
         "type": "object"
       },
       "UpdateUserResponse": {
