@@ -3302,6 +3302,12 @@
                         "title": "Facility Code",
                         "type": "string"
                     },
+                    "is_output_card": {
+                        "default": false,
+                        "description": "Whether the credential is set as the user's output card.",
+                        "title": "Is Output Card",
+                        "type": "boolean"
+                    },
                     "type": {
                         "description": "The type of card used during the credential evaluation process.",
                         "title": "Type",
@@ -3944,6 +3950,32 @@
                 "title": "DashboardOccupancyTrendsRequestV1",
                 "type": "object"
             },
+            "DashboardOccupancyTrendsRequestV2": {
+                "description": "Query parameters for fetching dashboard occupancy trends.",
+                "properties": {
+                    "end_time": {
+                        "description": "The end of the time range for dashboard occupancy trends.\nFormatted as an ISO 8601 string (e.g., <code>2025-07-17T21:06:20Z</code>).\nDefaults to the current time.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "interval": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/IntervalEnumV2"
+                            }
+                        ],
+                        "default": "PT1H",
+                        "description": "The time interval for each bucket in the returned trends.\nOptions available are: <code>PT15M</code>, <code>PT1H</code>, <code>PT1D</code>.\nDefaults to <code>PT1H</code>."
+                    },
+                    "start_time": {
+                        "description": "The start of the time range for dashboard occupancy trends.\nFormatted as an ISO 8601 string (e.g., <code>2025-07-17T21:06:20Z</code>).\nDefaults to one hour before the current time.",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "title": "DashboardOccupancyTrendsRequestV2",
+                "type": "object"
+            },
             "DashboardOccupancyTrendsResponseV1": {
                 "additionalProperties": false,
                 "properties": {
@@ -4023,6 +4055,73 @@
                     "occupancy"
                 ],
                 "title": "DashboardOccupancyTrendsResponseV1",
+                "type": "object"
+            },
+            "DashboardOccupancyTrendsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for dashboard occupancy trends.",
+                "properties": {
+                    "dashboard_id": {
+                        "description": "The unique identifier of the dashboard.",
+                        "title": "Dashboard Id",
+                        "type": "string"
+                    },
+                    "dashboard_name": {
+                        "description": "The name of the dashboard.",
+                        "title": "Dashboard Name",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "description": "The end of the time range of occupancy trends, as an RFC 3339 timestamp.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "in_counts": {
+                        "description": "Per-bucket counts for the \"in\" direction.",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                        },
+                        "title": "In Counts",
+                        "type": "array"
+                    },
+                    "interval": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/IntervalEnumV2"
+                            }
+                        ],
+                        "description": "The time interval used for the buckets."
+                    },
+                    "net_occupancy": {
+                        "description": "Per-bucket net occupancy values.",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                        },
+                        "title": "Net Occupancy",
+                        "type": "array"
+                    },
+                    "out_counts": {
+                        "description": "Per-bucket counts for the \"out\" direction.",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                        },
+                        "title": "Out Counts",
+                        "type": "array"
+                    },
+                    "start_time": {
+                        "description": "The start of the time range of occupancy trends, as an RFC 3339 timestamp.",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "dashboard_id",
+                    "dashboard_name",
+                    "start_time",
+                    "end_time",
+                    "interval"
+                ],
+                "title": "DashboardOccupancyTrendsResponseV2",
                 "type": "object"
             },
             "DashboardWidgetTrendsRequestV2": {
@@ -7950,11 +8049,11 @@
                 "type": "string"
             },
             "IntervalEnumV2": {
-                "description": "An enumeration.",
+                "description": "Bucket width for the returned occupancy trend readings.",
                 "enum": [
-                    "PT15M",
-                    "PT1H",
-                    "PT1D"
+                    "15_minutes",
+                    "1_hour",
+                    "1_day"
                 ],
                 "title": "IntervalEnumV2",
                 "type": "string"
@@ -9292,6 +9391,36 @@
                 "title": "MaxObjectCountsRequestV1",
                 "type": "object"
             },
+            "MaxObjectCountsRequestV2": {
+                "description": "Query parameters for the max object counts endpoint.",
+                "properties": {
+                    "end_time": {
+                        "description": "The end of the time range for requested counts. Formatted as an ISO 8601 timestamp (e.g. `2025-07-17T21:06:20Z`). It can only be used if `start_time` is also provided.",
+                        "format": "date-time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "search_zones": {
+                        "description": "Zones to search. Formatted as coordinates ranging from `[0,0]` to `[9,9]`, e.g., `[[3,3],[3,4],[4,3],[4,4]]`.",
+                        "items": {
+                            "items": {
+                                "type": "integer"
+                            },
+                            "type": "array"
+                        },
+                        "title": "Search Zones",
+                        "type": "array"
+                    },
+                    "start_time": {
+                        "description": "The start of the time range for requested counts. Formatted as an ISO 8601 timestamp (e.g. `2025-07-17T21:06:20Z`). Default value is the current time. If only providing a start time, the same value will be used for `end_time`.",
+                        "format": "date-time",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "title": "MaxObjectCountsRequestV2",
+                "type": "object"
+            },
             "MaxObjectCountsResponseV1": {
                 "additionalProperties": false,
                 "properties": {
@@ -9309,6 +9438,26 @@
                     }
                 },
                 "title": "MaxObjectCountsResponseV1",
+                "type": "object"
+            },
+            "MaxObjectCountsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for the max object counts endpoint.",
+                "properties": {
+                    "people_count": {
+                        "default": 0,
+                        "description": "The maximum number of people detected.",
+                        "title": "People Count",
+                        "type": "integer"
+                    },
+                    "vehicle_count": {
+                        "default": 0,
+                        "description": "The maximum number of vehicles detected.",
+                        "title": "Vehicle Count",
+                        "type": "integer"
+                    }
+                },
+                "title": "MaxObjectCountsResponseV2",
                 "type": "object"
             },
             "ModifyAccessScheduleEventRequestV1": {
@@ -9846,6 +9995,34 @@
                 "title": "ObjectCountItem",
                 "type": "object"
             },
+            "ObjectCountItemV2": {
+                "additionalProperties": false,
+                "description": "A single object-count sample for a point in time.",
+                "properties": {
+                    "detected_at": {
+                        "description": "The time the counts were sampled, in RFC 3339 format (e.g., 2025-08-04T21:51:53+00:00).",
+                        "title": "Detected At",
+                        "type": "string"
+                    },
+                    "people_count": {
+                        "description": "The number of people detected.",
+                        "title": "People Count",
+                        "type": "integer"
+                    },
+                    "vehicle_count": {
+                        "description": "The number of vehicles detected.",
+                        "title": "Vehicle Count",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "detected_at",
+                    "people_count",
+                    "vehicle_count"
+                ],
+                "title": "ObjectCountItemV2",
+                "type": "object"
+            },
             "ObjectCountRequest": {
                 "properties": {
                     "end_time": {
@@ -9951,6 +10128,58 @@
                 "title": "ObjectCountResponseV1",
                 "type": "object"
             },
+            "ObjectCountsRequestV2": {
+                "description": "Query parameters for fetching people/vehicle counts for a camera.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "description": "The end of the time range for requested counts, in ISO 8601 format (e.g., 2025-07-17T21:06:20Z). Defaults to the current time.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of items to return per page. Default is 100, maximum is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "start_time": {
+                        "description": "The start of the time range for requested counts, in ISO 8601 format (e.g., 2025-07-17T21:06:20Z). Defaults to one hour before the current time.",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "title": "ObjectCountsRequestV2",
+                "type": "object"
+            },
+            "ObjectCountsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for the paginated object-counts endpoint.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Continue paginating while this field is present.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "A page of object-count samples ordered by detection time.",
+                        "items": {
+                            "$ref": "#/components/schemas/ObjectCountItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ObjectCountsResponseV2",
+                "type": "object"
+            },
             "OccupancyData": {
                 "additionalProperties": false,
                 "properties": {
@@ -9988,6 +10217,34 @@
                     }
                 },
                 "title": "OccupancyData",
+                "type": "object"
+            },
+            "OccupancyTrendBucketV2": {
+                "additionalProperties": false,
+                "description": "A single time bucket of occupancy counts for one direction.",
+                "properties": {
+                    "count": {
+                        "description": "The number of counted objects in this bucket for this direction.",
+                        "title": "Count",
+                        "type": "integer"
+                    },
+                    "end_time": {
+                        "description": "The end of the bucket as an RFC 3339 timestamp.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start of the bucket as an RFC 3339 timestamp.",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "start_time",
+                    "end_time",
+                    "count"
+                ],
+                "title": "OccupancyTrendBucketV2",
                 "type": "object"
             },
             "OccupancyTrendsCamera": {
@@ -10101,6 +10358,30 @@
                 "title": "OccupancyTrendsCamerasResponseV2",
                 "type": "object"
             },
+            "OccupancyTrendsDirectionalV2": {
+                "additionalProperties": false,
+                "description": "Directional occupancy trend readings for the requested time range.",
+                "properties": {
+                    "trend_in": {
+                        "description": "Bucketed counts for objects moving in the 'in' direction.",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                        },
+                        "title": "Trend In",
+                        "type": "array"
+                    },
+                    "trend_out": {
+                        "description": "Bucketed counts for objects moving in the 'out' direction.",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                        },
+                        "title": "Trend Out",
+                        "type": "array"
+                    }
+                },
+                "title": "OccupancyTrendsDirectionalV2",
+                "type": "object"
+            },
             "OccupancyTrendsMQTTConfigGetResponseV2": {
                 "additionalProperties": false,
                 "properties": {
@@ -10167,6 +10448,37 @@
                 "title": "OccupancyTrendsMQTTConfigSetRequestV1",
                 "type": "object"
             },
+            "OccupancyTrendsMQTTConfigSetRequestV2": {
+                "description": "Request body for setting (replacing) a camera's Object Position MQTT config.\n\nNote: ``camera_id`` is intentionally NOT part of the request body in v2. It is\nsupplied as a URL path parameter, in line with the v2 convention that the\npreceding path segment identifies the resource being acted on.",
+                "properties": {
+                    "broker_cert": {
+                        "description": "A CA-signed certificate for the MQTT broker, used for the TLS connection.",
+                        "title": "Broker Cert",
+                        "type": "string"
+                    },
+                    "broker_host_port": {
+                        "description": "The host and port for the MQTT broker. The host may be an IP address or hostname. Port 443 is recommended; only ports 443, 123, and 53 are supported.",
+                        "title": "Broker Host Port",
+                        "type": "string"
+                    },
+                    "client_password": {
+                        "description": "The optional MQTT client password. This value is never returned in any response.",
+                        "title": "Client Password",
+                        "type": "string"
+                    },
+                    "client_username": {
+                        "description": "The optional MQTT client username.",
+                        "title": "Client Username",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "broker_host_port",
+                    "broker_cert"
+                ],
+                "title": "OccupancyTrendsMQTTConfigSetRequestV2",
+                "type": "object"
+            },
             "OccupancyTrendsMQTTConfigSetResponseV1": {
                 "additionalProperties": false,
                 "properties": {
@@ -10197,6 +10509,39 @@
                     }
                 },
                 "title": "OccupancyTrendsMQTTConfigSetResponseV1",
+                "type": "object"
+            },
+            "OccupancyTrendsMQTTConfigSetResponseV2": {
+                "additionalProperties": false,
+                "description": "Response returned after setting a camera's Object Position MQTT config.\n\nThe configured ``client_password`` is intentionally never echoed back in the\nresponse for security reasons.",
+                "properties": {
+                    "broker_cert": {
+                        "description": "The certificate set in the MQTT config.",
+                        "title": "Broker Cert",
+                        "type": "string"
+                    },
+                    "broker_host_port": {
+                        "description": "The host and port set in the MQTT config.",
+                        "title": "Broker Host Port",
+                        "type": "string"
+                    },
+                    "camera_id": {
+                        "description": "The unique identifier of the camera.",
+                        "title": "Camera Id",
+                        "type": "string"
+                    },
+                    "client_username": {
+                        "description": "The client username set in the MQTT config, if any.",
+                        "title": "Client Username",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "camera_id",
+                    "broker_host_port",
+                    "broker_cert"
+                ],
+                "title": "OccupancyTrendsMQTTConfigSetResponseV2",
                 "type": "object"
             },
             "OccupancyTrendsPreset": {
@@ -10285,6 +10630,48 @@
                 "title": "OccupancyTrendsRequestV1",
                 "type": "object"
             },
+            "OccupancyTrendsRequestV2": {
+                "description": "Query parameters for the per-camera occupancy trends data endpoint.",
+                "properties": {
+                    "end_time": {
+                        "description": "The end of the time range for occupancy trends, as an ISO 8601 timestamp (e.g. '2025-07-17T21:06:20Z'). Defaults to the current time.",
+                        "format": "date-time",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "interval": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/IntervalEnumV2"
+                            }
+                        ],
+                        "default": "1_hour",
+                        "description": "The width of each returned bucket. One of `15_minutes`, `1_hour`, or `1_day`. Defaults to `1_hour`."
+                    },
+                    "preset_id": {
+                        "description": "The unique identifier of the camera line preset to query.",
+                        "title": "Preset Id",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start of the time range for occupancy trends, as an ISO 8601 timestamp (e.g. '2025-07-17T21:06:20Z'). Defaults to one hour before the current time.",
+                        "format": "date-time",
+                        "title": "Start Time",
+                        "type": "string"
+                    },
+                    "type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OccupancyTrendsTypeEnumV2"
+                            }
+                        ],
+                        "default": "person",
+                        "description": "The class of the counted object. One of `person` or `vehicle`. Defaults to `person`."
+                    }
+                },
+                "title": "OccupancyTrendsRequestV2",
+                "type": "object"
+            },
             "OccupancyTrendsResponseV1": {
                 "additionalProperties": false,
                 "properties": {
@@ -10367,6 +10754,68 @@
                 "title": "OccupancyTrendsResponseV1",
                 "type": "object"
             },
+            "OccupancyTrendsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for per-camera occupancy trends data.",
+                "properties": {
+                    "camera_id": {
+                        "description": "The unique identifier of the camera.",
+                        "title": "Camera Id",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "description": "The end of the queried time range as an RFC 3339 timestamp.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "interval": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/IntervalEnumV2"
+                            }
+                        ],
+                        "description": "The width of each returned bucket."
+                    },
+                    "preset_id": {
+                        "description": "The unique identifier of the camera line preset.",
+                        "title": "Preset Id",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start of the queried time range as an RFC 3339 timestamp.",
+                        "title": "Start Time",
+                        "type": "string"
+                    },
+                    "trends": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OccupancyTrendsDirectionalV2"
+                            }
+                        ],
+                        "description": "The directional occupancy trend readings for the time range.",
+                        "title": "Trends"
+                    },
+                    "type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OccupancyTrendsTypeEnumV2"
+                            }
+                        ],
+                        "description": "The class of the counted object."
+                    }
+                },
+                "required": [
+                    "camera_id",
+                    "preset_id",
+                    "type",
+                    "interval",
+                    "start_time",
+                    "end_time",
+                    "trends"
+                ],
+                "title": "OccupancyTrendsResponseV2",
+                "type": "object"
+            },
             "OccupancyTrendsTypeEnum": {
                 "description": "An enumeration.",
                 "enum": [
@@ -10374,6 +10823,15 @@
                     "vehicle"
                 ],
                 "title": "OccupancyTrendsTypeEnum",
+                "type": "string"
+            },
+            "OccupancyTrendsTypeEnumV2": {
+                "description": "The class of object being counted.",
+                "enum": [
+                    "person",
+                    "vehicle"
+                ],
+                "title": "OccupancyTrendsTypeEnumV2",
                 "type": "string"
             },
             "OpenEndedResponseItemV2": {
@@ -10485,6 +10943,11 @@
                         "minLength": 1,
                         "title": "External Id",
                         "type": "string"
+                    },
+                    "is_output_card": {
+                        "description": "Whether the credential is set as the user's output card (if the card is active).",
+                        "title": "Is Output Card",
+                        "type": "boolean"
                     },
                     "user_id": {
                         "description": "The unique identifier of the user managed by Verkada. Provide either `user_id` or `external_id`, not both.",
@@ -23202,6 +23665,111 @@
                 "tags": [
                     "Analytics"
                 ]
+            },
+            "put": {
+                "description": "Replaces the MQTT broker configuration for a camera's Object Position Events.\n\nObject Position Events from the camera will be published to the MQTT broker\nspecified in the config. The camera is identified by the ``camera_id`` URL\npath parameter.\n\nThe configured password is never returned in the response.",
+                "operationId": "putOccupancyTrendsMQTTConfigViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OccupancyTrendsMQTTConfigSetRequestV2"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OccupancyTrendsMQTTConfigSetResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Set Object Position MQTT Config",
+                "tags": [
+                    "Analytics"
+                ]
+            }
+        },
+        "/v2/analytics/operational_dashboard/{dashboard_id}/occupancy_trends": {
+            "get": {
+                "description": "Returns occupancy trends data for a particular dashboard over a specified time range.\n\nResponses include the start and end time of the data requested and dashboard\ninformation (ID, name) alongside per-bucket in counts, out counts, and net\noccupancy.",
+                "operationId": "getDashboardOccupancyTrendsViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "dashboard_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The start of the time range for dashboard occupancy trends.\nFormatted as an ISO 8601 string (e.g., <code>2025-07-17T21:06:20Z</code>).\nDefaults to one hour before the current time.",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The end of the time range for dashboard occupancy trends.\nFormatted as an ISO 8601 string (e.g., <code>2025-07-17T21:06:20Z</code>).\nDefaults to the current time.",
+                            "title": "End Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "interval",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/IntervalEnumV2"
+                                }
+                            ],
+                            "default": "PT1H",
+                            "description": "The time interval for each bucket in the returned trends.\nOptions available are: <code>PT15M</code>, <code>PT1H</code>, <code>PT1D</code>.\nDefaults to <code>PT1H</code>."
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DashboardOccupancyTrendsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Dashboard Occupancy Trend Data",
+                "tags": [
+                    "Analytics"
+                ]
             }
         },
         "/v2/analytics/operational_dashboard/{dashboard_id}/widget_trends/query": {
@@ -24490,6 +25058,152 @@
                 ]
             }
         },
+        "/v2/cameras/{camera_id}/analytics/max_object_counts": {
+            "get": {
+                "description": "Returns the max count of people and vehicles within a specified time range.\n\nTimestamps (`start_time`, `end_time`) are provided as ISO 8601 strings\n(e.g. `2025-07-17T21:06:20Z`).",
+                "operationId": "getMaxObjectCountsViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The start of the time range for requested counts. Formatted as an ISO 8601 timestamp (e.g. `2025-07-17T21:06:20Z`). Default value is the current time. If only providing a start time, the same value will be used for `end_time`.",
+                            "format": "date-time",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The end of the time range for requested counts. Formatted as an ISO 8601 timestamp (e.g. `2025-07-17T21:06:20Z`). It can only be used if `start_time` is also provided.",
+                            "format": "date-time",
+                            "title": "End Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "search_zones",
+                        "required": false,
+                        "schema": {
+                            "description": "Zones to search. Formatted as coordinates ranging from `[0,0]` to `[9,9]`, e.g., `[[3,3],[3,4],[4,3],[4,4]]`.",
+                            "items": {
+                                "items": {
+                                    "type": "integer"
+                                },
+                                "type": "array"
+                            },
+                            "title": "Search Zones",
+                            "type": "array"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MaxObjectCountsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Max People/Vehicle Counts",
+                "tags": [
+                    "Analytics"
+                ]
+            }
+        },
+        "/v2/cameras/{camera_id}/analytics/object_counts": {
+            "get": {
+                "description": "Returns the count of people and vehicles detected on a camera within a\nspecified time range, paginated.\n\nTimestamps in the request are ISO 8601 strings; timestamps in the response\nare RFC 3339 strings. Continue paginating while the response includes a\n`cursor` value.",
+                "operationId": "getObjectCountsViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The start of the time range for requested counts, in ISO 8601 format (e.g., 2025-07-17T21:06:20Z). Defaults to one hour before the current time.",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The end of the time range for requested counts, in ISO 8601 format (e.g., 2025-07-17T21:06:20Z). Defaults to the current time.",
+                            "title": "End Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 100,
+                            "description": "Maximum number of items to return per page. Default is 100, maximum is 200.",
+                            "exclusiveMinimum": true,
+                            "maximum": 200,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ObjectCountsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get People/Vehicle Counts",
+                "tags": [
+                    "Analytics"
+                ]
+            }
+        },
         "/v2/cameras/{camera_id}/audio": {
             "get": {
                 "description": "Retrieve the current audio recording status for a specific camera.\n\nTo use this endpoint, you need a \"Camera Audio\" API key (separate from Read only and\nRead/write API keys).\n\nReturns the camera's audio status. If audio is disabled at the organization level,\nthe response will show `enabled: false` regardless of the camera's individual setting.",
@@ -24762,6 +25476,98 @@
                 "summary": "Get Timestamps for a License Plate",
                 "tags": [
                     "LPR"
+                ]
+            }
+        },
+        "/v2/cameras/{camera_id}/occupancy_trends": {
+            "get": {
+                "description": "Returns occupancy trends data for a single camera over a specified time range.\n\nThe response includes the queried time range (as RFC 3339 timestamps) and\ndirectional readings bucketed at the requested interval.",
+                "operationId": "getOccupancyTrendsViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The start of the time range for occupancy trends, as an ISO 8601 timestamp (e.g. '2025-07-17T21:06:20Z'). Defaults to one hour before the current time.",
+                            "format": "date-time",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The end of the time range for occupancy trends, as an ISO 8601 timestamp (e.g. '2025-07-17T21:06:20Z'). Defaults to the current time.",
+                            "format": "date-time",
+                            "title": "End Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "interval",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/IntervalEnumV2"
+                                }
+                            ],
+                            "default": "1_hour",
+                            "description": "The width of each returned bucket. One of `15_minutes`, `1_hour`, or `1_day`. Defaults to `1_hour`."
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/OccupancyTrendsTypeEnumV2"
+                                }
+                            ],
+                            "default": "person",
+                            "description": "The class of the counted object. One of `person` or `vehicle`. Defaults to `person`."
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "preset_id",
+                        "required": false,
+                        "schema": {
+                            "description": "The unique identifier of the camera line preset to query.",
+                            "title": "Preset Id",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OccupancyTrendsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "Get Occupancy Trend Data",
+                "tags": [
+                    "Analytics"
                 ]
             }
         },
