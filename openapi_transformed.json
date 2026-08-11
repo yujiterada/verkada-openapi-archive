@@ -3234,6 +3234,22 @@
         "title": "CameraInfoV2",
         "type": "object"
       },
+      "CameraPtzPositionRequest": {
+        "description": "Request schema for setting a camera's PTZ position to a saved preset",
+        "properties": {
+          "preset_id": {
+            "description": "The unique identifier of the PTZ preset position to move the camera to.",
+            "minLength": 1,
+            "title": "Preset Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "preset_id"
+        ],
+        "title": "CameraPtzPositionRequest",
+        "type": "object"
+      },
       "CardObjectResponseV1": {
         "additionalProperties": false,
         "properties": {
@@ -26362,6 +26378,45 @@
         "summary": "Get Occupancy Trend Data",
         "tags": [
           "Analytics"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
+    "/v2/cameras/{camera_id}/ptz/position": {
+      "post": {
+        "description": "Move a PTZ camera to one of its saved preset positions. The camera begins moving\nas soon as the request is accepted; it may take a few seconds for the camera to\nphysically reach the preset position.\n\n### Error Responses\n\n| Code | Message | Description |\n|------|---------|-------------|\n| 404 | PTZ preset not found for this camera | The preset does not exist for this camera |\n| 409 | Camera is not connected | The camera is offline and cannot be moved |",
+        "operationId": "postCameraPtzPositionViewV2",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "camera_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CameraPtzPositionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        },
+        "summary": "Move Camera to PTZ Preset",
+        "tags": [
+          "PTZ"
         ],
         "security": [
           {
