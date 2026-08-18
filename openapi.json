@@ -217,28 +217,6 @@
                 "title": "AccessGroupAddUserResponseV1",
                 "type": "object"
             },
-            "AccessGroupErrorResponseV2": {
-                "additionalProperties": false,
-                "description": "Error response body shape for v2 access-groups endpoints.",
-                "properties": {
-                    "id": {
-                        "description": "Short stable identifier for the failure site (used by Verkada support).",
-                        "title": "Id",
-                        "type": "string"
-                    },
-                    "message": {
-                        "description": "Human-readable explanation of the failure.",
-                        "title": "Message",
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "id",
-                    "message"
-                ],
-                "title": "AccessGroupErrorResponseV2",
-                "type": "object"
-            },
             "AccessGroupItemV2": {
                 "additionalProperties": false,
                 "description": "A single access group summary returned in list responses.",
@@ -566,6 +544,87 @@
                 "title": "AccessLevelResponseV1",
                 "type": "object"
             },
+            "AccessLevelV2": {
+                "additionalProperties": false,
+                "description": "An Access Level and the weekly windows during which it grants access.",
+                "properties": {
+                    "access_groups": {
+                        "description": "The identifiers of the Access Groups granted door access by this Access Level.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Access Groups",
+                        "type": "array"
+                    },
+                    "access_level_id": {
+                        "description": "The unique identifier of the Access Level managed by Verkada.",
+                        "title": "Access Level Id",
+                        "type": "string"
+                    },
+                    "access_schedule_events": {
+                        "description": "The weekly windows during which this Access Level grants access.",
+                        "items": {
+                            "$ref": "#/components/schemas/AccessScheduleEventV2"
+                        },
+                        "title": "Access Schedule Events",
+                        "type": "array"
+                    },
+                    "doors": {
+                        "description": "The identifiers of the Doors accessible under this Access Level.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors",
+                        "type": "array"
+                    },
+                    "last_updated_at": {
+                        "description": "The RFC 3339 timestamp at which the Access Level was last modified, for example `2025-08-04T21:51:53+00:00`.",
+                        "title": "Last Updated At",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the Access Level provided by the customer.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "sites": {
+                        "description": "The identifiers of the Sites containing the Doors this Access Level applies to.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Sites",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "access_level_id",
+                    "name",
+                    "last_updated_at"
+                ],
+                "title": "AccessLevelV2",
+                "type": "object"
+            },
+            "AccessLevelsListResponseV2": {
+                "additionalProperties": false,
+                "description": "Paginated list of Access Levels.",
+                "properties": {
+                    "cursor": {
+                        "description": "Base64url-encoded pagination cursor for retrieving the next page of results. `null` when there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "The page of Access Levels visible to the API key.",
+                        "items": {
+                            "$ref": "#/components/schemas/AccessLevelV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "AccessLevelsListResponseV2",
+                "type": "object"
+            },
             "AccessMembersRequestV1": {
                 "properties": {
                     "include_visitors": {
@@ -665,6 +724,90 @@
                     "end_time"
                 ],
                 "title": "AccessScheduleEventV1",
+                "type": "object"
+            },
+            "AccessScheduleEventV2": {
+                "additionalProperties": false,
+                "description": "A single weekly window during which an Access Level grants access.",
+                "properties": {
+                    "access_schedule_event_id": {
+                        "description": "The unique identifier of the Access Schedule Event managed by Verkada.",
+                        "title": "Access Schedule Event Id",
+                        "type": "string"
+                    },
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusV2"
+                            }
+                        ],
+                        "default": "access_granted",
+                        "description": "The status applied to the doors while the event is active."
+                    },
+                    "end_time": {
+                        "description": "The local time at which the event ends, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`).",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AccessScheduleRecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "RFC 5545-style recurrence rule. Access Schedule Events recur every week on exactly one full weekday name.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "The local time at which the event starts, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`).",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "access_schedule_event_id",
+                    "recurrence_rule",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "AccessScheduleEventV2",
+                "type": "object"
+            },
+            "AccessScheduleRecurrenceRuleV2": {
+                "additionalProperties": false,
+                "description": "RFC 5545-style recurrence rule for a weekly Access Schedule Event.\n\nAccess Levels store a single weekday per schedule event and repeat forever,\nso the rule carries only the three RRULE parts that shape has: ``WEEKLY``\nfrequency, an interval of one week, and the one weekday it falls on. Any\nother recurrence part is rejected rather than silently ignored.",
+                "properties": {
+                    "by_day": {
+                        "description": "The full weekday name on which the event repeats. Exactly one day is required because each Access Schedule Event represents one weekly window.",
+                        "items": {
+                            "$ref": "#/components/schemas/WeekdayV2"
+                        },
+                        "maxItems": 1,
+                        "minItems": 1,
+                        "type": "array"
+                    },
+                    "frequency": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecurrenceFrequencyV2"
+                            }
+                        ],
+                        "description": "Recurrence frequency. Access Schedule Events support `WEEKLY`."
+                    },
+                    "interval": {
+                        "description": "Recurrence interval. Access Schedule Events repeat every one week.",
+                        "maximum": 1,
+                        "minimum": 1,
+                        "title": "Interval",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "frequency",
+                    "interval",
+                    "by_day"
+                ],
+                "title": "AccessScheduleRecurrenceRuleV2",
                 "type": "object"
             },
             "AccessSiteInfo": {
@@ -3573,6 +3716,58 @@
                 "title": "CreateAccessLevelRequestV1",
                 "type": "object"
             },
+            "CreateAccessLevelRequestV2": {
+                "additionalProperties": false,
+                "description": "Request body for `POST /v2/access/access_levels`.",
+                "properties": {
+                    "access_groups": {
+                        "description": "The identifiers of the Access Groups granted door access by this Access Level.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Access Groups",
+                        "type": "array"
+                    },
+                    "access_schedule_events": {
+                        "description": "The weekly windows during which this Access Level grants access. Windows on the same weekday must not overlap or touch: the later window must start strictly after the earlier one ends.",
+                        "items": {
+                            "$ref": "#/components/schemas/CreateAccessScheduleEventV2"
+                        },
+                        "title": "Access Schedule Events",
+                        "type": "array"
+                    },
+                    "doors": {
+                        "description": "The identifiers of the Doors accessible under this Access Level. Every Door must belong to one of the Sites in `sites`.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors",
+                        "type": "array"
+                    },
+                    "name": {
+                        "description": "The name of the Access Level. Must be unique within the organization, at most 100 characters, and must not contain any of the characters `<>{}[]`.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "sites": {
+                        "description": "The identifiers of the Sites containing the Doors this Access Level applies to. At least one Site is required, and every Site must be within the scope of the API key.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Sites",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "name",
+                    "access_groups",
+                    "sites",
+                    "doors",
+                    "access_schedule_events"
+                ],
+                "title": "CreateAccessLevelRequestV2",
+                "type": "object"
+            },
             "CreateAccessScheduleEventRequestV1": {
                 "description": "Request schema for creating an Access Schedule Event.",
                 "properties": {
@@ -3610,6 +3805,92 @@
                     "end_time"
                 ],
                 "title": "CreateAccessScheduleEventRequestV1",
+                "type": "object"
+            },
+            "CreateAccessScheduleEventRequestV2": {
+                "additionalProperties": false,
+                "description": "Request body for `POST /v2/access/access_levels/<access_level_id>/access_schedule_events`.\n\nField set and validation are identical to the inline event supplied when\ncreating an Access Level, so the model is inherited rather than restated.\nIt is subclassed rather than aliased purely so that the generated OpenAPI\ndocument names this request after the endpoint that accepts it.",
+                "properties": {
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusV2"
+                            }
+                        ],
+                        "default": "access_granted",
+                        "description": "The status applied to the doors while the event is active. Only `access_granted` is supported; the field may be omitted."
+                    },
+                    "end_time": {
+                        "description": "The local time at which the event ends, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`).",
+                        "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AccessScheduleRecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "RFC 5545-style recurrence rule. Access Schedule Events recur every week on exactly one full weekday name.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "The local time at which the event starts, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`).",
+                        "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "recurrence_rule",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "CreateAccessScheduleEventRequestV2",
+                "type": "object"
+            },
+            "CreateAccessScheduleEventV2": {
+                "additionalProperties": false,
+                "description": "A weekly window supplied when creating an Access Level.",
+                "properties": {
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusV2"
+                            }
+                        ],
+                        "default": "access_granted",
+                        "description": "The status applied to the doors while the event is active. Only `access_granted` is supported; the field may be omitted."
+                    },
+                    "end_time": {
+                        "description": "The local time at which the event ends, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`).",
+                        "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AccessScheduleRecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "RFC 5545-style recurrence rule. Access Schedule Events recur every week on exactly one full weekday name.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "The local time at which the event starts, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`).",
+                        "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "recurrence_rule",
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "CreateAccessScheduleEventV2",
                 "type": "object"
             },
             "CreateLicensePlateOfInterestRequestV2": {
@@ -5115,6 +5396,14 @@
                 "title": "DoorStatusEnum",
                 "type": "string"
             },
+            "DoorStatusV2": {
+                "description": "Door status applied while an Access Level schedule event is active.\n\nAccess Levels only ever grant access, so ``access_granted`` is the sole\nmember. It is modelled as an enum (rather than omitted) so that additional\nstates can be introduced without a breaking change.",
+                "enum": [
+                    "access_granted"
+                ],
+                "title": "DoorStatusV2",
+                "type": "string"
+            },
             "EntryCodeResponseV2": {
                 "additionalProperties": false,
                 "description": "Response for setting an access user's entry code.",
@@ -5743,33 +6032,6 @@
                 "title": "EventTimeV2",
                 "type": "object"
             },
-            "EventsErrorResponse": {
-                "additionalProperties": false,
-                "description": "Error response schema",
-                "properties": {
-                    "details": {
-                        "description": "Additional error details",
-                        "title": "Details",
-                        "type": "object"
-                    },
-                    "error": {
-                        "description": "Error code",
-                        "title": "Error",
-                        "type": "string"
-                    },
-                    "message": {
-                        "description": "Human-readable error message",
-                        "title": "Message",
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "error",
-                    "message"
-                ],
-                "title": "EventsErrorResponse",
-                "type": "object"
-            },
             "EventsQueryV1": {
                 "properties": {
                     "device_id": {
@@ -5978,32 +6240,6 @@
                     "name"
                 ],
                 "title": "ExceptionCalendarV2",
-                "type": "object"
-            },
-            "ExceptionErrorResponseV2": {
-                "description": "Structured error body returned for all 4xx/5xx responses on these endpoints.",
-                "properties": {
-                    "data": {
-                        "description": "Optional additional error context.",
-                        "title": "Data",
-                        "type": "string"
-                    },
-                    "id": {
-                        "description": "Short alphanumeric error code for support triage.",
-                        "title": "Id",
-                        "type": "string"
-                    },
-                    "message": {
-                        "description": "Human-readable error message.",
-                        "title": "Message",
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "id",
-                    "message"
-                ],
-                "title": "ExceptionErrorResponseV2",
                 "type": "object"
             },
             "ExceptionV2": {
@@ -9187,6 +9423,28 @@
                     }
                 },
                 "title": "ListAccessGroupsQueryV2",
+                "type": "object"
+            },
+            "ListAccessLevelsQueryV2": {
+                "additionalProperties": false,
+                "description": "Query parameters for `GET /v2/access/access_levels`.",
+                "properties": {
+                    "cursor": {
+                        "description": "Base64url-encoded pagination cursor returned by a previous response. Omit it to fetch the first page.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "The maximum number of Access Levels to return. Defaults to 100, maximum 1000.",
+                        "exclusiveMinimum": true,
+                        "maximum": 1000,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ListAccessLevelsQueryV2",
                 "type": "object"
             },
             "ListAccessUsersRequestV2": {
@@ -12915,6 +13173,14 @@
                 "title": "QueueData",
                 "type": "object"
             },
+            "RecurrenceFrequencyV2": {
+                "description": "Recurrence frequencies supported by Access Schedule Events.\n\nThe downstream Access Level representation is intrinsically weekly, so this\nresource supports the RFC 5545 ``WEEKLY`` frequency only.",
+                "enum": [
+                    "WEEKLY"
+                ],
+                "title": "RecurrenceFrequencyV2",
+                "type": "string"
+            },
             "RecurrenceRule": {
                 "description": "A recurrence rule object specifying when the exception should repeat.",
                 "properties": {
@@ -15239,6 +15505,80 @@
                 "title": "UpdateAccessLevelRequestV1",
                 "type": "object"
             },
+            "UpdateAccessLevelRequestV2": {
+                "additionalProperties": false,
+                "description": "Request body for `PATCH /v2/access/access_levels/<access_level_id>`.\n\nEvery field is optional. Only the fields present in the request body are\nchanged; omitted fields keep their current value.\n\n``access_schedule_events`` is deliberately absent: the weekly windows of an\nAccess Level are managed exclusively through the nested\n``/v2/access/access_levels/<access_level_id>/access_schedule_events``\nendpoints. Supplying ``access_schedule_events`` here is a validation error.\nThis differs from the v1 ``PUT`` endpoint, which required the complete event\nlist on every update.",
+                "properties": {
+                    "access_groups": {
+                        "description": "The complete replacement list of Access Group identifiers granted door access by this Access Level.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Access Groups",
+                        "type": "array"
+                    },
+                    "doors": {
+                        "description": "The complete replacement list of Door identifiers accessible under this Access Level. Every Door must belong to one of the Access Level's Sites.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Doors",
+                        "type": "array"
+                    },
+                    "name": {
+                        "description": "The new name of the Access Level. Must be unique within the organization, at most 100 characters, and must not contain any of the characters `<>{}[]`.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "sites": {
+                        "description": "The complete replacement list of Site identifiers containing the Doors this Access Level applies to. At least one Site is required, and every Site must be within the scope of the API key.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Sites",
+                        "type": "array"
+                    }
+                },
+                "title": "UpdateAccessLevelRequestV2",
+                "type": "object"
+            },
+            "UpdateAccessScheduleEventRequestV2": {
+                "additionalProperties": false,
+                "description": "Request body for `PATCH /v2/access/access_levels/<access_level_id>/access_schedule_events/<event_id>`.\n\nEvery field is optional. Only the fields present in the request body are\nchanged; omitted fields keep their current value. This differs from the v1\n`PUT` endpoint, which replaced the whole event and therefore required\n`recurrence_rule`, `start_time`, and `end_time` on every request.",
+                "properties": {
+                    "door_status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DoorStatusV2"
+                            }
+                        ],
+                        "description": "The status applied to the doors while the event is active. Only `access_granted` is supported. Omit to leave the status unchanged."
+                    },
+                    "end_time": {
+                        "description": "The new local time at which the event ends, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`). Omit to leave the end time unchanged.",
+                        "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "recurrence_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AccessScheduleRecurrenceRuleV2"
+                            }
+                        ],
+                        "description": "The new RFC 5545-style weekly recurrence rule. Omit to leave the recurrence unchanged.",
+                        "title": "Recurrence Rule"
+                    },
+                    "start_time": {
+                        "description": "The new local time at which the event starts, in 24-hour `HH:MM` format with leading zeros (`00:00` through `23:59`). Omit to leave the start time unchanged.",
+                        "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "title": "UpdateAccessScheduleEventRequestV2",
+                "type": "object"
+            },
             "UpdateUserRequestBody": {
                 "properties": {
                     "company_name": {
@@ -17200,6 +17540,20 @@
                     "Sunday"
                 ],
                 "title": "WeekdayFullEnum",
+                "type": "string"
+            },
+            "WeekdayV2": {
+                "description": "Day of the week for an Access Level schedule event.\n\nFull day names per v2-standards §8 (\"Days of week: full strings\").",
+                "enum": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday"
+                ],
+                "title": "WeekdayV2",
                 "type": "string"
             },
             "Widget": {
@@ -22985,6 +23339,36 @@
                             }
                         },
                         "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Enable Face Unlock with Profile Photo",
@@ -23029,6 +23413,36 @@
                             }
                         },
                         "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Enable Face Unlock with Mobile Enrollment Invitation",
@@ -23073,6 +23487,36 @@
                             }
                         },
                         "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Enable Face Unlock with Uploaded Photo",
@@ -23160,6 +23604,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "List Access Scenarios",
@@ -23192,6 +23646,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
                     }
                 },
                 "summary": "Activate Access Scenario",
@@ -23224,6 +23688,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
                     }
                 },
                 "summary": "Release Access Scenario",
@@ -23293,6 +23767,36 @@
                             }
                         },
                         "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Enable Face Unlock with Profile Photo",
@@ -23337,6 +23841,36 @@
                             }
                         },
                         "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Enable Face Unlock with Mobile Enrollment Invitation",
@@ -23381,6 +23915,36 @@
                             }
                         },
                         "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Enable Face Unlock with Uploaded Photo",
@@ -23414,7 +23978,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23424,7 +23988,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23434,7 +23998,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23444,7 +24008,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23488,7 +24052,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23498,7 +24062,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23508,7 +24072,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23518,7 +24082,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23578,7 +24142,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23588,7 +24152,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23598,7 +24162,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23608,7 +24172,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23618,7 +24182,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23628,7 +24192,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23638,7 +24202,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorModel"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -23821,6 +24385,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get Dashboard Widget Trend Data",
@@ -23901,6 +24475,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Get Camera Data",
@@ -24101,6 +24685,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Get All License Plates of Interest",
@@ -24134,6 +24728,16 @@
                             }
                         },
                         "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Create a License Plate of Interest",
@@ -24159,6 +24763,19 @@
                 "responses": {
                     "200": {
                         "description": "ok"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
                     }
                 },
                 "summary": "Delete a License Plate of Interest",
@@ -24198,6 +24815,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Update a License Plate of Interest",
@@ -24246,6 +24873,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get All LPR Zones",
@@ -24298,6 +24945,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get LPR Zone Metrics",
@@ -24387,6 +25044,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get LPR Zone Records",
@@ -24497,6 +25174,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get Occupancy Trends Cameras",
@@ -24570,6 +25267,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get People Lists",
@@ -24643,6 +25360,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get Smart Lists",
@@ -25275,7 +26012,17 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "ok"
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Update Camera Audio Status",
@@ -25403,6 +26150,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Get License Plate Detection Images",
@@ -25487,6 +26244,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Get Timestamps for a License Plate",
@@ -25617,7 +26384,7 @@
                 },
                 "summary": "Move Camera to PTZ Preset",
                 "tags": [
-                    "PTZ"
+                    "Devices"
                 ]
             }
         },
@@ -25726,7 +26493,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EventsErrorResponse"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -25736,7 +26503,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EventsErrorResponse"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -25746,7 +26513,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EventsErrorResponse"
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
                                 }
                             }
                         },
@@ -25810,6 +26577,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get Approved Lists",
@@ -25842,6 +26629,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Add People to Approved Lists",
@@ -25874,6 +26671,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Remove People from Approved Lists",
@@ -25930,6 +26737,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get Approved List Members",
@@ -25962,6 +26789,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Reset Approved List",
@@ -26041,6 +26878,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Get Guest Events for a Site",
@@ -26096,6 +26943,19 @@
                 "responses": {
                     "200": {
                         "description": "ok"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Delete Event",
@@ -26126,6 +26986,16 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
                     }
                 },
                 "summary": "Get Guest Event by ID",
@@ -26185,6 +27055,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get Guest Types for a Site",
@@ -26254,6 +27144,26 @@
                             }
                         },
                         "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
                     }
                 },
                 "summary": "Get Hosts for a Site",
