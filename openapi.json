@@ -1038,6 +1038,66 @@
                 "title": "AddPeopleRequest",
                 "type": "object"
             },
+            "AlarmResolutionSource": {
+                "description": "How an alarm was resolved.",
+                "enum": [
+                    "command",
+                    "keypad",
+                    "phone",
+                    "sms",
+                    "agent",
+                    "api",
+                    "unspecified"
+                ],
+                "title": "AlarmResolutionSource",
+                "type": "string"
+            },
+            "AlarmResolveRequestV2": {
+                "description": "Request body for resolving an alarm.",
+                "properties": {
+                    "actor": {
+                        "default": "External API",
+                        "description": "Identifies who or what performed this action, recorded against the resulting event. Defaults to \"External API\".",
+                        "maxLength": 255,
+                        "title": "Actor",
+                        "type": "string"
+                    }
+                },
+                "title": "AlarmResolveRequestV2",
+                "type": "object"
+            },
+            "AlarmResponseLevel": {
+                "description": "The configured response posture for an alarm.\n\nDistinct from :class:`AlarmType`: the type is what the alarm is, the response\nlevel is what Verkada does about it. Values match those already delivered on\nthe ``new_alarms`` webhook so the two channels can be correlated.",
+                "enum": [
+                    "video_verification_only",
+                    "standard",
+                    "immediate_dispatch",
+                    "self_monitored",
+                    "fire",
+                    "unspecified"
+                ],
+                "title": "AlarmResponseLevel",
+                "type": "string"
+            },
+            "AlarmStatus": {
+                "description": "Whether an alarm is still open.",
+                "enum": [
+                    "active",
+                    "resolved"
+                ],
+                "title": "AlarmStatus",
+                "type": "string"
+            },
+            "AlarmType": {
+                "description": "The class of an alarm.\n\n``intrusion`` is the default; ``duress`` and ``fire`` are set from the\ncorresponding flags on the alarm record.",
+                "enum": [
+                    "intrusion",
+                    "duress",
+                    "fire"
+                ],
+                "title": "AlarmType",
+                "type": "string"
+            },
             "AlarmsDeviceType": {
                 "description": "Device types",
                 "enum": [
@@ -7327,6 +7387,27 @@
                 "title": "GetProfilePhotoQueryV2",
                 "type": "object"
             },
+            "GetPtzPresetsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing a camera's saved PTZ presets.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "Presets saved for the camera, in the order shown in Command.",
+                        "items": {
+                            "$ref": "#/components/schemas/PtzPresetItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "GetPtzPresetsResponseV2",
+                "type": "object"
+            },
             "GetUserRequest": {
                 "properties": {
                     "external_id": {
@@ -11136,6 +11217,80 @@
                 "title": "OpenEndedResponseItemV2",
                 "type": "object"
             },
+            "PartitionActionResponseV2": {
+                "additionalProperties": false,
+                "description": "Acknowledgement that an arm or disarm request was accepted.\n\nArming and disarming are asynchronous commands delivered to the alarm panel, so\na successful response means the request was accepted, not that the panel has\nalready reached the requested state. Poll the partition to observe the result.",
+                "example": {
+                    "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
+                    "requested_at": "2026-07-28T18:04:11Z",
+                    "requested_state": "armed"
+                },
+                "properties": {
+                    "partition_id": {
+                        "description": "The identifier of the partition the request was issued against.",
+                        "format": "uuid",
+                        "title": "Partition Id",
+                        "type": "string"
+                    },
+                    "requested_at": {
+                        "description": "RFC 3339 timestamp of when the request was accepted.",
+                        "title": "Requested At",
+                        "type": "string"
+                    },
+                    "requested_state": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PartitionState"
+                            }
+                        ],
+                        "description": "The state the partition was requested to move to."
+                    }
+                },
+                "required": [
+                    "partition_id",
+                    "requested_state",
+                    "requested_at"
+                ],
+                "title": "PartitionActionResponseV2",
+                "type": "object"
+            },
+            "PartitionArmRequestV2": {
+                "description": "Request body for arming a partition.",
+                "properties": {
+                    "actor": {
+                        "default": "External API",
+                        "description": "Identifies who or what performed this action, recorded against the resulting event. Defaults to \"External API\".",
+                        "maxLength": 255,
+                        "title": "Actor",
+                        "type": "string"
+                    }
+                },
+                "title": "PartitionArmRequestV2",
+                "type": "object"
+            },
+            "PartitionDisarmRequestV2": {
+                "description": "Request body for disarming a partition.",
+                "properties": {
+                    "actor": {
+                        "default": "External API",
+                        "description": "Identifies who or what performed this action, recorded against the resulting event. Defaults to \"External API\".",
+                        "maxLength": 255,
+                        "title": "Actor",
+                        "type": "string"
+                    }
+                },
+                "title": "PartitionDisarmRequestV2",
+                "type": "object"
+            },
+            "PartitionState": {
+                "description": "The arm state of a partition.\n\nProtect partitions are binary. There is no away/stay distinction on either\nthe sensor-panel or camera-partition path.",
+                "enum": [
+                    "armed",
+                    "disarmed"
+                ],
+                "title": "PartitionState",
+                "type": "string"
+            },
             "PassInviteRequestV2": {
                 "description": "Request body for pass app invitation endpoint",
                 "properties": {
@@ -12636,6 +12791,738 @@
                 "description": "Empty response body for profile photo mutation endpoints (PUT, DELETE).",
                 "properties": {},
                 "title": "ProfilePhotoResponseV2",
+                "type": "object"
+            },
+            "ProtectAlarmListQueryV2": {
+                "description": "Query parameters for listing alarms.\n\nResults are ordered newest first.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "description": "Return only alarms triggered at or before this time. An ISO 8601 timestamp including a timezone offset (e.g. 2026-07-31T00:00:00Z).",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "The maximum number of results returned in a single response. Default is 100. Max is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "site_id": {
+                        "description": "Return only the alarms for this site. Omit to return alarms across every site in the organization.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "Return only alarms triggered at or after this time. An ISO 8601 timestamp including a timezone offset (e.g. 2026-07-01T00:00:00Z).",
+                        "title": "Start Time",
+                        "type": "string"
+                    },
+                    "status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AlarmStatus"
+                            }
+                        ],
+                        "description": "Return only the alarms in this state. Omit to return both active and resolved alarms."
+                    }
+                },
+                "title": "ProtectAlarmListQueryV2",
+                "type": "object"
+            },
+            "ProtectAlarmListResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing alarms.",
+                "example": {
+                    "cursor": null,
+                    "items": [
+                        {
+                            "alarm_id": "8b7a6c5d-4e3f-2a1b-0c9d-8e7f6a5b4c3d",
+                            "alarm_type": "intrusion",
+                            "is_silent": false,
+                            "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
+                            "partition_name": "Warehouse",
+                            "resolution_source": null,
+                            "resolved_at": null,
+                            "resolved_by_actor": null,
+                            "response_level": "immediate_dispatch",
+                            "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
+                            "status": "active",
+                            "trigger_device_id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+                            "trigger_device_type": "motion_sensor",
+                            "trigger_type": "motion",
+                            "triggered_at": "2026-07-28T18:04:11Z"
+                        }
+                    ]
+                },
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "A list of alarms, ordered newest first.",
+                        "items": {
+                            "$ref": "#/components/schemas/ProtectAlarmV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ProtectAlarmListResponseV2",
+                "type": "object"
+            },
+            "ProtectAlarmV2": {
+                "additionalProperties": false,
+                "description": "A single alarm.",
+                "properties": {
+                    "alarm_id": {
+                        "description": "The unique identifier of the alarm.",
+                        "format": "uuid",
+                        "title": "Alarm Id",
+                        "type": "string"
+                    },
+                    "alarm_type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AlarmType"
+                            }
+                        ],
+                        "description": "The class of alarm. Intrusion alarms are the default; duress indicates a coerced disarm and should be treated as the highest priority."
+                    },
+                    "is_silent": {
+                        "description": "Whether the alarm was raised silently, without sounding on-site sirens.",
+                        "title": "Is Silent",
+                        "type": "boolean"
+                    },
+                    "partition_id": {
+                        "description": "The identifier of the partition the alarm was raised on.",
+                        "format": "uuid",
+                        "title": "Partition Id",
+                        "type": "string"
+                    },
+                    "partition_name": {
+                        "description": "The name of the partition the alarm was raised on.",
+                        "title": "Partition Name",
+                        "type": "string"
+                    },
+                    "resolution_source": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AlarmResolutionSource"
+                            }
+                        ],
+                        "description": "How the alarm was resolved. Null while the alarm is active."
+                    },
+                    "resolved_at": {
+                        "description": "RFC 3339 timestamp of when the alarm was resolved. Null while the alarm is active.",
+                        "title": "Resolved At",
+                        "type": "string"
+                    },
+                    "resolved_by_actor": {
+                        "description": "Who or what resolved the alarm. Null while the alarm is active.",
+                        "title": "Resolved By Actor",
+                        "type": "string"
+                    },
+                    "response_level": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AlarmResponseLevel"
+                            }
+                        ],
+                        "description": "The configured response posture for this alarm. Distinct from `alarm_type`."
+                    },
+                    "site_id": {
+                        "description": "The identifier of the site the alarm occurred at.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "status": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AlarmStatus"
+                            }
+                        ],
+                        "description": "Whether the alarm is still open."
+                    },
+                    "trigger_device_id": {
+                        "description": "The identifier of the device that triggered the alarm.",
+                        "format": "uuid",
+                        "title": "Trigger Device Id",
+                        "type": "string"
+                    },
+                    "trigger_device_type": {
+                        "description": "The type of the device that triggered the alarm.",
+                        "title": "Trigger Device Type",
+                        "type": "string"
+                    },
+                    "trigger_type": {
+                        "description": "The kind of event that triggered the alarm (e.g. motion, glass_break).",
+                        "title": "Trigger Type",
+                        "type": "string"
+                    },
+                    "triggered_at": {
+                        "description": "RFC 3339 timestamp of when the alarm was triggered.",
+                        "title": "Triggered At",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "alarm_id",
+                    "site_id",
+                    "alarm_type",
+                    "status",
+                    "response_level",
+                    "triggered_at"
+                ],
+                "title": "ProtectAlarmV2",
+                "type": "object"
+            },
+            "ProtectDeviceListQueryV2": {
+                "description": "Query parameters for listing the devices at a Protect site.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "The maximum number of results returned in a single response. Default is 100. Max is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    },
+                    "partition_id": {
+                        "description": "Return only the devices assigned to this partition. Omit to return every device at the site.",
+                        "format": "uuid",
+                        "title": "Partition Id",
+                        "type": "string"
+                    }
+                },
+                "title": "ProtectDeviceListQueryV2",
+                "type": "object"
+            },
+            "ProtectDeviceListResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing Protect devices.",
+                "example": {
+                    "cursor": null,
+                    "items": [
+                        {
+                            "device_id": "9f1c2d3e-4a5b-6c7d-8e9f-0a1b2c3d4e5f",
+                            "device_kind": "panel",
+                            "firmware_version": "1.24.0",
+                            "is_online": true,
+                            "model": "AP41",
+                            "name": "Warehouse Panel",
+                            "serial_number": "CHQX-GMW6-NR69",
+                            "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4"
+                        },
+                        {
+                            "battery_percentage": 92,
+                            "device_id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+                            "device_kind": "sensor",
+                            "is_online": true,
+                            "is_tampered": false,
+                            "model": "AD34",
+                            "name": "Loading Dock Door",
+                            "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
+                            "serial_number": "JKLM-2QRS-TU45",
+                            "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4"
+                        }
+                    ]
+                },
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "A list of devices at the site.",
+                        "items": {
+                            "discriminator": {
+                                "mapping": {
+                                    "panel": "#/definitions/ProtectPanelDeviceV2",
+                                    "sensor": "#/definitions/ProtectSensorDeviceV2"
+                                },
+                                "propertyName": "device_kind"
+                            },
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/ProtectSensorDeviceV2"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ProtectPanelDeviceV2"
+                                }
+                            ]
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ProtectDeviceListResponseV2",
+                "type": "object"
+            },
+            "ProtectPanelDeviceV2": {
+                "additionalProperties": false,
+                "description": "The alarm panel for a site.",
+                "properties": {
+                    "device_id": {
+                        "description": "The unique identifier of the panel.",
+                        "format": "uuid",
+                        "title": "Device Id",
+                        "type": "string"
+                    },
+                    "device_kind": {
+                        "description": "Discriminator identifying this record as the alarm panel.",
+                        "enum": [
+                            "panel"
+                        ],
+                        "title": "Device Kind",
+                        "type": "string"
+                    },
+                    "firmware_version": {
+                        "description": "The firmware version the panel is running. Null if not reported.",
+                        "title": "Firmware Version",
+                        "type": "string"
+                    },
+                    "is_online": {
+                        "description": "Whether the panel is currently online. Null if not reported.",
+                        "title": "Is Online",
+                        "type": "boolean"
+                    },
+                    "model": {
+                        "description": "The model identifier of the panel.",
+                        "title": "Model",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the panel.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "serial_number": {
+                        "description": "The serial number of the panel.",
+                        "title": "Serial Number",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The identifier of the site the panel belongs to.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "device_kind",
+                    "device_id",
+                    "site_id"
+                ],
+                "title": "ProtectPanelDeviceV2",
+                "type": "object"
+            },
+            "ProtectPartitionListQueryV2": {
+                "description": "Query parameters for listing the partitions at a Protect site.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "The maximum number of results returned in a single response. Default is 100. Max is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ProtectPartitionListQueryV2",
+                "type": "object"
+            },
+            "ProtectPartitionListResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing Protect partitions.",
+                "example": {
+                    "cursor": null,
+                    "items": [
+                        {
+                            "always_armed": false,
+                            "name": "Warehouse",
+                            "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
+                            "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
+                            "state": "armed",
+                            "state_as_of": "2026-07-28T18:04:11Z"
+                        }
+                    ]
+                },
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "A list of partitions at the site.",
+                        "items": {
+                            "$ref": "#/components/schemas/ProtectPartitionV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ProtectPartitionListResponseV2",
+                "type": "object"
+            },
+            "ProtectPartitionV2": {
+                "additionalProperties": false,
+                "description": "A single Protect partition.",
+                "properties": {
+                    "always_armed": {
+                        "description": "Whether the partition is permanently armed and therefore not subject to normal arm and disarm cycling. Arm and disarm requests against an always-armed partition are rejected.",
+                        "title": "Always Armed",
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "description": "The name of the partition.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "partition_id": {
+                        "description": "The unique identifier of the partition.",
+                        "format": "uuid",
+                        "title": "Partition Id",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The identifier of the site the partition belongs to.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "state": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PartitionState"
+                            }
+                        ],
+                        "description": "Whether the partition is currently armed or disarmed."
+                    },
+                    "state_as_of": {
+                        "description": "RFC 3339 timestamp of when `state` was last observed. Arm state is held by the alarm panel rather than in the cloud, so this indicates how current the reported state is. Null if no state has been observed.",
+                        "title": "State As Of",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "partition_id",
+                    "site_id",
+                    "state",
+                    "always_armed"
+                ],
+                "title": "ProtectPartitionV2",
+                "type": "object"
+            },
+            "ProtectResponseContactListQueryV2": {
+                "description": "Query parameters for listing the response contacts for a Protect site.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "The maximum number of results returned in a single response. Default is 100. Max is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ProtectResponseContactListQueryV2",
+                "type": "object"
+            },
+            "ProtectResponseContactListResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing a site's response contacts.",
+                "example": {
+                    "cursor": null,
+                    "items": [
+                        {
+                            "contact_id": "5d6e7f80-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+                            "contact_sequence": 1,
+                            "email": "dana.reyes@example.com",
+                            "name": "Dana Reyes",
+                            "phone_number": "+14155550123",
+                            "role": "Site Manager"
+                        }
+                    ]
+                },
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "The site's response contacts, ordered by `contact_sequence`.",
+                        "items": {
+                            "$ref": "#/components/schemas/ProtectResponseContactV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ProtectResponseContactListResponseV2",
+                "type": "object"
+            },
+            "ProtectResponseContactV2": {
+                "additionalProperties": false,
+                "description": "A single response contact in a site's escalation order.",
+                "properties": {
+                    "contact_id": {
+                        "description": "The unique identifier of the contact, if it has one.",
+                        "format": "uuid",
+                        "title": "Contact Id",
+                        "type": "string"
+                    },
+                    "contact_sequence": {
+                        "description": "The contact's position in the escalation order. Lower values are contacted first.",
+                        "title": "Contact Sequence",
+                        "type": "integer"
+                    },
+                    "email": {
+                        "description": "The contact's email address.",
+                        "title": "Email",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the contact.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "phone_number": {
+                        "description": "The contact's phone number in E.164 format.",
+                        "title": "Phone Number",
+                        "type": "string"
+                    },
+                    "role": {
+                        "description": "The contact's role or relationship to the site.",
+                        "title": "Role",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "contact_sequence"
+                ],
+                "title": "ProtectResponseContactV2",
+                "type": "object"
+            },
+            "ProtectSensorDeviceV2": {
+                "additionalProperties": false,
+                "description": "A sensor device belonging to a partition.",
+                "properties": {
+                    "battery_percentage": {
+                        "description": "The remaining battery charge as a percentage. Null if the device is not battery powered or has not reported.",
+                        "maximum": 100,
+                        "minimum": 0,
+                        "title": "Battery Percentage",
+                        "type": "integer"
+                    },
+                    "device_id": {
+                        "description": "The unique identifier of the device.",
+                        "format": "uuid",
+                        "title": "Device Id",
+                        "type": "string"
+                    },
+                    "device_kind": {
+                        "description": "Discriminator identifying this record as a sensor.",
+                        "enum": [
+                            "sensor"
+                        ],
+                        "title": "Device Kind",
+                        "type": "string"
+                    },
+                    "is_online": {
+                        "description": "Whether the device is currently online. Null if not reported.",
+                        "title": "Is Online",
+                        "type": "boolean"
+                    },
+                    "is_tampered": {
+                        "description": "Whether the device is reporting a tamper condition. Null if not reported.",
+                        "title": "Is Tampered",
+                        "type": "boolean"
+                    },
+                    "model": {
+                        "description": "The model identifier of the device.",
+                        "title": "Model",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the device.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "partition_id": {
+                        "description": "The identifier of the partition the sensor is assigned to.",
+                        "format": "uuid",
+                        "title": "Partition Id",
+                        "type": "string"
+                    },
+                    "serial_number": {
+                        "description": "The serial number of the device.",
+                        "title": "Serial Number",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The identifier of the site the device belongs to.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "device_kind",
+                    "device_id",
+                    "site_id"
+                ],
+                "title": "ProtectSensorDeviceV2",
+                "type": "object"
+            },
+            "ProtectSiteListQueryV2": {
+                "description": "Query parameters for listing the Protect sites in an organization.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "The maximum number of results returned in a single response. Default is 100. Max is 200.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ProtectSiteListQueryV2",
+                "type": "object"
+            },
+            "ProtectSiteListResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing Protect sites.",
+                "example": {
+                    "cursor": null,
+                    "items": [
+                        {
+                            "dispatch_enabled": true,
+                            "name": "San Mateo HQ",
+                            "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
+                            "timezone": "America/Los_Angeles"
+                        }
+                    ]
+                },
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if there are no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "A list of Protect sites in the organization.",
+                        "items": {
+                            "$ref": "#/components/schemas/ProtectSiteV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ProtectSiteListResponseV2",
+                "type": "object"
+            },
+            "ProtectSiteV2": {
+                "additionalProperties": false,
+                "description": "A single Protect site.",
+                "properties": {
+                    "dispatch_enabled": {
+                        "description": "Whether Verkada is authorized to request emergency dispatch for this site. Null if not reported.",
+                        "title": "Dispatch Enabled",
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "description": "The name of the site.",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "site_id": {
+                        "description": "The unique identifier of the site.",
+                        "format": "uuid",
+                        "title": "Site Id",
+                        "type": "string"
+                    },
+                    "timezone": {
+                        "description": "The IANA timezone the site is configured with (e.g. America/Los_Angeles).",
+                        "title": "Timezone",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "site_id"
+                ],
+                "title": "ProtectSiteV2",
+                "type": "object"
+            },
+            "PtzPresetItemV2": {
+                "additionalProperties": false,
+                "description": "A single saved PTZ preset position.",
+                "properties": {
+                    "created_at": {
+                        "description": "RFC 3339 timestamp of when the preset was created. Null for presets created before creation time was recorded.",
+                        "title": "Created At",
+                        "type": "string"
+                    },
+                    "is_home": {
+                        "description": "Whether this is the camera's home preset, the position the camera returns to when idle. Exactly one preset per camera is the home preset. Shown as 'H' in Command.",
+                        "title": "Is Home",
+                        "type": "boolean"
+                    },
+                    "position": {
+                        "description": "1-based position of the preset in the camera's preset list, matching the number shown in Command. Informational only: positions shift when presets are added, deleted, or reordered. Use `preset_id` to refer to a preset.",
+                        "title": "Position",
+                        "type": "integer"
+                    },
+                    "preset_id": {
+                        "description": "Verkada UID for the preset. Pass this as `preset_id` to POST /v2/cameras/{camera_id}/ptz/position.",
+                        "title": "Preset Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "preset_id",
+                    "is_home",
+                    "position"
+                ],
+                "title": "PtzPresetItemV2",
                 "type": "object"
             },
             "PutAccessGroupRequestBodyV1": {
@@ -26383,6 +27270,58 @@
                     }
                 },
                 "summary": "Move Camera to PTZ Preset",
+                "tags": [
+                    "Devices"
+                ]
+            }
+        },
+        "/v2/cameras/{camera_id}/ptz/presets": {
+            "get": {
+                "description": "List the saved preset positions for a PTZ camera, in the order they appear in\nCommand. Use a preset's `preset_id` with Move Camera to PTZ Preset.\n\nThe `position` field matches the number shown on the preset in Command, and the\nhome preset (shown as 'H') is flagged with `is_home`. Positions shift when\npresets are added, deleted, or reordered, so store `preset_id` rather than\n`position` to refer to a preset.",
+                "operationId": "getCameraPtzPresetsViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPtzPresetsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "summary": "Get PTZ Presets",
                 "tags": [
                     "Devices"
                 ]
