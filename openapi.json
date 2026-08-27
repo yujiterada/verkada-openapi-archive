@@ -2471,6 +2471,73 @@
                 "title": "CCRData",
                 "type": "object"
             },
+            "CalendarExceptionRecurrenceRuleV2": {
+                "description": "v2 recurrence rule.\n\nOverrides ``by_day`` to use full weekday strings (Monday, ...) and adds\nfield-level numeric bounds on ``by_month_day``, ``by_set_pos``, and\n``by_month``.  Cross-field semantic validators (WEEKLY requires by_day,\netc.) are inherited via the v1 schema used at the request layer and do\nnot need to be duplicated here.",
+                "properties": {
+                    "by_day": {
+                        "description": "List of full weekday names (Monday, Tuesday, ...) for WEEKLY/MONTHLY/YEARLY rules.",
+                        "items": {
+                            "$ref": "#/components/schemas/WeekdayFullEnum"
+                        },
+                        "type": "array"
+                    },
+                    "by_month": {
+                        "description": "Month number (1-12) for YEARLY rules.",
+                        "maximum": 12,
+                        "minimum": 1,
+                        "title": "By Month",
+                        "type": "integer"
+                    },
+                    "by_month_day": {
+                        "description": "Day of the month (1-31) for MONTHLY/YEARLY rules.",
+                        "maximum": 31,
+                        "minimum": 1,
+                        "title": "By Month Day",
+                        "type": "integer"
+                    },
+                    "by_set_pos": {
+                        "description": "Position of the weekday in the month (1-5) for MONTHLY/YEARLY rules.",
+                        "maximum": 5,
+                        "minimum": 1,
+                        "title": "By Set Pos",
+                        "type": "integer"
+                    },
+                    "count": {
+                        "description": "Total number of recurrences.",
+                        "title": "Count",
+                        "type": "integer"
+                    },
+                    "excluded_dates": {
+                        "description": "Dates to exclude from recurrence (YYYY-MM-DD).",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Excluded Dates",
+                        "type": "array"
+                    },
+                    "frequency": {
+                        "description": "Recurrence frequency (DAILY/WEEKLY/MONTHLY/YEARLY).",
+                        "title": "Frequency",
+                        "type": "string"
+                    },
+                    "interval": {
+                        "description": "Recurrence interval.",
+                        "title": "Interval",
+                        "type": "integer"
+                    },
+                    "until": {
+                        "description": "End date (YYYY-MM-DD) for the recurrence.",
+                        "title": "Until",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "frequency",
+                    "interval"
+                ],
+                "title": "CalendarExceptionRecurrenceRuleV2",
+                "type": "object"
+            },
             "CameraAudioResponse": {
                 "additionalProperties": false,
                 "properties": {
@@ -2979,6 +3046,174 @@
                     "jwt"
                 ],
                 "title": "CameraFootageStreamRequestV1",
+                "type": "object"
+            },
+            "CameraFootageStreamRequestV2": {
+                "description": "Query parameters for the HLS streaming endpoint.",
+                "properties": {
+                    "bucket": {
+                        "default": "",
+                        "description": "The location of the cloud backup segment.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Bucket",
+                        "type": "string"
+                    },
+                    "byte_range": {
+                        "default": "",
+                        "description": "The byte range of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Byte Range",
+                        "type": "string"
+                    },
+                    "camera": {
+                        "default": "",
+                        "description": "The unique identifier of the camera.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Camera",
+                        "type": "string"
+                    },
+                    "camera_id": {
+                        "description": "The unique identifier of the camera.",
+                        "title": "Camera Id",
+                        "type": "string"
+                    },
+                    "codec": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/StreamCodecV2"
+                            }
+                        ],
+                        "default": "hevc",
+                        "description": "The codec used for the video stream.\nEither <code>hevc</code> or <code>h264</code>.\n\nDefault: <code>hevc</code>"
+                    },
+                    "data_location": {
+                        "default": "",
+                        "description": "The location of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Data Location",
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "default": "0",
+                        "description": "The end time of the video stream on the specified camera.\nAn ISO 8601 timestamp (<code>2025-07-17T21:06:20Z</code>) or epoch seconds.\nFor a live footage stream, set to <code>0</code>.\nFor a historical footage stream, <code>end_time</code> - <code>start_time</code> must be less than or equal to one hour.\n\nDefault: <code>0</code>",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "file": {
+                        "default": "",
+                        "description": "File name used to fetch the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "File",
+                        "type": "string"
+                    },
+                    "init": {
+                        "default": "",
+                        "description": "The init segment of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Init",
+                        "type": "string"
+                    },
+                    "init_byte_range": {
+                        "default": "",
+                        "description": "The byte range of the init segment.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Init Byte Range",
+                        "type": "string"
+                    },
+                    "iv": {
+                        "default": "",
+                        "description": "The initialization vector of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Iv",
+                        "type": "string"
+                    },
+                    "jwt": {
+                        "description": "A short-lived token authorizing live or historical streaming from the camera.\nAcquire one from the <a href='https://apidocs.verkada.com/reference/getfootagetokenviewv2'>Get Streaming Token endpoint</a>.",
+                        "title": "Jwt",
+                        "type": "string"
+                    },
+                    "key_name": {
+                        "default": "",
+                        "description": "The key name of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Key Name",
+                        "type": "string"
+                    },
+                    "offset": {
+                        "default": "",
+                        "description": "The offset of the video segments, for recent historical segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Offset",
+                        "type": "string"
+                    },
+                    "org_id": {
+                        "description": "The unique identifier of the organization.",
+                        "title": "Org Id",
+                        "type": "string"
+                    },
+                    "prefetch": {
+                        "default": "",
+                        "description": "List of segments to preload.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Prefetch",
+                        "type": "string"
+                    },
+                    "resolution": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/StreamResolutionV2"
+                            }
+                        ],
+                        "default": "low_res",
+                        "description": "The resolution of the video stream.\nFor a live video stream, <code>high_res</code> selects the high resolution stream and <code>low_res</code> the low resolution stream.\nFor historical video streaming, <code>high_res</code> returns a mix of low and high resolution video with high resolution footage prioritized where available, and <code>low_res</code> returns only low resolution footage.\n\nDefault: <code>low_res</code>"
+                    },
+                    "source": {
+                        "default": "",
+                        "description": "The source of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Source",
+                        "type": "string"
+                    },
+                    "source_encrypted": {
+                        "default": "",
+                        "description": "The encryption state of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Source Encrypted",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "default": "0",
+                        "description": "The start time of the video stream on the specified camera.\nAn ISO 8601 timestamp (<code>2025-07-17T21:06:20Z</code>) or epoch seconds.\nFor a live footage stream, set to <code>0</code>.\nFor a historical footage stream, <code>end_time</code> - <code>start_time</code> must be less than or equal to one hour.\n\nDefault: <code>0</code>",
+                        "title": "Start Time",
+                        "type": "string"
+                    },
+                    "start_ts": {
+                        "default": "",
+                        "description": "The start time of the video segments, for recent historical segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Start Ts",
+                        "type": "string"
+                    },
+                    "stream_id": {
+                        "default": "",
+                        "description": "The stream identifier of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Stream Id",
+                        "type": "string"
+                    },
+                    "transcode": {
+                        "default": false,
+                        "description": "Whether a segment should be transcoded to H264.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Transcode",
+                        "type": "boolean"
+                    },
+                    "ts": {
+                        "default": "",
+                        "description": "The timestamp of the video segments.\nThe API user should not have to specify this parameter. It is pre-loaded into the URLs contained in the HLS playlist file.",
+                        "title": "Ts",
+                        "type": "string"
+                    },
+                    "type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/StreamTypeV2"
+                            }
+                        ],
+                        "default": "stream",
+                        "description": "The video type.\nReserved for future compatibility; the only accepted value is <code>stream</code>.\n\nDefault: <code>stream</code>"
+                    }
+                },
+                "required": [
+                    "org_id",
+                    "camera_id",
+                    "jwt"
+                ],
+                "title": "CameraFootageStreamRequestV2",
                 "type": "object"
             },
             "CameraInfo": {
@@ -3616,6 +3851,59 @@
                 "title": "CloudBackupSettingsGetResponse",
                 "type": "object"
             },
+            "CloudBackupSettingsPatchRequestV2": {
+                "description": "A partial update to a camera's cloud backup settings.\n\nEvery field is optional; the ones supplied are applied and the rest are left\nas they are. Because none of these fields is nullable, an omitted field and\nan explicit ``null`` mean the same thing -- leave it alone.",
+                "properties": {
+                    "backup_days": {
+                        "description": "The days of the week whose footage is backed up, as full weekday names (for example <code>[\"Monday\", \"Tuesday\"]</code>). An empty list backs up no days. Replaces the existing list rather than adding to it.",
+                        "items": {
+                            "$ref": "#/components/schemas/CloudBackupWeekdayV2"
+                        },
+                        "type": "array"
+                    },
+                    "backup_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window of footage that is backed up. Footage recorded outside this window is not uploaded. Both ends must be supplied together.",
+                        "title": "Backup Window"
+                    },
+                    "enabled": {
+                        "description": "Whether cloud backup is enabled for the camera. Re-enabling a camera whose backup was previously disabled resumes from the time it was disabled.",
+                        "title": "Enabled",
+                        "type": "boolean"
+                    },
+                    "upload_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window during which uploads are allowed to run. Both ends must be supplied together.",
+                        "title": "Upload Window"
+                    },
+                    "video_quality": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoQualityV2"
+                            }
+                        ],
+                        "description": "The quality the footage is uploaded at. Either <code>STANDARD_QUALITY</code> or <code>HIGH_QUALITY</code>."
+                    },
+                    "video_to_upload": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoToUploadV2"
+                            }
+                        ],
+                        "description": "Which footage inside the backup window is uploaded. <code>MOTION</code> uploads only footage containing motion; <code>ALL</code> uploads every recorded second."
+                    }
+                },
+                "title": "CloudBackupSettingsPatchRequestV2",
+                "type": "object"
+            },
             "CloudBackupSettingsPostRequest": {
                 "properties": {
                     "camera_id": {
@@ -3664,6 +3952,294 @@
                     "upload_timeslot"
                 ],
                 "title": "CloudBackupSettingsPostRequest",
+                "type": "object"
+            },
+            "CloudBackupSettingsResponseV2": {
+                "additionalProperties": false,
+                "description": "Cloud backup settings plus the read-only state of the backup itself.",
+                "example": {
+                    "backup_days": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday"
+                    ],
+                    "backup_window": {
+                        "end_time": "24:00:00",
+                        "start_time": "00:00:00"
+                    },
+                    "camera_id": "af1c7365-525d-43b3-930e-fbab667e5388",
+                    "enabled": true,
+                    "latest_high_quality_segment_time": null,
+                    "latest_standard_quality_segment_time": "2026-08-04T21:51:53+00:00",
+                    "upload_window": {
+                        "end_time": "05:00:00",
+                        "start_time": "01:00:00"
+                    },
+                    "video_quality": "HIGH_QUALITY",
+                    "video_to_upload": "MOTION"
+                },
+                "properties": {
+                    "backup_days": {
+                        "description": "The days of the week whose footage is backed up, as full weekday names.",
+                        "items": {
+                            "$ref": "#/components/schemas/CloudBackupWeekdayV2"
+                        },
+                        "type": "array"
+                    },
+                    "backup_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window of footage that is backed up.",
+                        "title": "Backup Window"
+                    },
+                    "camera_id": {
+                        "description": "The unique identifier of the camera.",
+                        "title": "Camera Id",
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "description": "Whether cloud backup is enabled for the camera.",
+                        "title": "Enabled",
+                        "type": "boolean"
+                    },
+                    "latest_high_quality_segment_time": {
+                        "description": "The timestamp of the most recent high-quality backup segment available in the cloud, as an RFC 3339 timestamp. <code>null</code> if no high-quality footage has been backed up yet.",
+                        "title": "Latest High Quality Segment Time",
+                        "type": "string"
+                    },
+                    "latest_standard_quality_segment_time": {
+                        "description": "The timestamp of the most recent standard-quality backup segment available in the cloud, as an RFC 3339 timestamp. <code>null</code> if no standard-quality footage has been backed up yet.",
+                        "title": "Latest Standard Quality Segment Time",
+                        "type": "string"
+                    },
+                    "upload_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window during which uploads are allowed to run.",
+                        "title": "Upload Window"
+                    },
+                    "video_quality": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoQualityV2"
+                            }
+                        ],
+                        "description": "The quality the footage is uploaded at: <code>STANDARD_QUALITY</code> or <code>HIGH_QUALITY</code>."
+                    },
+                    "video_to_upload": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoToUploadV2"
+                            }
+                        ],
+                        "description": "Which footage inside the backup window is uploaded: <code>MOTION</code> or <code>ALL</code>."
+                    }
+                },
+                "required": [
+                    "camera_id",
+                    "enabled",
+                    "video_to_upload",
+                    "video_quality",
+                    "backup_days",
+                    "backup_window",
+                    "upload_window"
+                ],
+                "title": "CloudBackupSettingsResponseV2",
+                "type": "object"
+            },
+            "CloudBackupSettingsUpdateRequestV2": {
+                "description": "The full set of cloud backup settings to apply to a camera.",
+                "properties": {
+                    "backup_days": {
+                        "description": "The days of the week whose footage is backed up, as full weekday names (for example <code>[\"Monday\", \"Tuesday\"]</code>). An empty list backs up no days.",
+                        "items": {
+                            "$ref": "#/components/schemas/CloudBackupWeekdayV2"
+                        },
+                        "type": "array"
+                    },
+                    "backup_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window of footage that is backed up. Footage recorded outside this window is not uploaded.",
+                        "title": "Backup Window"
+                    },
+                    "enabled": {
+                        "description": "Whether cloud backup is enabled for the camera. Re-enabling a camera whose backup was previously disabled resumes from the time it was disabled.",
+                        "title": "Enabled",
+                        "type": "boolean"
+                    },
+                    "upload_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window during which uploads are allowed to run. Use this to keep backup traffic off the network during business hours.",
+                        "title": "Upload Window"
+                    },
+                    "video_quality": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoQualityV2"
+                            }
+                        ],
+                        "description": "The quality the footage is uploaded at. Either <code>STANDARD_QUALITY</code> or <code>HIGH_QUALITY</code>."
+                    },
+                    "video_to_upload": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoToUploadV2"
+                            }
+                        ],
+                        "description": "Which footage inside the backup window is uploaded. <code>MOTION</code> uploads only footage containing motion; <code>ALL</code> uploads every recorded second."
+                    }
+                },
+                "required": [
+                    "enabled",
+                    "video_to_upload",
+                    "video_quality",
+                    "backup_days",
+                    "backup_window",
+                    "upload_window"
+                ],
+                "title": "CloudBackupSettingsUpdateRequestV2",
+                "type": "object"
+            },
+            "CloudBackupSettingsV2": {
+                "additionalProperties": false,
+                "description": "The cloud backup settings applied to a camera.",
+                "example": {
+                    "backup_days": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday"
+                    ],
+                    "backup_window": {
+                        "end_time": "24:00:00",
+                        "start_time": "00:00:00"
+                    },
+                    "camera_id": "af1c7365-525d-43b3-930e-fbab667e5388",
+                    "enabled": true,
+                    "upload_window": {
+                        "end_time": "05:00:00",
+                        "start_time": "01:00:00"
+                    },
+                    "video_quality": "HIGH_QUALITY",
+                    "video_to_upload": "MOTION"
+                },
+                "properties": {
+                    "backup_days": {
+                        "description": "The days of the week whose footage is backed up, as full weekday names.",
+                        "items": {
+                            "$ref": "#/components/schemas/CloudBackupWeekdayV2"
+                        },
+                        "type": "array"
+                    },
+                    "backup_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window of footage that is backed up.",
+                        "title": "Backup Window"
+                    },
+                    "camera_id": {
+                        "description": "The unique identifier of the camera.",
+                        "title": "Camera Id",
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "description": "Whether cloud backup is enabled for the camera.",
+                        "title": "Enabled",
+                        "type": "boolean"
+                    },
+                    "upload_window": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/CloudBackupWindowV2"
+                            }
+                        ],
+                        "description": "The daily window during which uploads are allowed to run.",
+                        "title": "Upload Window"
+                    },
+                    "video_quality": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoQualityV2"
+                            }
+                        ],
+                        "description": "The quality the footage is uploaded at: <code>STANDARD_QUALITY</code> or <code>HIGH_QUALITY</code>."
+                    },
+                    "video_to_upload": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VideoToUploadV2"
+                            }
+                        ],
+                        "description": "Which footage inside the backup window is uploaded: <code>MOTION</code> or <code>ALL</code>."
+                    }
+                },
+                "required": [
+                    "camera_id",
+                    "enabled",
+                    "video_to_upload",
+                    "video_quality",
+                    "backup_days",
+                    "backup_window",
+                    "upload_window"
+                ],
+                "title": "CloudBackupSettingsV2",
+                "type": "object"
+            },
+            "CloudBackupWeekdayV2": {
+                "description": "A day of the week as a full name, per v2-standards section 8.",
+                "enum": [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday"
+                ],
+                "title": "CloudBackupWeekdayV2",
+                "type": "string"
+            },
+            "CloudBackupWindowV2": {
+                "description": "A daily window bounded by two local times of day.\n\nDeliberately carries no rule that ``end_time`` follow ``start_time``. This\nmodel is the response shape as well as the request shape, and\n``flask_pydantic_spec`` validates responses -- a rule here would turn a\ncamera whose stored window is empty (``0,0``) or inverted into a 500 on\nread. The ordering rule belongs on the request, where it is applied by\n:class:`CloudBackupSettingsUpdateRequestV2`.",
+                "properties": {
+                    "end_time": {
+                        "description": "The local time of day the window closes, as <code>HH:MM:SS</code> (for example <code>02:00:00</code>). Use <code>24:00:00</code> for a window that runs to midnight.",
+                        "pattern": "^(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d|24:00:00)$",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The local time of day the window opens, as <code>HH:MM:SS</code> (for example <code>01:00:00</code>).",
+                        "pattern": "^(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d|24:00:00)$",
+                        "title": "Start Time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "start_time",
+                    "end_time"
+                ],
+                "title": "CloudBackupWindowV2",
                 "type": "object"
             },
             "ConflictingExternalId": {
@@ -4274,6 +4850,44 @@
                 "title": "CreateUserResponse",
                 "type": "object"
             },
+            "DashboardOccupancyIntervalV2": {
+                "description": "ISO 8601 duration values for the occupancy trends time bucket size.",
+                "enum": [
+                    "PT15M",
+                    "PT1H",
+                    "PT1D"
+                ],
+                "title": "DashboardOccupancyIntervalV2",
+                "type": "string"
+            },
+            "DashboardOccupancyTrendBucketV2": {
+                "additionalProperties": false,
+                "description": "A single time bucket of occupancy trend data.",
+                "properties": {
+                    "end_time": {
+                        "description": "The end of the bucket time range, as an RFC 3339 timestamp.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The start of the bucket time range, as an RFC 3339 timestamp.",
+                        "title": "Start Time",
+                        "type": "string"
+                    },
+                    "value": {
+                        "description": "The value for this bucket (count or net occupancy).",
+                        "title": "Value",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "start_time",
+                    "end_time",
+                    "value"
+                ],
+                "title": "DashboardOccupancyTrendBucketV2",
+                "type": "object"
+            },
             "DashboardOccupancyTrendsRequestV1": {
                 "properties": {
                     "dashboard_id": {
@@ -4318,7 +4932,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnumV2"
+                                "$ref": "#/components/schemas/DashboardOccupancyIntervalV2"
                             }
                         ],
                         "default": "PT1H",
@@ -4436,7 +5050,7 @@
                     "in_counts": {
                         "description": "Per-bucket counts for the \"in\" direction.",
                         "items": {
-                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                            "$ref": "#/components/schemas/DashboardOccupancyTrendBucketV2"
                         },
                         "title": "In Counts",
                         "type": "array"
@@ -4444,7 +5058,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnumV2"
+                                "$ref": "#/components/schemas/DashboardOccupancyIntervalV2"
                             }
                         ],
                         "description": "The time interval used for the buckets."
@@ -4452,7 +5066,7 @@
                     "net_occupancy": {
                         "description": "Per-bucket net occupancy values.",
                         "items": {
-                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                            "$ref": "#/components/schemas/DashboardOccupancyTrendBucketV2"
                         },
                         "title": "Net Occupancy",
                         "type": "array"
@@ -4460,7 +5074,7 @@
                     "out_counts": {
                         "description": "Per-bucket counts for the \"out\" direction.",
                         "items": {
-                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                            "$ref": "#/components/schemas/DashboardOccupancyTrendBucketV2"
                         },
                         "title": "Out Counts",
                         "type": "array"
@@ -4481,6 +5095,16 @@
                 "title": "DashboardOccupancyTrendsResponseV2",
                 "type": "object"
             },
+            "DashboardWidgetIntervalV2": {
+                "description": "An enumeration.",
+                "enum": [
+                    "PT15M",
+                    "PT1H",
+                    "PT1D"
+                ],
+                "title": "DashboardWidgetIntervalV2",
+                "type": "string"
+            },
             "DashboardWidgetTrendsRequestV2": {
                 "properties": {
                     "end_time": {
@@ -4491,7 +5115,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnumV2"
+                                "$ref": "#/components/schemas/DashboardWidgetIntervalV2"
                             }
                         ],
                         "default": "PT1H",
@@ -4550,7 +5174,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnumV2"
+                                "$ref": "#/components/schemas/DashboardWidgetIntervalV2"
                             }
                         ],
                         "description": "The time interval used."
@@ -5267,7 +5891,7 @@
                 "type": "object"
             },
             "DoorExceptionV2": {
-                "description": "v2 response model for a Door Exception within an Exception Calendar.\n\nOverrides ``recurrence_rule`` to use ``RecurrenceRuleV2`` so that\n``by_day`` serialises as full weekday strings per v2-standards §8.",
+                "description": "v2 response model for a Door Exception within an Exception Calendar.\n\nOverrides ``recurrence_rule`` to use ``CalendarExceptionRecurrenceRuleV2`` so that\n``by_day`` serialises as full weekday strings per v2-standards §8.",
                 "properties": {
                     "all_day_default": {
                         "default": false,
@@ -5338,7 +5962,7 @@
                     "recurrence_rule": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/RecurrenceRuleV2"
+                                "$ref": "#/components/schemas/CalendarExceptionRecurrenceRuleV2"
                             }
                         ],
                         "description": "Recurrence rule with full weekday strings (Monday, Tuesday, ...).",
@@ -8210,11 +8834,10 @@
                 "type": "object"
             },
             "HostResponseItemV2": {
-                "description": "The host metadata associated with a visit.",
                 "properties": {
-                    "delivery_location": {
-                        "description": "(Mailroom) The host's default package delivery location.",
-                        "title": "Delivery Location",
+                    "email": {
+                        "description": "The email of the host.",
+                        "title": "Email",
                         "type": "string"
                     },
                     "first_name": {
@@ -8230,16 +8853,6 @@
                     "has_delegate": {
                         "description": "Whether the host has a delegate assigned.",
                         "title": "Has Delegate",
-                        "type": "boolean"
-                    },
-                    "has_email": {
-                        "description": "Whether the host has an email address present.",
-                        "title": "Has Email",
-                        "type": "boolean"
-                    },
-                    "has_phone_number": {
-                        "description": "Whether the host has a phone number present.",
-                        "title": "Has Phone Number",
                         "type": "boolean"
                     },
                     "host_id": {
@@ -8258,20 +8871,15 @@
                         "title": "Original First Name",
                         "type": "string"
                     },
+                    "phone_number": {
+                        "description": "The phone number of the host.",
+                        "title": "Phone Number",
+                        "type": "string"
+                    },
                     "requires_host_approval": {
                         "description": "Whether the host requires host approval on all visits.",
                         "title": "Requires Host Approval",
                         "type": "boolean"
-                    },
-                    "student_id": {
-                        "description": "For student-related visits, the student ID of the visit's student.",
-                        "title": "Student Id",
-                        "type": "string"
-                    },
-                    "student_number": {
-                        "description": "For student-related visits, the student number of the visit's student.",
-                        "title": "Student Number",
-                        "type": "string"
                     }
                 },
                 "required": [
@@ -8281,9 +8889,7 @@
                     "full_name",
                     "original_first_name",
                     "requires_host_approval",
-                    "has_delegate",
-                    "has_phone_number",
-                    "has_email"
+                    "has_delegate"
                 ],
                 "title": "HostResponseItemV2",
                 "type": "object"
@@ -8379,16 +8985,6 @@
                     "1_day"
                 ],
                 "title": "IntervalEnum",
-                "type": "string"
-            },
-            "IntervalEnumV2": {
-                "description": "Bucket width for the returned occupancy trend readings.",
-                "enum": [
-                    "15_minutes",
-                    "1_hour",
-                    "1_day"
-                ],
-                "title": "IntervalEnumV2",
                 "type": "string"
             },
             "InviteeRequestV2": {
@@ -10574,7 +11170,7 @@
                 "title": "OccupancyData",
                 "type": "object"
             },
-            "OccupancyTrendBucketV2": {
+            "OccupancyTrendsBucketV2": {
                 "additionalProperties": false,
                 "description": "A single time bucket of occupancy counts for one direction.",
                 "properties": {
@@ -10599,7 +11195,7 @@
                     "end_time",
                     "count"
                 ],
-                "title": "OccupancyTrendBucketV2",
+                "title": "OccupancyTrendsBucketV2",
                 "type": "object"
             },
             "OccupancyTrendsCamera": {
@@ -10720,7 +11316,7 @@
                     "trend_in": {
                         "description": "Bucketed counts for objects moving in the 'in' direction.",
                         "items": {
-                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                            "$ref": "#/components/schemas/OccupancyTrendsBucketV2"
                         },
                         "title": "Trend In",
                         "type": "array"
@@ -10728,7 +11324,7 @@
                     "trend_out": {
                         "description": "Bucketed counts for objects moving in the 'out' direction.",
                         "items": {
-                            "$ref": "#/components/schemas/OccupancyTrendBucketV2"
+                            "$ref": "#/components/schemas/OccupancyTrendsBucketV2"
                         },
                         "title": "Trend Out",
                         "type": "array"
@@ -10736,6 +11332,16 @@
                 },
                 "title": "OccupancyTrendsDirectionalV2",
                 "type": "object"
+            },
+            "OccupancyTrendsIntervalV2": {
+                "description": "Bucket width for the returned occupancy trend readings.",
+                "enum": [
+                    "15_minutes",
+                    "1_hour",
+                    "1_day"
+                ],
+                "title": "OccupancyTrendsIntervalV2",
+                "type": "string"
             },
             "OccupancyTrendsMQTTConfigGetResponseV2": {
                 "additionalProperties": false,
@@ -10997,7 +11603,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnumV2"
+                                "$ref": "#/components/schemas/OccupancyTrendsIntervalV2"
                             }
                         ],
                         "default": "1_hour",
@@ -11126,7 +11732,7 @@
                     "interval": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/IntervalEnumV2"
+                                "$ref": "#/components/schemas/OccupancyTrendsIntervalV2"
                             }
                         ],
                         "description": "The width of each returned bucket."
@@ -16001,6 +16607,32 @@
                 "title": "SmartListsRequestV2",
                 "type": "object"
             },
+            "StreamCodecV2": {
+                "description": "The codec of the requested video stream.",
+                "enum": [
+                    "hevc",
+                    "h264"
+                ],
+                "title": "StreamCodecV2",
+                "type": "string"
+            },
+            "StreamResolutionV2": {
+                "description": "The resolution of the requested video stream.",
+                "enum": [
+                    "low_res",
+                    "high_res"
+                ],
+                "title": "StreamResolutionV2",
+                "type": "string"
+            },
+            "StreamTypeV2": {
+                "description": "The video type. Reserved for future compatibility.",
+                "enum": [
+                    "stream"
+                ],
+                "title": "StreamTypeV2",
+                "type": "string"
+            },
             "ThumbnailImageRequestV1": {
                 "properties": {
                     "camera_id": {
@@ -17066,6 +17698,15 @@
                 "title": "ValidatedExceptionV2",
                 "type": "object"
             },
+            "VideoQualityV2": {
+                "description": "The quality the footage is uploaded at.",
+                "enum": [
+                    "STANDARD_QUALITY",
+                    "HIGH_QUALITY"
+                ],
+                "title": "VideoQualityV2",
+                "type": "string"
+            },
             "VideoTaggingEventGetRequestV1": {
                 "properties": {
                     "camera_id": {
@@ -17657,6 +18298,15 @@
                 "title": "VideoTaggingEventV2",
                 "type": "object"
             },
+            "VideoToUploadV2": {
+                "description": "Which footage from the backup window is uploaded.",
+                "enum": [
+                    "MOTION",
+                    "ALL"
+                ],
+                "title": "VideoToUploadV2",
+                "type": "string"
+            },
             "ViewingStationDevice": {
                 "additionalProperties": false,
                 "description": "Detailed information about a Viewing Station",
@@ -17872,6 +18522,85 @@
                     }
                 },
                 "title": "ViewingStationDevicesResponseV2",
+                "type": "object"
+            },
+            "VisitHostResponseItemV2": {
+                "description": "The host metadata associated with a visit.",
+                "properties": {
+                    "delivery_location": {
+                        "description": "(Mailroom) The host's default package delivery location.",
+                        "title": "Delivery Location",
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "description": "The preferred first name of the host. If none is specified by the host, the same as original_first_name.",
+                        "title": "First Name",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "description": "The full name of the host.",
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "has_delegate": {
+                        "description": "Whether the host has a delegate assigned.",
+                        "title": "Has Delegate",
+                        "type": "boolean"
+                    },
+                    "has_email": {
+                        "description": "Whether the host has an email address present.",
+                        "title": "Has Email",
+                        "type": "boolean"
+                    },
+                    "has_phone_number": {
+                        "description": "Whether the host has a phone number present.",
+                        "title": "Has Phone Number",
+                        "type": "boolean"
+                    },
+                    "host_id": {
+                        "description": "The unique identifier of the host.",
+                        "format": "uuid",
+                        "title": "Host Id",
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "description": "The last name of the host.",
+                        "title": "Last Name",
+                        "type": "string"
+                    },
+                    "original_first_name": {
+                        "description": "The original first name of the host.",
+                        "title": "Original First Name",
+                        "type": "string"
+                    },
+                    "requires_host_approval": {
+                        "description": "Whether the host requires host approval on all visits.",
+                        "title": "Requires Host Approval",
+                        "type": "boolean"
+                    },
+                    "student_id": {
+                        "description": "For student-related visits, the student ID of the visit's student.",
+                        "title": "Student Id",
+                        "type": "string"
+                    },
+                    "student_number": {
+                        "description": "For student-related visits, the student number of the visit's student.",
+                        "title": "Student Number",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "host_id",
+                    "first_name",
+                    "last_name",
+                    "full_name",
+                    "original_first_name",
+                    "requires_host_approval",
+                    "has_delegate",
+                    "has_phone_number",
+                    "has_email"
+                ],
+                "title": "VisitHostResponseItemV2",
                 "type": "object"
             },
             "VisitListRequestV2": {
@@ -18169,7 +18898,7 @@
                     "host": {
                         "allOf": [
                             {
-                                "$ref": "#/components/schemas/HostResponseItemV2"
+                                "$ref": "#/components/schemas/VisitHostResponseItemV2"
                             }
                         ],
                         "description": "The primary host metadata associated with this visit. Maintained for backward compatibility; prefer the hosts field for visits with multiple hosts.",
@@ -18183,7 +18912,7 @@
                     "hosts": {
                         "description": "The list of host metadata associated with this visit.",
                         "items": {
-                            "$ref": "#/components/schemas/HostResponseItemV2"
+                            "$ref": "#/components/schemas/VisitHostResponseItemV2"
                         },
                         "title": "Hosts",
                         "type": "array"
@@ -25213,7 +25942,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/components/schemas/IntervalEnumV2"
+                                    "$ref": "#/components/schemas/DashboardOccupancyIntervalV2"
                                 }
                             ],
                             "default": "PT1H",
@@ -27191,7 +27920,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/components/schemas/IntervalEnumV2"
+                                    "$ref": "#/components/schemas/OccupancyTrendsIntervalV2"
                                 }
                             ],
                             "default": "1_hour",
