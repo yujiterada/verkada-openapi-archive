@@ -16669,6 +16669,11 @@
                         "title": "Camera Id",
                         "type": "string"
                     },
+                    "end_time": {
+                        "description": "The inclusive end of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T22:06:20Z').\n\nIf omitted, the search covers one hour either side of `timestamp`.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\n`start_time` and `end_time` must be specified together.\n\nNot supported when `resolution` is hi-res.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
                     "resolution": {
                         "allOf": [
                             {
@@ -16677,6 +16682,11 @@
                         ],
                         "default": "low-res",
                         "description": "Returns a low-resolution thumbnail if this parameter is set to 'low-res'.\nReturns a high-resolution thumbnail if this parameter is set to 'hi-res'.\n\nDefaults to a low-resolution thumbnail."
+                    },
+                    "start_time": {
+                        "description": "The inclusive start of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T20:06:20Z').\n\nIf omitted, the search covers one hour either side of `timestamp`.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\n`start_time` and `end_time` must be specified together.\n\nNot supported when `resolution` is hi-res.",
+                        "title": "Start Time",
+                        "type": "string"
                     },
                     "timestamp": {
                         "description": "The approximate timestamp of the requested thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T21:06:20Z'). Defaults to the current time.",
@@ -16699,10 +16709,20 @@
                         "title": "Camera Id",
                         "type": "string"
                     },
+                    "end_time": {
+                        "description": "The inclusive end of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T22:06:20Z').\n\n`start_time` and `end_time` must be specified together.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\nIf omitted, the endpoint keeps its existing behavior.",
+                        "title": "End Time",
+                        "type": "string"
+                    },
                     "expiry": {
                         "default": "P1D",
                         "description": "How long the generated link stays valid, as an ISO 8601 duration (e.g., PT1H for one hour, P1D for one day). Must be between one hour and one week. Defaults to one day (P1D).",
                         "title": "Expiry",
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "description": "The inclusive start of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T20:06:20Z').\n\n`start_time` and `end_time` must be specified together.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\nIf omitted, the endpoint keeps its existing behavior.",
+                        "title": "Start Time",
                         "type": "string"
                     },
                     "timestamp": {
@@ -26156,7 +26176,7 @@
         },
         "/v2/cameras/footage/thumbnails": {
             "get": {
-                "description": "Returns a low-resolution or high-resolution thumbnail from a specified\ncamera at or near a specified time.\n\nThe `timestamp` query parameter is an ISO 8601 string and defaults to\nthe current time. Defaults to low-resolution thumbnails.",
+                "description": "Returns a low-resolution or high-resolution thumbnail from a specified\ncamera at or near a specified time.\n\nThe `timestamp` query parameter is an ISO 8601 string and defaults to\nthe current time. Defaults to low-resolution thumbnails.\n\n`start_time` and `end_time` optionally bound the search window used to find\nthe thumbnail; if omitted, the search covers one hour either side of\n`timestamp`. The window may not exceed four hours. They are not supported\nwhen `resolution` is hi-res.\n\nThe response includes an `X-Verkada-Timestamp` header with the Unix timestamp\nof the actual capture time of the frame served.",
                 "operationId": "getThumbnailImageViewV2",
                 "parameters": [
                     {
@@ -26192,6 +26212,26 @@
                             "default": "low-res",
                             "description": "Returns a low-resolution thumbnail if this parameter is set to 'low-res'.\nReturns a high-resolution thumbnail if this parameter is set to 'hi-res'.\n\nDefaults to a low-resolution thumbnail."
                         }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The inclusive start of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T20:06:20Z').\n\nIf omitted, the search covers one hour either side of `timestamp`.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\n`start_time` and `end_time` must be specified together.\n\nNot supported when `resolution` is hi-res.",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The inclusive end of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T22:06:20Z').\n\nIf omitted, the search covers one hour either side of `timestamp`.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\n`start_time` and `end_time` must be specified together.\n\nNot supported when `resolution` is hi-res.",
+                            "title": "End Time",
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -26207,7 +26247,7 @@
         },
         "/v2/cameras/footage/thumbnails/link": {
             "get": {
-                "description": "Returns a link to a thumbnail image from a specified camera at a\nspecified time.\n\nAccepts the capture `timestamp` as an ISO 8601 datetime\n(e.g., 2025-07-17T21:06:20Z) and the link `expiry` as an ISO 8601\nduration (e.g., PT1H, P1D). Returns the capture time and link expiry\nas RFC 3339 timestamps.",
+                "description": "Returns a link to a thumbnail image from a specified camera at a\nspecified time.\n\nAccepts the capture `timestamp` as an ISO 8601 datetime\n(e.g., 2025-07-17T21:06:20Z) and the link `expiry` as an ISO 8601\nduration (e.g., PT1H, P1D). Returns the capture time and link expiry\nas RFC 3339 timestamps.\n\nOptionally accepts `start_time` and `end_time` as ISO 8601 datetimes\nto bound the search window for the returned thumbnail: instead of the\nclosest snapshot to `timestamp`, the nearest snapshot within\n`[start_time, end_time]` is returned. `start_time` and `end_time`\nmust be specified together, and the window between them may not\nexceed four hours. If omitted, the endpoint keeps its existing\nbehavior.",
                 "operationId": "getThumbnailLinkViewV2",
                 "parameters": [
                     {
@@ -26239,6 +26279,26 @@
                             "default": "P1D",
                             "description": "How long the generated link stays valid, as an ISO 8601 duration (e.g., PT1H for one hour, P1D for one day). Must be between one hour and one week. Defaults to one day (P1D).",
                             "title": "Expiry",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The inclusive start of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T20:06:20Z').\n\n`start_time` and `end_time` must be specified together.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\nIf omitted, the endpoint keeps its existing behavior.",
+                            "title": "Start Time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "required": false,
+                        "schema": {
+                            "description": "The inclusive end of the time window to search for a thumbnail, formatted as an ISO 8601 string (e.g. '2025-07-17T22:06:20Z').\n\n`start_time` and `end_time` must be specified together.\n\nThe window between `start_time` and `end_time` may not exceed four hours.\n\nIf omitted, the endpoint keeps its existing behavior.",
+                            "title": "End Time",
                             "type": "string"
                         }
                     }
@@ -27004,429 +27064,6 @@
                 ]
             }
         },
-        "/v2/cameras/video_tagging/event_types": {
-            "delete": {
-                "description": "Deletes the video tagging event type identified by the `event_type_uid`\nquery parameter. Returns HTTP 204 No Content on success (was HTTP 200\nwith an empty JSON body in v1).",
-                "operationId": "deleteVideoTaggingEventTypeViewV2",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "event_type_uid",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the event type.",
-                            "minLength": 1,
-                            "title": "Event Type Uid",
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                },
-                "summary": "Delete a Helix Event Type",
-                "tags": [
-                    "Methods"
-                ]
-            },
-            "get": {
-                "description": "Lists the video tagging (Helix) event types for the organization,\noptionally filtered by `event_type_uid` and/or `name`. Results are\nreturned in the `items` array with cursor-based pagination: pass the\nreturned `cursor` and a `limit` to fetch subsequent pages.",
-                "operationId": "getVideoTaggingEventTypeViewV2",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "event_type_uid",
-                        "required": false,
-                        "schema": {
-                            "description": "Filter by the unique identifier of the event type.",
-                            "minLength": 1,
-                            "title": "Event Type Uid",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "name",
-                        "required": false,
-                        "schema": {
-                            "description": "Filter by the name of the event type.",
-                            "minLength": 1,
-                            "title": "Name",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "required": false,
-                        "schema": {
-                            "default": 100,
-                            "description": "Maximum number of event types to return per page. Default is 100.",
-                            "exclusiveMinimum": true,
-                            "maximum": 1000,
-                            "minimum": 0,
-                            "title": "Limit",
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "cursor",
-                        "required": false,
-                        "schema": {
-                            "description": "Base62-encoded pagination cursor from a previous response. Use to fetch the next page of results.",
-                            "title": "Cursor",
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/GetVideoTaggingEventTypesResponseV2"
-                                }
-                            }
-                        },
-                        "description": "OK"
-                    }
-                },
-                "summary": "Get List of Helix Event Types",
-                "tags": [
-                    "Methods"
-                ]
-            },
-            "patch": {
-                "description": "Partially updates the video tagging event type identified by the\n`event_type_uid` query parameter. Only the fields supplied in the\nrequest body (`name`, `event_schema`) are modified. Returns HTTP 200.",
-                "operationId": "patchVideoTaggingEventTypeViewV2",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "event_type_uid",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the event type.",
-                            "minLength": 1,
-                            "title": "Event Type Uid",
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/PatchVideoTaggingEventTypeRequestV2"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                },
-                "summary": "Update a Helix Event Type",
-                "tags": [
-                    "Methods"
-                ]
-            },
-            "post": {
-                "description": "Creates a video tagging (Helix) event type for the organization.\nReturns HTTP 201 Created with the created event type.",
-                "operationId": "postVideoTaggingEventTypeViewV2",
-                "parameters": [],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/VideoTaggingEventTypePostBodyRequestV2"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    },
-                    "201": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/VideoTaggingEventTypeV2"
-                                }
-                            }
-                        },
-                        "description": "Created"
-                    }
-                },
-                "summary": "Create a Helix Event Type",
-                "tags": [
-                    "Methods"
-                ]
-            }
-        },
-        "/v2/cameras/video_tagging/events": {
-            "delete": {
-                "description": "Deletes the video tagging event uniquely identified by `camera_id`,\n`occurred_at` (ISO 8601), and `event_type_uid` query parameters.\nReturns HTTP 204 No Content on success.",
-                "operationId": "deleteVideoTaggingEventViewV2",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "camera_id",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the camera.",
-                            "minLength": 1,
-                            "title": "Camera Id",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "occurred_at",
-                        "required": true,
-                        "schema": {
-                            "description": "The time at which the event occurred, in ISO 8601 format (e.g. 2025-07-17T21:06:20Z). Replaces the v1 `time_ms` field.",
-                            "title": "Occurred At",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "event_type_uid",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the event type.",
-                            "minLength": 1,
-                            "title": "Event Type Uid",
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                },
-                "summary": "Delete a Helix Event",
-                "tags": [
-                    "Methods"
-                ]
-            },
-            "get": {
-                "description": "Retrieves the video tagging event uniquely identified by `camera_id`,\n`occurred_at` (ISO 8601), and `event_type_uid` query parameters. The\nresponse returns `occurred_at` in RFC 3339 format.",
-                "operationId": "getVideoTaggingEventViewV2",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "camera_id",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the camera.",
-                            "minLength": 1,
-                            "title": "Camera Id",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "occurred_at",
-                        "required": true,
-                        "schema": {
-                            "description": "The time at which the event occurred, in ISO 8601 format (e.g. 2025-07-17T21:06:20Z). Replaces the v1 `time_ms` field.",
-                            "title": "Occurred At",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "event_type_uid",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the event type.",
-                            "minLength": 1,
-                            "title": "Event Type Uid",
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/VideoTaggingEventV2"
-                                }
-                            }
-                        },
-                        "description": "OK"
-                    }
-                },
-                "summary": "Get a Helix Event",
-                "tags": [
-                    "Methods"
-                ]
-            },
-            "patch": {
-                "description": "Partially updates the video tagging event uniquely identified by\n`camera_id`, `occurred_at` (ISO 8601), and `event_type_uid` query\nparameters. Only the fields supplied in the request body (`flagged`,\n`attributes`) are modified. Returns HTTP 200 on success.",
-                "operationId": "patchVideoTaggingEventViewV2",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "camera_id",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the camera.",
-                            "minLength": 1,
-                            "title": "Camera Id",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "occurred_at",
-                        "required": true,
-                        "schema": {
-                            "description": "The time at which the event occurred, in ISO 8601 format (e.g. 2025-07-17T21:06:20Z). Replaces the v1 `time_ms` field.",
-                            "title": "Occurred At",
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "event_type_uid",
-                        "required": true,
-                        "schema": {
-                            "description": "The unique identifier of the event type.",
-                            "minLength": 1,
-                            "title": "Event Type Uid",
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/PatchVideoTaggingEventRequestV2"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                },
-                "summary": "Update a Helix Event",
-                "tags": [
-                    "Methods"
-                ]
-            },
-            "post": {
-                "description": "Creates a video tagging (Helix) event for a camera at a specific time.\nThe `occurred_at` field must be in ISO 8601 format (e.g.,\n`2025-07-17T21:06:20Z`), must be after 2020-01-01, and no more than one\nday in the future. Returns HTTP 201 Created with the created event, whose\n`occurred_at` is returned in RFC 3339 format.",
-                "operationId": "postVideoTaggingEventViewV2",
-                "parameters": [],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/VideoTaggingEventPostBodyRequestV2"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    },
-                    "201": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/VideoTaggingEventV2"
-                                }
-                            }
-                        },
-                        "description": "Created"
-                    }
-                },
-                "summary": "Create a Helix Event",
-                "tags": [
-                    "Methods"
-                ]
-            }
-        },
-        "/v2/cameras/video_tagging/events/batch": {
-            "post": {
-                "description": "Accepts up to 1000 events under the `items` key and enqueues an\nasynchronous batch job. Returns HTTP 202 Accepted with a job id and a\n`status_url` to poll for completion.",
-                "operationId": "postVideoTaggingEventBatchViewV2",
-                "parameters": [],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/BatchJobCreatedRequest_VideoTaggingEventPostBodyRequestV2"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    },
-                    "202": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/BatchJobCreatedResponse"
-                                }
-                            }
-                        },
-                        "description": "Accepted"
-                    }
-                },
-                "summary": "Create Helix Events in Batch",
-                "tags": [
-                    "Methods"
-                ]
-            }
-        },
-        "/v2/cameras/video_tagging/events/query": {
-            "post": {
-                "description": "Searches video tagging (Helix) events matching the supplied filters.\nTime filters (`start_time`, `end_time`) must be in ISO 8601 format. Use\ncursor-based pagination: pass `limit` to control page size, then pass the\nreturned `cursor` value on subsequent requests until `cursor` is null.\nThe response `items` return `occurred_at` in RFC 3339 format.",
-                "operationId": "postVideoTaggingEventSearchViewV2",
-                "parameters": [],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/VideoTaggingEventSearchRequestV2"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/VideoTaggingEventSearchResponseV2"
-                                }
-                            }
-                        },
-                        "description": "OK"
-                    }
-                },
-                "summary": "Search Helix Events",
-                "tags": [
-                    "Methods"
-                ]
-            }
-        },
         "/v2/cameras/{camera_id}/analytics/max_object_counts": {
             "get": {
                 "description": "Returns the max count of people and vehicles within a specified time range.\n\nTimestamps (`start_time`, `end_time`) are provided as ISO 8601 strings\n(e.g. `2025-07-17T21:06:20Z`).",
@@ -27649,7 +27286,7 @@
         },
         "/v2/cameras/{camera_id}/footage/thumbnails/latest": {
             "get": {
-                "description": "Returns the latest thumbnail from the specified camera in either low resolution\nor high resolution.",
+                "description": "Returns the latest thumbnail from the specified camera in either low resolution\nor high resolution.\n\nThe response includes an `X-Verkada-Timestamp` header with the Unix timestamp\nof the actual capture time of the frame served.",
                 "operationId": "getThumbnailLatestViewV2",
                 "parameters": [
                     {
