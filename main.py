@@ -4,6 +4,7 @@ Script to download OpenAPI spec, compare with existing, and commit changes if di
 Uses GitPython for Git operations and structured logging.
 """
 
+import difflib
 import json
 import logging
 import os
@@ -127,6 +128,127 @@ def git_diff(filename):
     except Exception as e:
         logger.error(f"Error checking git diff: {e}")
         return False
+
+
+def get_unified_diff(filename):
+    """
+    Generate a unified diff (similar to `diff -u old new`) between the committed
+    version of the file (HEAD) and the current working-tree version.
+
+    Args:
+        filename: File to diff
+
+    Returns:
+        str: Unified diff text, or empty string if none / on error
+    """
+    try:
+        repo = Repo('.')
+
+        # New (untracked) file: diff against an empty "old" file
+        if filename in repo.untracked_files:
+            with open(filename, 'r', encoding='utf-8') as f:
+                new_lines = f.readlines()
+            diff = difflib.unified_diff(
+                [], new_lines,
+                fromfile=f'a/{filename}', tofile=f'b/{filename}'
+            )
+            return ''.join(diff)
+
+        # Tracked file: use git to produce the unified diff against HEAD
+        return repo.git.diff('HEAD', '--', filename)
+
+    except InvalidGitRepositoryError:
+        logger.error("Not in a git repository")
+        return ''
+    except Exception as e:
+        logger.error(f"Error generating diff for {filename}: {e}")
+        return ''
+
+
+def generate_commit_message(diff_text, fallback="Update openapi spec"):
+    """
+    Ask a local Ollama instance to write a git commit message (subject + body)
+    describing the given unified diff.
+
+    Ollama connection is configured via environment variables:
+        OLLAMA_HOST  - IP:port or full URL of the Ollama server
+                       (e.g. "192.168.1.50:11434" or "http://192.168.1.50:11434")
+        OLLAMA_MODEL - Model name to use (default: "qwen3.6:27b")
+
+    Args:
+        diff_text: Unified diff describing the changes
+        fallback: Commit message to use if Ollama is unavailable or fails
+
+    Returns:
+        str: Generated commit message, or the fallback on any problem
+    """
+    ollama_host = os.environ.get('OLLAMA_HOST')
+    model = os.environ.get('OLLAMA_MODEL', 'qwen3.8:27b')
+
+    if not ollama_host:
+        logger.warning("OLLAMA_HOST not set; using default commit message")
+        return fallback
+
+    if not diff_text.strip():
+        logger.warning("Empty diff; using default commit message")
+        return fallback
+
+    # Normalize host into a full base URL
+    if not ollama_host.startswith(('http://', 'https://')):
+        ollama_host = f"http://{ollama_host}"
+    ollama_host = ollama_host.rstrip('/')
+
+    # OpenAPI diffs can be huge; truncate to keep the prompt manageable
+    MAX_DIFF_CHARS = 12000
+    if len(diff_text) > MAX_DIFF_CHARS:
+        logger.info(
+            f"Diff is large ({len(diff_text)} chars); truncating to {MAX_DIFF_CHARS}"
+        )
+        diff_text = diff_text[:MAX_DIFF_CHARS] + "\n... (diff truncated) ...\n"
+
+    prompt = (
+        "You write clear, conventional git commit messages.\n"
+        "Below is a unified diff of changes to a Verkada OpenAPI specification file.\n"
+        "Write a git commit message describing these changes.\n\n"
+        "Rules:\n"
+        "- First line: a short summary in imperative mood, at most 72 characters.\n"
+        "- Then a blank line.\n"
+        "- Then a body with bullet points describing the notable changes.\n"
+        "- Output ONLY the commit message. No preamble, explanation, or code fences.\n\n"
+        f"Diff:\n{diff_text}\n"
+    )
+
+    try:
+        logger.info(f"Requesting commit message from Ollama ({model}) at {ollama_host}")
+        response = requests.post(
+            f"{ollama_host}/api/generate",
+            json={"model": model, "prompt": prompt, "stream": False, "think": False},
+            timeout=300,
+        )
+        response.raise_for_status()
+        message = response.json().get('response', '').strip()
+
+        if not message:
+            logger.warning("Ollama returned an empty response; using default message")
+            return fallback
+
+        # Strip surrounding markdown code fences if the model added them
+        if message.startswith("```"):
+            lines = [
+                line for line in message.splitlines()
+                if not line.strip().startswith("```")
+            ]
+            message = "\n".join(lines).strip()
+
+        logger.info("Successfully generated commit message from Ollama")
+        return message or fallback
+
+    except requests.RequestException as e:
+        logger.error(f"Error calling Ollama: {e}; using default message")
+        return fallback
+    except Exception as e:
+        logger.error(f"Unexpected error generating commit message: {e}; using default message")
+        return fallback
 
 
 def git_commit(filename, message="Update openapi spec"):
@@ -298,8 +420,12 @@ def main():
     if has_changes:
         logger.info("Changes detected, proceeding with transform, commit, and push")
 
-        # Step 4a: Commit the raw openapi spec
-        if not git_commit(OUTPUT_FILE):
+        # Step 4a: Build a unified diff of the changes and ask Ollama for a
+        # commit message, then commit the raw openapi spec.
+        diff_text = get_unified_diff(OUTPUT_FILE)
+        commit_message = generate_commit_message(diff_text, fallback="Update openapi spec")
+
+        if not git_commit(OUTPUT_FILE, message=commit_message):
             logger.error("Failed to commit changes. Exiting.")
             return 1
 
@@ -334,3 +460,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
