@@ -3542,6 +3542,11 @@
             "minimum": 0,
             "title": "Limit",
             "type": "integer"
+          },
+          "site_id": {
+            "description": "One or multiple comma separated site identifiers, as returned by Get Camera Sites. Only cameras at those sites are returned, including cameras in their sub-sites. Omit to return every camera in the organization.",
+            "title": "Site Id",
+            "type": "string"
           }
         },
         "title": "CameraInfoRequestV2",
@@ -3686,6 +3691,80 @@
           "preset_id"
         ],
         "title": "CameraPtzPositionRequest",
+        "type": "object"
+      },
+      "CameraSiteItemV2": {
+        "additionalProperties": false,
+        "description": "A single camera site (also called a camera group) in the organization.",
+        "properties": {
+          "name": {
+            "description": "The display name of the camera site.",
+            "title": "Name",
+            "type": "string"
+          },
+          "parent_site_id": {
+            "description": "The unique identifier of the parent site, or None for a top-level site.",
+            "title": "Parent Site Id",
+            "type": "string"
+          },
+          "path": {
+            "description": "The full hierarchy path of the site, from root to leaf, joined by \" / \" (e.g., \"Austin / Floor 1\").",
+            "title": "Path",
+            "type": "string"
+          },
+          "site_id": {
+            "description": "The unique identifier of the camera site.",
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "site_id",
+          "path"
+        ],
+        "title": "CameraSiteItemV2",
+        "type": "object"
+      },
+      "CameraSitesRequestV2": {
+        "description": "Query parameters for listing camera sites.",
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum number of camera sites to return per page. Default is 100, maximum is 200.",
+            "exclusiveMinimum": true,
+            "maximum": 200,
+            "minimum": 0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "CameraSitesRequestV2",
+        "type": "object"
+      },
+      "CameraSitesResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for listing camera sites.",
+        "properties": {
+          "cursor": {
+            "description": "The pagination cursor used to fetch the next page of results.",
+            "title": "Cursor",
+            "type": "string"
+          },
+          "items": {
+            "description": "A page of camera sites in the organization.",
+            "items": {
+              "$ref": "#/components/schemas/CameraSiteItemV2"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "CameraSitesResponseV2",
         "type": "object"
       },
       "CardObjectResponseV1": {
@@ -26697,7 +26776,7 @@
     },
     "/v2/cameras": {
       "get": {
-        "description": "Returns details for cameras in the organization, paginated.\n\nEach item includes the camera's name, site, location, model, serial number,\ncamera ID, MAC address, local IP, device and cloud retention, the date the\ncamera was added, firmware update status, camera status, location latitude,\nlongitude and angle (in degrees), and analytics flags.\n\nContinue paginating while the response includes a `cursor` value.",
+        "description": "Returns details for cameras in the organization, paginated.\n\nEach item includes the camera's name, site, location, model, serial number,\ncamera ID, MAC address, local IP, device and cloud retention, the date the\ncamera was added, firmware update status, camera status, location latitude,\nlongitude and angle (in degrees), and analytics flags.\n\nPass `site_id` to return only cameras at one or more sites, including cameras\nin their sub-sites. Use Get Camera Sites to look up site ids.\n\nContinue paginating while the response includes a `cursor` value.",
         "operationId": "getCameraInfoViewV2",
         "parameters": [
           {
@@ -26722,6 +26801,16 @@
               "minimum": 0,
               "title": "Limit",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "site_id",
+            "required": false,
+            "schema": {
+              "description": "One or multiple comma separated site identifiers, as returned by Get Camera Sites. Only cameras at those sites are returned, including cameras in their sub-sites. Omit to return every camera in the organization.",
+              "title": "Site Id",
+              "type": "string"
             }
           }
         ],
