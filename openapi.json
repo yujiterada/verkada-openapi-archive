@@ -9182,7 +9182,7 @@
                         "type": "string"
                     },
                     "image_url": {
-                        "description": "Pre-signed URL to the cropped license plate image.",
+                        "description": "URL to the cropped license plate image.",
                         "title": "Image Url",
                         "type": "string"
                     },
@@ -9192,7 +9192,7 @@
                         "type": "string"
                     },
                     "vehicle_image_url": {
-                        "description": "Pre-signed URL to the full vehicle image, if available.",
+                        "description": "URL to the full vehicle image, if available.",
                         "title": "Vehicle Image Url",
                         "type": "string"
                     }
@@ -27414,7 +27414,7 @@
         },
         "/v2/cameras/{camera_id}/lpr/images": {
             "get": {
-                "description": "Returns the timestamps, detected license plate numbers, and pre-signed\nimage URLs of all license plates seen by a camera.\n\nOnly works for cameras that are LPR enabled.\n\n### Path Parameters\n\n- **camera_id**: The unique identifier of the camera.\n\n### Query Parameters\n\n- **license_plate** (optional): Filter detections by license plate number.\n- **start_time** (optional): Start of time range in ISO 8601 format\n  (e.g., `2025-01-17T00:00:00Z`). Defaults to 24 hours ago.\n- **end_time** (optional): End of time range in ISO 8601 format\n  (e.g., `2025-01-17T23:59:59Z`). Defaults to current time.\n- **limit** (optional): Page size, 1-200. Default 100.\n- **cursor** (optional): Pagination cursor from a previous response.\n\n### Pagination\n\nUse cursor-based pagination:\n- Set `limit` to control page size (1-200, default 100)\n- Use the returned `cursor` value in subsequent requests\n- Continue until `cursor` is null\n\n### Response Fields\n\nEach item in the `items` array contains:\n- `license_plate`: The detected plate number\n- `detected_at`: Detection timestamp in RFC 3339 format\n- `image_url`: Pre-signed URL to the license plate image\n- `vehicle_image_url`: Pre-signed URL to the full vehicle image (if available)",
+                "description": "Returns the timestamps, detected license plate numbers, and\nimage URLs of all license plates seen by a camera.\n\nOnly works for cameras that are LPR enabled.\n\n### Path Parameters\n\n- **camera_id**: The unique identifier of the camera.\n\n### Query Parameters\n\n- **license_plate** (optional): Filter detections by license plate number.\n- **start_time** (optional): Start of time range in ISO 8601 format\n  (e.g., `2025-01-17T00:00:00Z`). Defaults to 24 hours ago.\n- **end_time** (optional): End of time range in ISO 8601 format\n  (e.g., `2025-01-17T23:59:59Z`). Defaults to current time.\n- **limit** (optional): Page size, 1-200. Default 100.\n- **cursor** (optional): Pagination cursor from a previous response.\n\n### Pagination\n\nUse cursor-based pagination:\n- Set `limit` to control page size (1-200, default 100)\n- Use the returned `cursor` value in subsequent requests\n- Continue until `cursor` is null\n\n### Response Fields\n\nEach item in the `items` array contains:\n- `license_plate`: The detected plate number\n- `detected_at`: Detection timestamp in RFC 3339 format\n- `image_url`: URL to the license plate image\n- `vehicle_image_url`: URL to the full vehicle image (if available)",
                 "operationId": "getLPRImagesViewV2",
                 "parameters": [
                     {
