@@ -17197,6 +17197,45 @@
         "title": "UpdateAccessScheduleEventRequestV2",
         "type": "object"
       },
+      "UpdateCameraSiteNameRequestV2": {
+        "description": "Request body for renaming a camera site.",
+        "properties": {
+          "name": {
+            "description": "The new display name for the camera site.",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "UpdateCameraSiteNameRequestV2",
+        "type": "object"
+      },
+      "UpdateCameraSiteNameResponseV2": {
+        "additionalProperties": false,
+        "description": "Response schema for renaming a camera site.",
+        "properties": {
+          "name": {
+            "description": "The display name of the camera site after the update.",
+            "title": "Name",
+            "type": "string"
+          },
+          "site_id": {
+            "description": "The unique identifier of the camera site.",
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "site_id",
+          "name"
+        ],
+        "title": "UpdateCameraSiteNameResponseV2",
+        "type": "object"
+      },
       "UpdateUserRequestBody": {
         "properties": {
           "company_name": {
