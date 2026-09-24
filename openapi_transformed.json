@@ -32037,6 +32037,69 @@
         ]
       }
     },
+    "/v2/cameras/sites": {
+      "get": {
+        "description": "Returns every camera site (also called a camera group) in the organization, with its\nparent site and full hierarchy path. Use a site's `site_id` with the `site_id` filter\non Get Camera Data to list only that site's cameras.\n\nContinue paginating while the response includes a `cursor` value.",
+        "operationId": "getCameraSitesViewV2",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+              "title": "Cursor",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Maximum number of camera sites to return per page. Default is 100, maximum is 200.",
+              "exclusiveMinimum": true,
+              "maximum": 200,
+              "minimum": 0,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CameraSitesResponseV2"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponseV2"
+                }
+              }
+            },
+            "description": "Bad Request"
+          }
+        },
+        "summary": "Get Camera Sites",
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
+      }
+    },
     "/v2/cameras/{camera_id}/analytics/max_object_counts": {
       "get": {
         "description": "Returns the max count of people and vehicles within a specified time range.\n\nTimestamps (`start_time`, `end_time`) are provided as ISO 8601 strings\n(e.g. `2025-07-17T21:06:20Z`).",
