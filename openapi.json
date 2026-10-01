@@ -4929,6 +4929,56 @@
                 "title": "CreateUserResponse",
                 "type": "object"
             },
+            "DashboardItemV2": {
+                "additionalProperties": false,
+                "description": "A single operational dashboard.",
+                "properties": {
+                    "created_at": {
+                        "description": "RFC 3339 timestamp of when the dashboard was created.",
+                        "title": "Created At",
+                        "type": "string"
+                    },
+                    "dashboard_id": {
+                        "description": "Verkada UID for the dashboard. Use it as the <code>dashboard_id</code> path parameter of the widget trends and occupancy trends endpoints.",
+                        "title": "Dashboard Id",
+                        "type": "string"
+                    },
+                    "dashboard_name": {
+                        "description": "The name of the dashboard.",
+                        "title": "Dashboard Name",
+                        "type": "string"
+                    },
+                    "site_ids": {
+                        "description": "Verkada UIDs of the sites the dashboard covers.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Site Ids",
+                        "type": "array"
+                    },
+                    "timezone": {
+                        "description": "IANA timezone the dashboard is configured in (e.g., <code>America/Los_Angeles</code>).",
+                        "title": "Timezone",
+                        "type": "string"
+                    },
+                    "widgets": {
+                        "description": "Widgets on the dashboard, in display order.",
+                        "items": {
+                            "$ref": "#/components/schemas/DashboardWidgetSummaryV2"
+                        },
+                        "title": "Widgets",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "dashboard_id",
+                    "dashboard_name",
+                    "timezone",
+                    "created_at"
+                ],
+                "title": "DashboardItemV2",
+                "type": "object"
+            },
             "DashboardOccupancyIntervalV2": {
                 "description": "ISO 8601 duration values for the occupancy trends time bucket size.",
                 "enum": [
@@ -5183,6 +5233,37 @@
                 ],
                 "title": "DashboardWidgetIntervalV2",
                 "type": "string"
+            },
+            "DashboardWidgetSummaryV2": {
+                "additionalProperties": false,
+                "description": "A widget on a dashboard, without its data.",
+                "properties": {
+                    "widget_id": {
+                        "description": "Verkada UID for the widget.",
+                        "title": "Widget Id",
+                        "type": "string"
+                    },
+                    "widget_name": {
+                        "description": "The name of the widget.",
+                        "title": "Widget Name",
+                        "type": "string"
+                    },
+                    "widget_type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/WidgetType"
+                            }
+                        ],
+                        "description": "The type of the widget. Pass this value in <code>widget_types</code> when querying widget trends."
+                    }
+                },
+                "required": [
+                    "widget_id",
+                    "widget_name",
+                    "widget_type"
+                ],
+                "title": "DashboardWidgetSummaryV2",
+                "type": "object"
             },
             "DashboardWidgetTrendsRequestV2": {
                 "properties": {
@@ -10253,6 +10334,48 @@
                 "title": "ListAccessUsersResponseV2",
                 "type": "object"
             },
+            "ListDashboardsQueryV2": {
+                "description": "Query parameters for listing operational dashboards.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "default": 100,
+                        "description": "Maximum number of dashboards to return per page. Default is 100.",
+                        "exclusiveMinimum": true,
+                        "maximum": 200,
+                        "minimum": 0,
+                        "title": "Limit",
+                        "type": "integer"
+                    }
+                },
+                "title": "ListDashboardsQueryV2",
+                "type": "object"
+            },
+            "ListDashboardsResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for listing operational dashboards.",
+                "properties": {
+                    "cursor": {
+                        "description": "Pagination cursor for the next page of results. Null if no more pages.",
+                        "title": "Cursor",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "List of operational dashboards.",
+                        "items": {
+                            "$ref": "#/components/schemas/DashboardItemV2"
+                        },
+                        "title": "Items",
+                        "type": "array"
+                    }
+                },
+                "title": "ListDashboardsResponseV2",
+                "type": "object"
+            },
             "ListExceptionCalendarsQueryV2": {
                 "description": "Query parameters for GET /v2/access/exception_calendars.",
                 "properties": {
@@ -13709,20 +13832,22 @@
                         {
                             "device_id": "9f1c2d3e-4a5b-6c7d-8e9f-0a1b2c3d4e5f",
                             "device_kind": "panel",
-                            "firmware_version": "1.24.0",
-                            "is_online": true,
-                            "model": "AP41",
+                            "device_type": "sylvie",
+                            "firmware_version": null,
+                            "is_online": null,
+                            "model": null,
                             "name": "Warehouse Panel",
                             "serial_number": "CHQX-GMW6-NR69",
                             "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4"
                         },
                         {
-                            "battery_percentage": 92,
+                            "battery_percentage": null,
                             "device_id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
                             "device_kind": "sensor",
-                            "is_online": true,
-                            "is_tampered": false,
-                            "model": "AD34",
+                            "device_type": "wireless_contact_sensor",
+                            "is_online": null,
+                            "is_tampered": null,
+                            "model": null,
                             "name": "Loading Dock Door",
                             "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
                             "serial_number": "JKLM-2QRS-TU45",
@@ -13764,7 +13889,7 @@
             },
             "ProtectPanelDeviceV2": {
                 "additionalProperties": false,
-                "description": "The alarm panel for a site.",
+                "description": "The alarm panel for a site.\n\nLive health and firmware come from the panel itself and are not read here.",
                 "properties": {
                     "device_id": {
                         "description": "The unique identifier of the panel.",
@@ -13778,6 +13903,11 @@
                             "panel"
                         ],
                         "title": "Device Kind",
+                        "type": "string"
+                    },
+                    "device_type": {
+                        "description": "What kind of panel this is (e.g. sylvie, colossus).",
+                        "title": "Device Type",
                         "type": "string"
                     },
                     "firmware_version": {
@@ -13984,7 +14114,7 @@
                 "description": "A single response contact in a site's escalation order.",
                 "properties": {
                     "contact_id": {
-                        "description": "The unique identifier of the contact, if it has one.",
+                        "description": "The unique identifier of the contact.",
                         "format": "uuid",
                         "title": "Contact Id",
                         "type": "string"
@@ -14016,6 +14146,7 @@
                     }
                 },
                 "required": [
+                    "contact_id",
                     "contact_sequence"
                 ],
                 "title": "ProtectResponseContactV2",
@@ -14023,7 +14154,7 @@
             },
             "ProtectSensorDeviceV2": {
                 "additionalProperties": false,
-                "description": "A sensor device belonging to a partition.",
+                "description": "A device belonging to a partition.\n\nEverything at a site other than the panel itself: sensors, panic buttons,\ntransmitters and output devices. Use `device_type` to tell them apart.",
                 "properties": {
                     "battery_percentage": {
                         "description": "The remaining battery charge as a percentage. Null if the device is not battery powered or has not reported.",
@@ -14044,6 +14175,11 @@
                             "sensor"
                         ],
                         "title": "Device Kind",
+                        "type": "string"
+                    },
+                    "device_type": {
+                        "description": "What kind of device this is (e.g. wireless_contact_sensor, wired_motion_sensor, wireless_panic_button).",
+                        "title": "Device Type",
                         "type": "string"
                     },
                     "is_online": {
@@ -14150,7 +14286,7 @@
                 "description": "A single Protect site.",
                 "properties": {
                     "dispatch_enabled": {
-                        "description": "Whether Verkada is authorized to request emergency dispatch for this site. Null if not reported.",
+                        "description": "Whether Verkada is authorized to request emergency dispatch for this site.",
                         "title": "Dispatch Enabled",
                         "type": "boolean"
                     },
@@ -14172,7 +14308,8 @@
                     }
                 },
                 "required": [
-                    "site_id"
+                    "site_id",
+                    "dispatch_enabled"
                 ],
                 "title": "ProtectSiteV2",
                 "type": "object"
@@ -29439,6 +29576,74 @@
                     }
                 },
                 "summary": "Set Object Position MQTT Config",
+                "tags": [
+                    "Analytics"
+                ]
+            }
+        },
+        "/v2/analytics/operational_dashboard": {
+            "get": {
+                "description": "Returns every operational dashboard in the organization, regardless of which\nusers it is shared with, along with the widgets on each dashboard.\n\nUse the returned `dashboard_id` and `widget_id` values with the Get Dashboard\nWidget Trend Data endpoint to retrieve the underlying data.\n\nResults are paginated. Use the `cursor` from the response to fetch the\nnext page.",
+                "operationId": "getListDashboardsViewV2",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 100,
+                            "description": "Maximum number of dashboards to return per page. Default is 100.",
+                            "exclusiveMinimum": true,
+                            "maximum": 200,
+                            "minimum": 0,
+                            "title": "Limit",
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
+                            "title": "Cursor",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListDashboardsResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "summary": "Get All Operational Dashboards",
                 "tags": [
                     "Analytics"
                 ]
