@@ -1046,6 +1046,7 @@
                     "phone",
                     "sms",
                     "agent",
+                    "access_door",
                     "api",
                     "unspecified"
                 ],
@@ -13614,6 +13615,12 @@
                         "title": "End Time",
                         "type": "string"
                     },
+                    "include_test_alarms": {
+                        "default": false,
+                        "description": "Include alarms raised while the site was in Alarm Test Mode. These are excluded by default.",
+                        "title": "Include Test Alarms",
+                        "type": "boolean"
+                    },
                     "limit": {
                         "default": 100,
                         "description": "The maximum number of results returned in a single response. Default is 100. Max is 200.",
@@ -13656,6 +13663,7 @@
                             "alarm_id": "8b7a6c5d-4e3f-2a1b-0c9d-8e7f6a5b4c3d",
                             "alarm_type": "intrusion",
                             "is_silent": false,
+                            "is_test": false,
                             "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
                             "partition_name": "Warehouse",
                             "resolution_source": null,
@@ -13712,6 +13720,12 @@
                         "title": "Is Silent",
                         "type": "boolean"
                     },
+                    "is_test": {
+                        "default": false,
+                        "description": "Whether the site was in Alarm Test Mode when the alarm was raised. Test alarms are excluded from the list endpoint unless `include_test_alarms` is set.",
+                        "title": "Is Test",
+                        "type": "boolean"
+                    },
                     "partition_id": {
                         "description": "The identifier of the partition the alarm was raised on.",
                         "format": "uuid",
@@ -13737,7 +13751,7 @@
                         "type": "string"
                     },
                     "resolved_by_actor": {
-                        "description": "Who or what resolved the alarm. Null while the alarm is active.",
+                        "description": "The identifier of the user who resolved the alarm. Null while the alarm is active, and for a resolution no user performed.",
                         "title": "Resolved By Actor",
                         "type": "string"
                     },
