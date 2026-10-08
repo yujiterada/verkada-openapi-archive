@@ -1062,6 +1062,12 @@
                         "maxLength": 255,
                         "title": "Actor",
                         "type": "string"
+                    },
+                    "disarm": {
+                        "default": false,
+                        "description": "Also disarm the partition the alarm was raised in. Defaults to false, which resolves the alarm and leaves the partition armed.",
+                        "title": "Disarm",
+                        "type": "boolean"
                     }
                 },
                 "title": "AlarmResolveRequestV2",
@@ -14242,6 +14248,44 @@
                 "title": "ProtectSensorDeviceV2",
                 "type": "object"
             },
+            "ProtectSiteAddressV2": {
+                "additionalProperties": false,
+                "description": "The street address of a Protect site.",
+                "properties": {
+                    "city": {
+                        "description": "The city.",
+                        "title": "City",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "The country.",
+                        "title": "Country",
+                        "type": "string"
+                    },
+                    "state": {
+                        "description": "The state or region.",
+                        "title": "State",
+                        "type": "string"
+                    },
+                    "street1": {
+                        "description": "The first line of the street address.",
+                        "title": "Street1",
+                        "type": "string"
+                    },
+                    "street2": {
+                        "description": "The second line of the street address.",
+                        "title": "Street2",
+                        "type": "string"
+                    },
+                    "zip": {
+                        "description": "The postal code.",
+                        "title": "Zip",
+                        "type": "string"
+                    }
+                },
+                "title": "ProtectSiteAddressV2",
+                "type": "object"
+            },
             "ProtectSiteListQueryV2": {
                 "description": "Query parameters for listing the Protect sites in an organization.",
                 "properties": {
@@ -14270,7 +14314,14 @@
                     "cursor": null,
                     "items": [
                         {
-                            "dispatch_enabled": true,
+                            "address": {
+                                "city": "San Mateo",
+                                "country": "US",
+                                "state": "CA",
+                                "street1": "405 E 4th Ave",
+                                "street2": "Suite 100",
+                                "zip": "94401"
+                            },
                             "name": "San Mateo HQ",
                             "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
                             "timezone": "America/Los_Angeles"
@@ -14299,10 +14350,14 @@
                 "additionalProperties": false,
                 "description": "A single Protect site.",
                 "properties": {
-                    "dispatch_enabled": {
-                        "description": "Whether Verkada is authorized to request emergency dispatch for this site.",
-                        "title": "Dispatch Enabled",
-                        "type": "boolean"
+                    "address": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ProtectSiteAddressV2"
+                            }
+                        ],
+                        "description": "The street address of the site.",
+                        "title": "Address"
                     },
                     "name": {
                         "description": "The name of the site.",
@@ -14322,8 +14377,7 @@
                     }
                 },
                 "required": [
-                    "site_id",
-                    "dispatch_enabled"
+                    "site_id"
                 ],
                 "title": "ProtectSiteV2",
                 "type": "object"
