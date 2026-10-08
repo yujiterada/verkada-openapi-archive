@@ -1065,7 +1065,7 @@
                     },
                     "disarm": {
                         "default": false,
-                        "description": "Also disarm the partition the alarm was raised in. Defaults to false, which resolves the alarm and leaves the partition armed.",
+                        "description": "Also disarm the partitions the alarm tripped. Defaults to false, which resolves the alarm and leaves the partitions armed.",
                         "title": "Disarm",
                         "type": "boolean"
                     }
@@ -1081,6 +1081,7 @@
                     "immediate_dispatch",
                     "self_monitored",
                     "fire",
+                    "soc",
                     "unspecified"
                 ],
                 "title": "AlarmResponseLevel",
@@ -13609,7 +13610,7 @@
                 "type": "object"
             },
             "ProtectAlarmListQueryV2": {
-                "description": "Query parameters for listing alarms.\n\nResults are ordered newest first.",
+                "description": "Query parameters for listing alarms.\n\nResults are ordered newest first and include self-monitored alarms only.",
                 "properties": {
                     "cursor": {
                         "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
@@ -13675,7 +13676,7 @@
                             "resolution_source": null,
                             "resolved_at": null,
                             "resolved_by_actor": null,
-                            "response_level": "immediate_dispatch",
+                            "response_level": "self_monitored",
                             "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
                             "status": "active",
                             "trigger_device_id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
