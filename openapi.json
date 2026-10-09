@@ -1065,7 +1065,7 @@
                     },
                     "disarm": {
                         "default": false,
-                        "description": "Also disarm the partition the alarm was raised in. Defaults to false, which resolves the alarm and leaves the partition armed.",
+                        "description": "Also disarm the partitions the alarm tripped. Defaults to false, which resolves the alarm and leaves the partitions armed.",
                         "title": "Disarm",
                         "type": "boolean"
                     }
@@ -1081,6 +1081,7 @@
                     "immediate_dispatch",
                     "self_monitored",
                     "fire",
+                    "soc",
                     "unspecified"
                 ],
                 "title": "AlarmResponseLevel",
@@ -12034,10 +12035,10 @@
             },
             "PartitionActionResponseV2": {
                 "additionalProperties": false,
-                "description": "Acknowledgement that an arm or disarm request was accepted.\n\nArming and disarming are asynchronous commands delivered to the alarm panel, so\na successful response means the request was accepted, not that the panel has\nalready reached the requested state. Poll the partition to observe the result.",
+                "description": "Acknowledgement that an arm or disarm request was accepted.\n\nA 202 means the request was accepted, not that the partition is in the requested\nstate. Arming and disarming complete asynchronously, arming after any exit delay. Read\n`GET /v2/protect/sites/{site_id}/partitions/{partition_id}` to see the state. A camera\npartition can pass through an exit delay and reads as `disarmed` until it is armed. A\npanel partition's `state` comes from the latest recorded event; see `state_as_of`.",
                 "example": {
                     "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
-                    "requested_at": "2026-07-28T18:04:11Z",
+                    "requested_at": "2026-07-28T18:04:11+00:00",
                     "requested_state": "armed"
                 },
                 "properties": {
@@ -12096,6 +12097,15 @@
                 },
                 "title": "PartitionDisarmRequestV2",
                 "type": "object"
+            },
+            "PartitionKind": {
+                "description": "What enforces a partition: a sensor alarm panel or a set of cameras.",
+                "enum": [
+                    "panel",
+                    "camera"
+                ],
+                "title": "PartitionKind",
+                "type": "string"
             },
             "PartitionState": {
                 "description": "The arm state of a partition.\n\nProtect partitions are binary. There is no away/stay distinction on either\nthe sensor-panel or camera-partition path.",
@@ -13609,7 +13619,7 @@
                 "type": "object"
             },
             "ProtectAlarmListQueryV2": {
-                "description": "Query parameters for listing alarms.\n\nResults are ordered newest first.",
+                "description": "Query parameters for listing alarms.\n\nResults are ordered newest first and include self-monitored alarms only.",
                 "properties": {
                     "cursor": {
                         "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
@@ -13675,7 +13685,7 @@
                             "resolution_source": null,
                             "resolved_at": null,
                             "resolved_by_actor": null,
-                            "response_level": "immediate_dispatch",
+                            "response_level": "self_monitored",
                             "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
                             "status": "active",
                             "trigger_device_id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
@@ -13999,6 +14009,7 @@
                     "items": [
                         {
                             "always_armed": false,
+                            "kind": "panel",
                             "name": "Warehouse",
                             "partition_id": "1b9f4a52-0c1e-4a1d-9d3a-2b1a5f6e7c80",
                             "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
@@ -14034,6 +14045,14 @@
                         "title": "Always Armed",
                         "type": "boolean"
                     },
+                    "kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PartitionKind"
+                            }
+                        ],
+                        "description": "Whether the partition is enforced by an alarm panel and its sensors (`panel`) or by cameras (`camera`)."
+                    },
                     "name": {
                         "description": "The name of the partition.",
                         "title": "Name",
@@ -14057,10 +14076,10 @@
                                 "$ref": "#/components/schemas/PartitionState"
                             }
                         ],
-                        "description": "Whether the partition is currently armed or disarmed."
+                        "description": "Whether the partition is currently armed or disarmed. A camera partition in exit delay reads as `disarmed`; one in entry delay or with an active incident reads as `armed`."
                     },
                     "state_as_of": {
-                        "description": "RFC 3339 timestamp of when `state` was last observed. Arm state is held by the alarm panel rather than in the cloud, so this indicates how current the reported state is. Null if no state has been observed.",
+                        "description": "RFC 3339 timestamp of when `state` was last observed. A panel partition's arm state is held by the alarm panel rather than in the cloud, so this indicates how current the reported state is, and is null if no state has been observed. Always null for camera partitions, whose state is held in the cloud and is current as of the response.",
                         "title": "State As Of",
                         "type": "string"
                     }
@@ -14068,6 +14087,7 @@
                 "required": [
                     "partition_id",
                     "site_id",
+                    "kind",
                     "state",
                     "always_armed"
                 ],
