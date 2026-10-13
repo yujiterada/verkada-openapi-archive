@@ -4676,6 +4676,12 @@
                         "minLength": 1,
                         "title": "Label",
                         "type": "string"
+                    },
+                    "list_id": {
+                        "description": "The UUID of an existing, manually managed people list in the organization. Defaults to the organization's default people list when omitted or null.",
+                        "format": "uuid",
+                        "title": "List Id",
+                        "type": "string"
                     }
                 },
                 "required": [
@@ -11352,6 +11358,15 @@
                         "title": "Camera Presets Used",
                         "type": "array"
                     },
+                    "demographics": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OccupancyDemographicsData"
+                            }
+                        ],
+                        "description": "Contains a map for demographics percentages for in counts. Only present when demographics are enabled for the widget.",
+                        "title": "Demographics"
+                    },
                     "in_counts": {
                         "additionalProperties": {
                             "type": "number"
@@ -11378,6 +11393,35 @@
                     }
                 },
                 "title": "OccupancyData",
+                "type": "object"
+            },
+            "OccupancyDemographicsData": {
+                "additionalProperties": false,
+                "properties": {
+                    "age": {
+                        "additionalProperties": {
+                            "additionalProperties": {
+                                "type": "number"
+                            },
+                            "type": "object"
+                        },
+                        "description": "A map of RFC 3339 timestamps to age percentages of in counts for that time bucket.\nPercentages are computed over counts with a known age. If more than half of a bucket's counts have an unknown age, the bucket is an empty map.\nOnly present when age demographics are enabled for the widget.",
+                        "title": "Age",
+                        "type": "object"
+                    },
+                    "gender": {
+                        "additionalProperties": {
+                            "additionalProperties": {
+                                "type": "number"
+                            },
+                            "type": "object"
+                        },
+                        "description": "A map of RFC 3339 timestamps to gender percentages of in counts for that time bucket.\nPercentages are computed over counts with a known gender. If more than half of a bucket's counts have an unknown gender, the bucket is an empty map.\nOnly present when gender demographics are enabled for the widget.",
+                        "title": "Gender",
+                        "type": "object"
+                    }
+                },
+                "title": "OccupancyDemographicsData",
                 "type": "object"
             },
             "OccupancyTrendsBucketV2": {
@@ -12684,6 +12728,12 @@
                     "label": {
                         "description": "The name/label of the Person of Interest.",
                         "title": "Label",
+                        "type": "string"
+                    },
+                    "list_id": {
+                        "description": "The UUID of an existing, manually managed people list in the organization. Defaults to the organization's default people list when omitted or null.",
+                        "format": "uuid",
+                        "title": "List Id",
                         "type": "string"
                     }
                 },
@@ -23700,7 +23750,7 @@
                 ]
             },
             "post": {
-                "description": "Creates a Person of Interest for an organization using a specified base64 encoded string of face image and label.",
+                "description": "Creates a Person of Interest for an organization using a specified base64 encoded string of face image and label.\nOptionally specify `list_id` to add the person to an existing people list.\nIf omitted or null, the organization's default people list is used.",
                 "operationId": "postPersonOfInterestViewV1",
                 "parameters": [],
                 "requestBody": {
@@ -31191,7 +31241,7 @@
                 ]
             },
             "post": {
-                "description": "Creates a Person of Interest for an organization using a base64 encoded\nstring of a face image and a label.\n\n### Request Body\n\n- `base64_image` (required): Base64 encoded face image\n- `label` (required): The name/label of the Person of Interest\n\n### Example Response (HTTP 201)\n\n```json\n{\n    \"person_id\": \"0a5b38d4-0308-4274-99b3-2b2f40d40deb\",\n    \"label\": \"Steve Ponting\",\n    \"created_at\": \"2020-08-19T07:25:53+00:00\",\n    \"last_seen_at\": \"2020-08-20T17:57:14+00:00\"\n}\n```",
+                "description": "Creates a Person of Interest for an organization using a base64 encoded\nstring of a face image and a label.\n\n### Request Body\n\n- `base64_image` (required): Base64 encoded face image\n- `label` (required): The name/label of the Person of Interest\n- `list_id` (optional): An existing people list to add the person to.\n  If omitted or null, the organization's default people list is used.\n\n### Example Response (HTTP 201)\n\n```json\n{\n    \"person_id\": \"0a5b38d4-0308-4274-99b3-2b2f40d40deb\",\n    \"label\": \"Steve Ponting\",\n    \"created_at\": \"2020-08-19T07:25:53+00:00\",\n    \"last_seen_at\": \"2020-08-20T17:57:14+00:00\"\n}\n```",
                 "operationId": "postPersonOfInterestCollectionViewV2",
                 "parameters": [],
                 "requestBody": {
