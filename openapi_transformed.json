@@ -3276,7 +3276,7 @@
             "type": "string"
           },
           "firmware_update_schedule": {
-            "description": "Delimited list of <code>start_time, end_time</code> as timeslot for which         camera firmware can be updated, start_time and end_time are integers         indicating seconds to midnight, i.e, [3600, 7200] means 1am - 2am",
+            "description": "Delimited list of <code>start_time, end_time</code> as timeslot for which camera firmware can be updated, start_time and end_time are integers indicating seconds to midnight, i.e, [3600, 7200] means 1am - 2am. If the schedule differs by day, only the earliest window is shown. Use GET /v2/cameras to see every window and the days it applies to.",
             "title": "Firmware Update Schedule",
             "type": "string"
           },
@@ -7355,10 +7355,31 @@
         "title": "FaceUnlockRequestV2",
         "type": "object"
       },
+      "FirmwareUpdateWeekdayV2": {
+        "description": "A day of the week.",
+        "enum": [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ],
+        "title": "FirmwareUpdateWeekdayV2",
+        "type": "string"
+      },
       "FirmwareUpdateWindowV2": {
         "additionalProperties": false,
         "description": "A single time window during which firmware can be updated.",
         "properties": {
+          "days": {
+            "description": "Days of the week on which the firmware update window is active (camera-local time).",
+            "items": {
+              "$ref": "#/components/schemas/FirmwareUpdateWeekdayV2"
+            },
+            "type": "array"
+          },
           "end_seconds_from_midnight": {
             "description": "End of the firmware update window in seconds since midnight (camera-local time).",
             "minimum": 0,
@@ -7374,7 +7395,8 @@
         },
         "required": [
           "start_seconds_from_midnight",
-          "end_seconds_from_midnight"
+          "end_seconds_from_midnight",
+          "days"
         ],
         "title": "FirmwareUpdateWindowV2",
         "type": "object"
