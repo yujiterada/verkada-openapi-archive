@@ -13691,7 +13691,7 @@
         "type": "object"
       },
       "ProtectAlarmListQueryV2": {
-        "description": "Query parameters for listing alarms.\n\nResults are ordered newest first and include self-monitored alarms only.",
+        "description": "Query parameters for listing alarms.\n\nResults are ordered newest first.",
         "properties": {
           "cursor": {
             "description": "Pagination cursor from a previous response. Use to fetch the next page of results.",
