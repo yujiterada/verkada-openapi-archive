@@ -35522,7 +35522,7 @@
   ],
   "tags": [],
   "x-explorer-enabled": true,
-  "x-proxy-enabled": true,
+  "x-proxy-enabled": false,
   "x-samples-enabled": true,
   "x-samples-languages": [
     "curl",
