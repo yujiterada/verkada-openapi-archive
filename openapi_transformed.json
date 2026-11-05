@@ -1038,6 +1038,27 @@
         "title": "AddPeopleRequest",
         "type": "object"
       },
+      "AddUsersToAccessGroupRequestV2": {
+        "description": "Request body for adding users to an access group.",
+        "properties": {
+          "user_ids": {
+            "description": "The Verkada-defined user identifiers to add to the access group. Between 1 and 100 entries.",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "User Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "user_ids"
+        ],
+        "title": "AddUsersToAccessGroupRequestV2",
+        "type": "object"
+      },
       "AlarmResolutionSource": {
         "description": "How an alarm was resolved.",
         "enum": [
@@ -13757,7 +13778,9 @@
               "resolution_source": null,
               "resolved_at": null,
               "resolved_by_actor": null,
+              "response_id": "0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e",
               "response_level": "self_monitored",
+              "response_name": "After hours",
               "site_id": "6a6ddb70-be76-423d-8ee0-71fced3c03a4",
               "status": "active",
               "trigger_device_id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
@@ -13843,6 +13866,11 @@
             "title": "Resolved By Actor",
             "type": "string"
           },
+          "response_id": {
+            "description": "Identifier of the response configuration the alarm was raised with.",
+            "title": "Response Id",
+            "type": "string"
+          },
           "response_level": {
             "allOf": [
               {
@@ -13850,6 +13878,11 @@
               }
             ],
             "description": "The configured response posture for this alarm. Distinct from `alarm_type`."
+          },
+          "response_name": {
+            "description": "Response configuration name at the time the alarm was raised.",
+            "title": "Response Name",
+            "type": "string"
           },
           "site_id": {
             "description": "The identifier of the site the alarm occurred at.",
@@ -13893,6 +13926,8 @@
           "alarm_type",
           "status",
           "response_level",
+          "response_id",
+          "response_name",
           "triggered_at"
         ],
         "title": "ProtectAlarmV2",
