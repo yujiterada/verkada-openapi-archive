@@ -11640,6 +11640,131 @@
                 "title": "OccupancyTrendsIntervalV2",
                 "type": "string"
             },
+            "OccupancyTrendsLineDirectionV2": {
+                "description": "The crossing direction a line is configured to count.",
+                "enum": [
+                    "in",
+                    "out",
+                    "both"
+                ],
+                "title": "OccupancyTrendsLineDirectionV2",
+                "type": "string"
+            },
+            "OccupancyTrendsLinePointV2": {
+                "additionalProperties": false,
+                "description": "A point on the camera frame, normalized to the frame dimensions.",
+                "properties": {
+                    "x": {
+                        "description": "The horizontal position of the point as a fraction of the frame width, from 0 (left edge) to 1 (right edge).",
+                        "title": "X",
+                        "type": "number"
+                    },
+                    "y": {
+                        "description": "The vertical position of the point as a fraction of the frame height, from 0 (top edge) to 1 (bottom edge).",
+                        "title": "Y",
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "x",
+                    "y"
+                ],
+                "title": "OccupancyTrendsLinePointV2",
+                "type": "object"
+            },
+            "OccupancyTrendsLinePresetV2": {
+                "additionalProperties": false,
+                "description": "A line preset configured on a camera, with the lines it contains.",
+                "properties": {
+                    "lines": {
+                        "description": "The lines configured in the preset.",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupancyTrendsLineV2"
+                        },
+                        "title": "Lines",
+                        "type": "array"
+                    },
+                    "object_class": {
+                        "description": "The object class the line preset is configured to count (e.g., 'person').",
+                        "title": "Object Class",
+                        "type": "string"
+                    },
+                    "preset_id": {
+                        "description": "The unique identifier of the line preset.",
+                        "title": "Preset Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "preset_id",
+                    "object_class"
+                ],
+                "title": "OccupancyTrendsLinePresetV2",
+                "type": "object"
+            },
+            "OccupancyTrendsLineV2": {
+                "additionalProperties": false,
+                "description": "A single line drawn on the camera frame for occupancy trends.",
+                "properties": {
+                    "direction": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OccupancyTrendsLineDirectionV2"
+                            }
+                        ],
+                        "description": "The crossing direction the line is configured to count. One of `in`, `out`, or `both`."
+                    },
+                    "end": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OccupancyTrendsLinePointV2"
+                            }
+                        ],
+                        "description": "The end point of the line.",
+                        "title": "End"
+                    },
+                    "start": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OccupancyTrendsLinePointV2"
+                            }
+                        ],
+                        "description": "The start point of the line.",
+                        "title": "Start"
+                    }
+                },
+                "required": [
+                    "direction",
+                    "start",
+                    "end"
+                ],
+                "title": "OccupancyTrendsLineV2",
+                "type": "object"
+            },
+            "OccupancyTrendsLinesResponseV2": {
+                "additionalProperties": false,
+                "description": "Response schema for the occupancy trends lines configured on a camera.",
+                "properties": {
+                    "camera_id": {
+                        "description": "The unique identifier of the camera.",
+                        "title": "Camera Id",
+                        "type": "string"
+                    },
+                    "presets": {
+                        "description": "The line presets configured on the camera for occupancy trends. Empty when the camera has no lines configured.",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupancyTrendsLinePresetV2"
+                        },
+                        "title": "Presets",
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "camera_id"
+                ],
+                "title": "OccupancyTrendsLinesResponseV2",
+                "type": "object"
+            },
             "OccupancyTrendsMQTTConfigGetResponseV2": {
                 "additionalProperties": false,
                 "properties": {
@@ -19206,6 +19331,11 @@
                         "title": "Approval Status",
                         "type": "string"
                     },
+                    "camera_assisted_sign_out": {
+                        "description": "Whether sign out time was populated from camera assisted auto sign out.",
+                        "title": "Camera Assisted Sign Out",
+                        "type": "boolean"
+                    },
                     "check_in_time": {
                         "description": "Timestamp at which the visitor checked in. Only present if the visit is successful (as opposed to denied or pending).",
                         "title": "Check In Time",
@@ -19278,6 +19408,11 @@
                         "title": "Questionnaires",
                         "type": "array"
                     },
+                    "scheduled_auto_sign_out": {
+                        "description": "Timestamp at which the visit was scheduled to be automatically signed out.",
+                        "title": "Scheduled Auto Sign Out",
+                        "type": "integer"
+                    },
                     "security_screen_status": {
                         "description": "Only present if the visit required a security screen. Can be one of: <code>NOT_STARTED</code> (visit submitted, security screen not yet submitted to provider), <code>START</code> (visitor information submitted to provider), <code>NO_MATCH</code> (screening complete, no match found), <code>NEEDS_REVIEW</code> (screening found potential match, needs human verification), <code>CONFIRMED_MATCH</code> (user-confirmed match) <code>ERROR</code> (error with security screen provider) or <code>CANCELED</code> (security screen not completed due to cancellation or time-out).",
                         "title": "Security Screen Status",
@@ -19340,6 +19475,11 @@
                         "description": "The overall approval status of the visit - factoring in host approvals, questionnaires, and security screens. Can be one of: PENDING (host approval or background check not yet complete), APPROVED (all steps passed), or DENIED (visitor was denied entry due to one or more failures).",
                         "title": "Approval Status",
                         "type": "string"
+                    },
+                    "camera_assisted_sign_out": {
+                        "description": "Whether sign out time was populated from camera assisted auto sign out.",
+                        "title": "Camera Assisted Sign Out",
+                        "type": "boolean"
                     },
                     "check_in_time": {
                         "description": "Time at which the visitor checked in, in RFC 3339 format (e.g., '2025-08-04T21:51:53+00:00'). Only present if the visit is successful (as opposed to denied or pending).",
@@ -19407,6 +19547,11 @@
                         },
                         "title": "Questionnaires",
                         "type": "array"
+                    },
+                    "scheduled_auto_sign_out": {
+                        "description": "Time at which a visit was scheduled to be automatically signed out, in RFC 3339 format (e.g., '2025-08-04T21:51:53+00:00').",
+                        "title": "Scheduled Auto Sign Out",
+                        "type": "string"
                     },
                     "security_screen_status": {
                         "description": "Only present if the visit required a security screen. Can be one of: NOT_STARTED (visit submitted, security screen not yet submitted to provider), START (visitor information submitted to provider), NO_MATCH (screening complete, no match found), NEEDS_REVIEW (screening found potential match, needs human verification), CONFIRMED_MATCH (user-confirmed match), ERROR (error with security screen provider), or CANCELED (security screen not completed due to cancellation or time-out).",
@@ -21815,7 +21960,7 @@
                 ]
             },
             "post": {
-                "description": "",
+                "description": "An organization can have a limited number of Door Exception Calendars; creating one\nbeyond that returns 409, and deleting unused calendars frees room.",
                 "operationId": "postAccessDoorExceptionCalendarsViewV1",
                 "parameters": [],
                 "requestBody": {
@@ -25605,6 +25750,98 @@
                 ]
             }
         },
+        "/v2/access/access_groups/{group_id}/users": {
+            "post": {
+                "description": "Adds up to 100 users to the access group and returns the group with its full\nmembership. Users who are already members are left unchanged, so the request can\nbe safely retried. Every user must exist in the organization; if any do not, the\nrequest is rejected with a 422 that lists them and no users are added. Access\ngroups managed by an external integration cannot be modified.",
+                "operationId": "postAccessGroupUsersViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "group_id",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddUsersToAccessGroupRequestV2"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccessGroupResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Unprocessable Entity"
+                    },
+                    "503": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Service Unavailable"
+                    }
+                },
+                "summary": "Add Users to Access Group",
+                "tags": [
+                    "Access Groups"
+                ]
+            }
+        },
         "/v2/access/access_groups/{group_id}/users/{user_id}": {
             "delete": {
                 "description": "Removes the user with the given identifier from the access group. Both the group\nand user identifiers are Verkada-defined UUIDs supplied as path parameters.",
@@ -25811,7 +26048,7 @@
                 ]
             },
             "post": {
-                "description": "Creates an Access Level granting the given Access Groups entry to the given\nDoors during the given weekly schedule events. Every Site listed in `sites`\nmust be within the API key's scope, and every Door in `doors` must belong to\none of those Sites.\n\nThe name must be unique within the organization; a collision returns 409.\nTwo schedule events on the same weekday must not overlap or touch -- the\nlater one must start strictly after the earlier one ends; a violation returns\n422.",
+                "description": "Creates an Access Level granting the given Access Groups entry to the given\nDoors during the given weekly schedule events. Every Site listed in `sites`\nmust be within the API key's scope, and every Door in `doors` must belong to\none of those Sites.\n\nThe name must be unique within the organization; a collision returns 409.\nAn organization can have a limited number of Access Levels; creating one\nbeyond that returns 409 with the `limit_exceeded` error code, and deleting unused\nAccess Levels frees room.\nTwo schedule events on the same weekday must not overlap or touch -- the\nlater one must start strictly after the earlier one ends; a violation returns\n422.",
                 "operationId": "postAccessLevelsListViewV2",
                 "parameters": [],
                 "requestBody": {
@@ -27349,7 +27586,7 @@
                 ]
             },
             "post": {
-                "description": "Create a new Exception Calendar for the specified doors. The calendar's exceptions can\ninclude recurrence rules following RFC 5545.",
+                "description": "Create a new Exception Calendar for the specified doors. The calendar's exceptions can\ninclude recurrence rules following RFC 5545.\n\nAn organization can have a limited number of Exception Calendars; creating one beyond\nthat returns 409 with the `limit_exceeded` error code, and deleting unused Exception\nCalendars frees room.",
                 "operationId": "postExceptionCalendarsViewV2",
                 "parameters": [],
                 "requestBody": {
@@ -32712,6 +32949,58 @@
                     }
                 },
                 "summary": "Get Occupancy Trend Data",
+                "tags": [
+                    "Analytics"
+                ]
+            }
+        },
+        "/v2/cameras/{camera_id}/occupancy_trends/lines": {
+            "get": {
+                "description": "Returns the occupancy trends lines configured on a single camera.\n\nLines are grouped by line preset. Each preset includes the object class it\ncounts and the lines drawn on the camera frame, with each line's counted\ndirection and its start and end points. Point coordinates are normalized to\nthe frame dimensions, from 0 to 1.\n\nThe `preset_id` of each preset can be passed to the occupancy trends data\nendpoint to retrieve the counts for that preset. A camera with no lines\nconfigured returns an empty `presets` list.",
+                "operationId": "getOccupancyTrendsLinesViewV2",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "camera_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OccupancyTrendsLinesResponseV2"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "502": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponseV2"
+                                }
+                            }
+                        },
+                        "description": "Bad Gateway"
+                    }
+                },
+                "summary": "Get Occupancy Trends Lines",
                 "tags": [
                     "Analytics"
                 ]
